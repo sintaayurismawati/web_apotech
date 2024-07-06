@@ -1,0 +1,70 @@
+<!-- <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.html");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+?> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApoTech</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <img src="images/Logo_ApoTech.png" style="height: 40px; width: 200px;">
+            <ul class="nav-links">
+                <li><a id="home-link" href="#" class="active" onclick="showProduct()">Semua Produk</a></li>
+                <li class="dropdown">
+                    <a id="kategori-link" href="javascript:void(0)" class="dropbtn" onclick="showProduct()">Kategori</a>
+                    <div class="dropdown-content">
+                        <a href="#">Obat Kapsul</a>
+                        <a href="#">Obat Sirup</a>
+                        <a href="#">Obat Tetes</a>
+                        <a href="#">Obat Oles</a>
+                        <a href="#">Alat Medis</a>
+                    </div>
+                </li>
+                <li><a id="toko-link" href="#" onclick="showTokoSaya()">Toko Saya</a></li>
+                <li><a id="histori-link" href="#" onclick="showHistori()">Histori</a></li>
+                <li><a id="cart-link" href="#" onclick="showKeranjang()"><i class="fas fa-shopping-cart"></i></a></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div id="product-container" class="product-container"></div>
+        <div id="toko-saya" class="toko-saya" style="display: none;">
+            <h1>TOKO SAYA</h1>
+        </div>
+        <div id="histori" class="histori" style="display: none;">
+            <h1>HISTORI</h1>
+        </div>
+        <div id="keranjang" class="keranjang" style="display: none;">
+            <h1>KERANJANG</h1>
+        </div>
+        <div id="detail-product" class="detail-product" style="display: none;">
+            <h1>DETAIL PRODUCT</h1>
+        </div>
+    </main>
+    <!-- Menyertakan nilai user_id di dalam JavaScript -->
+
+    <!-- <script>
+        var userId = "<?php echo json_encode($user_id); ?>";
+        console.log("User ID: ", userId);
+    </script> -->
+
+    <!-- Sertakan file JavaScript terpisah -->
+    <script src="home.js"></script>
+</body>
+
+</html>
