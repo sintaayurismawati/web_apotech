@@ -28,19 +28,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("iiiii", $produk_id, $user_id, $jumlah_beli, $total, $metode_pembayaran_id);
             if ($stmt->execute()) {
                 echo "Insert successful";
-                header("Location: home.html?addStore=success");
+                header("Location: ../html/home.html?addStore=success");
             } else {
                 echo "Insert error: " . $stmt->error;
-                header("Location: home.html?addStore=error");
+                header("Location: ../html/home.html?addStore=error");
             }
             $stmt->close();
         } else {
             echo "Metode pembayaran tidak ditemukan.";
-            header("Location: home.html?addStore=error");
+            header("Location: ../html/home.html?addStore=error");
         }
     } else {
         echo "User ID not found in session.";
-        header("Location: login.html");
+        header("Location: ../html/login.html");
     }
 
     mysqli_close($conn);

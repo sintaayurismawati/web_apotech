@@ -23,17 +23,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("issiiss", $vendor_id, $nama_produk, $kategori_produk, $harga_produk, $jumlah_stok, $deskripsi, $image_url);
         if ($stmt->execute()) {
             echo "Insert successful";
-            header("Location: home.html?addProductStore=success");
+            header("Location: ../html/home.html?addProductStore=success");
         } else {
             echo "Insert error: " . $stmt->error;
-            header("Location: home.html?addProductStore=error");
+            header("Location: ../html/home.html?addProductStore=error");
         }
 
         $stmt->close();
     } else {
         // Jika user_id tidak ada dalam sesi, kembali ke halaman login atau berikan pesan kesalahan
         echo "Vendor ID not found in session.";
-        header("Location: login.html");
+        header("Location: ../html/login.html");
     }
 
     mysqli_close($conn);

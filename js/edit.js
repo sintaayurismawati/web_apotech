@@ -10,7 +10,7 @@ function initializeProductDisplay(products) {
         productItem.className = 'product-item';
         productItem.id = 'product-item';
         productItem.addEventListener('click', () =>
-            window.location.href = 'detail_product.html'
+            window.location.href = '../html/detail_product.html'
         );
 
         const productImage = document.createElement('img');

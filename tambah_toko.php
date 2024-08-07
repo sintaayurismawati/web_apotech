@@ -28,17 +28,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("issssi", $user_id, $nama_vendor, $kota, $alamat, $image_profil, $no_telp);
         if ($stmt->execute()) {
             echo "Insert successful";
-            header("Location: home.html?addStore=success");
+            header("Location: ../html/home.html?addStore=success");
         } else {
             echo "Insert error: " . $stmt->error;
-            header("Location: home.html?addStore=error");
+            header("Location: ../html/home.html?addStore=error");
         }
 
         $stmt->close();
     } else {
         // Jika user_id tidak ada dalam sesi, kembali ke halaman login atau berikan pesan kesalahan
         echo "User ID not found in session.";
-        header("Location: login.html");
+        header("Location: ../html/login.html");
     }
 
     mysqli_close($conn);

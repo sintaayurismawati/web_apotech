@@ -30,7 +30,7 @@ function initializeProductDisplay(products) {
         productItem.className = 'product-item';
         productItem.id = 'product-item';
         productItem.addEventListener('click', () =>
-            window.location.href = 'detail_product.html'
+            window.location.href = '../html/detail_product.html'
         );
 
         const productImage = document.createElement('img');
@@ -78,7 +78,7 @@ function showAllProducts() {
     while (productContainer.firstChild) {
         productContainer.removeChild(productContainer.firstChild);
     }
-    fetch('get_all_product.php')
+    fetch('../php/get_all_product.php')
         .then(response => {
             console.log('Fetch response:', response);
             return response.json();
@@ -99,7 +99,7 @@ function showAllProducts() {
                 productItem.addEventListener('click', () => {
                     localStorage.setItem('selectedProduct', JSON.stringify(product));
                     console.log('Product saved to localStorage:', product);
-                    window.location.href = 'detail_produk.html';
+                    window.location.href = '../html/detail_produk.html';
                 });
 
                 const productImage = document.createElement('img');
@@ -158,7 +158,7 @@ function showTokoSaya() {
     document.getElementById("keranjang").style.display = "none";
     document.getElementById("detail-product").style.display = "none";
 
-    fetch('get_toko_saya.php')
+    fetch('../php/get_toko_saya.php')
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -251,7 +251,7 @@ function showAddProductStoreForm() {
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
                 <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Produk</h2>
-                <form id="addStoreForm" action="tambah_produk_toko.php" method="post">
+                <form id="addStoreForm" action="..php/tambah_produk_toko.php" method="post">
                     <div style="display:flex; flex-flow:column;">
                         <label for="nama_produk" style="margin-top: 10px;">Nama Produk:</label>
                         <input type="text" id="nama_produk" name="nama_produk" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
@@ -281,7 +281,7 @@ function showAddProductStoreForm() {
 
 // Function to show product store
 function showPrdouctStore() {
-    fetch('get_product_store.php')
+    fetch('../php/get_product_store.php')
         .then(response => response.json())
         .then(data => {
             var tokoSayaDiv = document.getElementById('toko-saya');
@@ -327,7 +327,7 @@ function showAddStoreForm() {
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative;">
                 <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Toko</h2>
-                <form id="addStoreForm" action="tambah_toko.php" method="post">
+                <form id="addStoreForm" action="../php/tambah_toko.php" method="post">
                     <div style="display:flex; flex-flow:column; gap:5px;">
                         <label for="storeName">Nama Toko:</label>
                         <input type="text" id="storeName" name="storeName" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
@@ -367,7 +367,7 @@ function submitStoreForm(event) {
     // Collect form data
     const formData = new FormData(document.getElementById('addStoreForm'));
 
-    fetch('tambah_toko.php', {
+    fetch('../php/tambah_toko.php', {
         method: 'POST',
         body: formData
     })

@@ -1,5 +1,5 @@
 document.getElementById('loginButton').addEventListener('click', function () {
-    window.location.href = 'login.html'; // Replace with your actual login page URL
+    window.location.href = '../html/login.html'; // Replace with your actual login page URL
 });
 
 let slideIndex = 0;

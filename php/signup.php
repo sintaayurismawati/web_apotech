@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt->close();
     } else {
-        header("Location: login.html?signup=nomatch");
+        header("Location: ../html/login.html?signup=nomatch");
     }
     mysqli_close($conn);
 }

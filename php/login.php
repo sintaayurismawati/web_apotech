@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
         $_SESSION['username'] = $username;
         $_SESSION['user_id'] = $user['id']; // Save user ID to session
-        header("Location: home.html");
+        header("Location: ../html/home.html");
     } else {
         echo "Invalid username or password.";
     }

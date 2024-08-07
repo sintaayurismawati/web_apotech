@@ -23,5 +23,5 @@ function showLogin() {
 }
 
 // document.getElementById('loginButton').addEventListener('click', function () {
-//     window.location.href = 'home.html'; // Replace with your actual login page URL
+//     window.location.href = '../html/home.html'; // Replace with your actual login page URL
 // });

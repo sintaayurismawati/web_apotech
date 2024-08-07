@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ApoTech</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
 <body>
     <div class="login-page">
-        <img class="img-container" src="images/image4.jpeg" style="width: 50%; height: 645px">
+        <img class="img-container" src="../images/image4.jpeg" style="width: 50%; height: 645px">
         <div class="login-container" id="login-container">
-            <img src="images/Logo_ApoTech.png" style="height: 40px; width: 200px; display: block; margin: auto;">
+            <img src="../images/Logo_ApoTech.png" style="height: 40px; width: 200px; display: block; margin: auto;">
             <h1 style="text-align: center; color: #07837b;">Welcome !</h1>
             <h4 style="text-align: center; color: #475353;">Silahkan Login untuk melanjutkan</h4>
-            <form action="login.php" method="post">
+            <form action="../php/login.php" method="post">
                 <div class="input-group">
                     <input type="text" name="username" placeholder="Username" required>
                 </div>
@@ -29,10 +29,10 @@
         </div>
 
         <div class="signup-container" id="signup-container" style="display: none;">
-            <img src="images/Logo_ApoTech.png" style="height: 40px; width: 200px; display: block; margin: auto;">
+            <img src="../images/Logo_ApoTech.png" style="height: 40px; width: 200px; display: block; margin: auto;">
             <h1 style="text-align: center; color: #07837b;">Sign Up</h1>
             <h4 style="text-align: center; color: #475353;">Buat akun untuk memulai</h4>
-            <form action="signup.php" method="post">
+            <form action="../php/signup.php" method="post">
                 <div class="input-group">
                     <input type="text" name="username" placeholder="Username" required>
                     <input type="text" name="email" placeholder="Email" required>
@@ -53,7 +53,7 @@
             <p style="text-align: center;">Sudah punya akun? <a href="#" onclick="showLogin()">Login</a></p>
         </div>
     </div>
-    <script src="login.js"></script>
+    <script src="../js/login.js"></script>
 </body>
 
 </html>
