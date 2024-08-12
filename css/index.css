@@ -1,0 +1,171 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.navbar {
+    background-color: #bbebe7;
+    padding: 0px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.container {
+    padding : 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #00A69C;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+.content {
+    padding: 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    
+}
+main {
+    margin-top: 40px; 
+    padding : 0px
+}
+
+.opening-container {
+    max-width: 500px;
+    text-align: justify;
+    margin-left: 20px;
+}
+
+#signupButton {
+    margin-left: 50px; 
+}
+
+#loginButton{
+    background-color: #00A69C;
+    color: #fff; 
+    border: none; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    margin: 5px; 
+    font-size: 16px;
+    cursor: pointer; 
+  }
+  
+  #loginButton:hover , #signupButton:hover { 
+    background-color: #aaafab; 
+  }
+
+  .slider {
+    position: relative; 
+    width: 500px;
+    height: 300px; 
+    overflow: hidden; 
+  }
+  
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease; 
+  }
+  
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .content-container{
+        /* display: flex; */
+        /* flex-direction: row;  */
+        /* align-items: center; */
+        /* justify-content: space-between;    */
+        display: flex;
+        justify-content: space-between;
+        /* align-items: center; */
+        gap: 50px;
+  }
+
+  .SelamatDatang {
+    font-size: 60px;
+    color: #07837b;
+  }
+
+  .short-desc{
+    font-size: 16px;
+    color: #475353;
+  }
+
+.mySlides {
+    display: none;
+}
+
+.mySlides img {
+    width: 100%; 
+    height: 602px;
+}
+
+/* .dot-container {
+    position: absolute;
+    bottom: 8px; 
+    width: 100%;
+    text-align: center;
+} */
+
+/* .dot {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+    cursor: pointer;
+}
+
+.active {
+    background-color: #717171;
+} */
+
+@keyframes fade {
+    from {opacity: .4} 
+    to {opacity: 1}
+}
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@media only screen and (max-width: 300px) {
+    .text {
+        font-size: 11px;
+    }
+}

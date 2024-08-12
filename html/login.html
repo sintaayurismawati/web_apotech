@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApoTech</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <div class="login-page">
+        <img class="img-container" src="../images/image4.jpeg" style="width: 50%; height: 645px">
+        <div class="login-container" id="login-container">
+            <img src="../images/Logo_ApoTech.png" style="height: 40px; width: 200px; display: block; margin: auto;">
+            <h1 style="text-align: center; color: #07837b;">Welcome !</h1>
+            <h4 style="text-align: center; color: #475353;">Silahkan Login untuk melanjutkan</h4>
+            <form action="../php/login.php" method="post">
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <button id="loginButton" type="submit">Login</button>
+            </form>
+            <p style="text-align: center;">Belum punya akun? <a href="#" onclick="showSignUp()">SignUp</a></p>
+        </div>
+
+        <div class="signup-container" id="signup-container" style="display: none;">
+            <img src="../images/Logo_ApoTech.png" style="height: 40px; width: 200px; display: block; margin: auto;">
+            <h1 style="text-align: center; color: #07837b;">Sign Up</h1>
+            <h4 style="text-align: center; color: #475353;">Buat akun untuk memulai</h4>
+            <form action="../php/signup.php" method="post">
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="text" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="retype_password" placeholder="Ulangi Password" required>
+                    <input type="text" name="alamat" placeholder="Alamat" required>
+                    <input type="text" name="no_telp" placeholder="No.HP" required>
+                    <label>Gender:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="Pria" required> Pria</label>
+                        <label><input type="radio" name="gender" value="Wanita" required> Wanita</label>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+            <p style="text-align: center;">Sudah punya akun? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    <script src="../js/login.js"></script>
+</body>
+
+</html>
