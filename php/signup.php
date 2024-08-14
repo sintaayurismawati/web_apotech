@@ -20,9 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ssisss", $username, $email, $no_telp, $hashed_password, $gender, $alamat);
 
         if ($stmt->execute()) {
-            header("Location: login.html?signup=success");
+            header("Location: ../html/login.html?signup=success");
         } else {
-            header("Location: login.html?signup=error");
+            header("Location: ../html/login.html?signup=error");
         }
 
         $stmt->close();
