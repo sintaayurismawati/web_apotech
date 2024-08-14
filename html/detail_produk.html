@@ -61,7 +61,7 @@
                 <span class="close" onclick="closeModalBeli()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Detail Pembelian</h2>
                 <row>
-                    <form id="addDetailBelanja" action="../php/tambah_detail_belanja.php" method="post" onsubmit="cekJumlahBeli(event), submitDetailBelanja(event)">
+                    <form id="addDetailBelanja" action="../php/tambah_detail_belanja.php" method="post" onsubmit="cekJumlahBeli(event)">
                         <label for="jumlah_beli" style="margin-top: 10px;">Jumlah beli:</label>
                         <input type="number" id="jumlah_beli" name="jumlah_beli" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
                         <label for="metode_pembayaran" style="margin-top: 10px;">Metode Pembayaran:</label>

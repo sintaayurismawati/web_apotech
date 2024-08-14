@@ -107,7 +107,7 @@ function cekJumlahBeli(event) {
 
     return false; // Mencegah pengiriman formulir
   } else {
-    // submitDetailBelanja();
+    submitDetailBelanja();
     // Jika jumlah_beli valid, kembalikan true untuk melanjutkan pengiriman formulir
     return true;
   }
@@ -126,8 +126,7 @@ function closeModal(modalId = "modal") {
   }
 }
 
-function submitDetailBelanja(event) {
-  event.preventDefault();
+function submitDetailBelanja() {
   const formData = new FormData(document.getElementById("addDetailBelanja"));
 
   fetch("../php/tambah_detail_belanja.php", {
