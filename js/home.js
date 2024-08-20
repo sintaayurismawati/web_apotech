@@ -193,10 +193,6 @@ function showTokoSaya() {
                                     <h1 style="color:#00A69C;">20</h1>
                                 </div>
                                 <div class="jumlah-produk" style="text-align: center;">
-                                    <h3 style="color:#475353;">Kunjungan</h3>
-                                    <h1 style="color:#00A69C;">20</h1>
-                                </div>
-                                <div class="jumlah-produk" style="text-align: center;">
                                     <h3 style="color:#475353;">Keranjang</h3>
                                     <h1 style="color:#00A69C;">100</h1>
                                 </div>                                

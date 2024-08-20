@@ -14,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $jumlah_beli = (int) $_POST['jumlah_beli'];
         $total = (int) $_POST['total'];
         $metode_pembayaran_id = (int) $_POST['metode_pembayaran_id'];
+        $alamat = $_POST['alamat'];
 
         // Debug: Menampilkan input
         error_log("User ID: $user_id, Produk ID: $produk_id, Jumlah Beli: $jumlah_beli, Total: $total, Metode Pembayaran ID: $metode_pembayaran_id");
@@ -36,11 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             try {
                 // Insert ke tabel detail_belanja
-                $stmt_insert = $conn->prepare("INSERT INTO detail_belanja (produk_id, user_id, jumlah_beli, total, metode_pembayaran_id) VALUES (?, ?, ?, ?, ?)");
+                $stmt_insert = $conn->prepare("INSERT INTO detail_belanja (produk_id, user_id, jumlah_beli, total, metode_pembayaran_id, alamat_pengiriman) VALUES (?, ?, ?, ?, ?,?)");
                 if (!$stmt_insert) {
                     throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
                 }
-                $stmt_insert->bind_param("iiiii", $produk_id, $user_id, $jumlah_beli, $total, $metode_pembayaran_id);
+                $stmt_insert->bind_param("iiiiis", $produk_id, $user_id, $jumlah_beli, $total, $metode_pembayaran_id, $alamat);
                 if (!$stmt_insert->execute()) {
                     throw new Exception("Execute failed: (" . $stmt_insert->errno . ") " . $stmt_insert->error);
                 }
