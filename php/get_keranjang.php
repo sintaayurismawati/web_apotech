@@ -14,9 +14,11 @@ if (isset($_SESSION['user_id'])) {
     $stmt = $conn->prepare("SELECT k.jumlah,
                                    k.total,
                                    k.created_at,
+                                   k.produk_id,
                                    p.nama_produk, 
                                    p.harga_produk, 
                                    p.image_url,
+                                   p.jumlah_stok,
                                    v.nama_vendor, 
                                    v.kota, 
                                    v.image_profil

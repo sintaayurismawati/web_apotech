@@ -55,6 +55,31 @@ $user_id = $_SESSION['user_id'];
         <div id="detail-product" class="detail-product" style="display: none;">
             <h1>DETAIL PRODUCT</h1>
         </div>
+        <div id="modal-beli" class="modal" style="display: none; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+            <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
+                <span class="close" onclick="closeModalBeli()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                <h2 style="text-align: center;">Detail Pembelian</h2>
+                <row>
+                    <form id="addDetailBelanja" action="../php/tambah_detail_belanja.php" method="post" onsubmit="cekJumlahBeli(event)">
+                        <label for="jumlah_beli" style="margin-top: 10px;">Jumlah beli:</label>
+                        <input type="number" id="jumlah_beli" name="jumlah_beli" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <label for="metode_pembayaran" style="margin-top: 10px;">Metode Pembayaran:</label>
+                        <select required id="metode_pembayaran" name="metode_pembayaran" style="width: 98.5%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                            <option value="" disabled selected>Pilih metode pembayaran</option>
+                        </select>
+                        <label for="alamat" style="margin-top: 10px;">Alamat:</label>
+                        <br>
+                        <textarea name="alamat" id="alamat" rows="6" cols="50"  required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                        <!-- <input type="text" id="total" name="total" required style="width: 95%; height:30px; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"> -->
+                        <h2 style="text-align: right;" id="total">Total: Rp0</h2>
+                        <input type="hidden" id="total_hidden" name="total">
+                        <div style="text-align: right;">
+                            <input type="submit" id="btn-next" value="Checkout" style="background-color: #00A69C; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-align: right;">
+                        </div>
+                    </form>
+                </row>
+            </div>
+        </div>
     </main>
     <!-- Menyertakan nilai user_id di dalam JavaScript -->
 

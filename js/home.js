@@ -1,5 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
   showProduct();
+
+  document.getElementById("jumlah_beli").addEventListener("input", () => {
+    const jumlahBeli =
+      parseInt(document.getElementById("jumlah_beli").value, 10) || 0;
+    const total = jumlahBeli * hargaProdukKrj;
+
+    // Logging values to console for debugging
+    console.log("Jumlah Beli:", jumlahBeli);
+    console.log("Harga Produk:", hargaProdukKrj);
+    console.log("Total:", total);
+
+    document.getElementById(
+      "total"
+    ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
+    document.getElementById("total_hidden").value = total;
+  });
 });
 
 // Function to remove 'active' class from all links and add to the clicked one
@@ -474,30 +490,25 @@ function loadKeranjang() {
         tanggalAddKeranjang = formatTanggal(keranjang.created_at);
 
         keranjangCard.innerHTML = `
-                    <div class="tanggal-container-krj">
-                        <label style="font-weight: bold; color: #00a69c;">${tanggalAddKeranjang}</label>
-                    </div>
-                    <br>
                     <div style="display: flex; flex-flow: row; width: 100%;">
                         <div style="width: 300px; height: 250px;">
                             <img src="${keranjang.image_url}">
                         </div>
                         <div class="details-krj">
                             <div>
-                                <label class="sub-title-krj">${keranjang.nama_produk}</label>
-                                <label>Rp${keranjang.harga_produk}</label>
+                              <label style="font-weight: bold; color: #00a69c;">${tanggalAddKeranjang}</label>
+                            </div>
+                            <div>
+                                <label id="sub-title-krj" class="sub-title-krj">${keranjang.nama_produk}</label>
+                                <label class="harga-produk-label">Rp${keranjang.harga_produk}</label>
                             </div>
                             <div>
                                 <label class="sub-title-krj">Toko</label>
                                 <label>${keranjang.nama_vendor} (${keranjang.kota})</label>
                             </div>
                             <div>
-                                <label class="sub-title-krj">Jumlah</label>
-                                <label>${keranjang.jumlah}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title-krj">Total</label>
-                                <label>Rp${keranjang.total}</label>
+                                <label class="sub-title-krj">Tersisa</label>
+                                <label class="stok-tersisa">${keranjang.jumlah_stok}</label>
                             </div>
                             <div style="display: flex; gap: 10px; margin-top: 10px;">
                               <button class="btn-hps-krj">Hapus</button>
@@ -506,6 +517,30 @@ function loadKeranjang() {
                         </div>
                     </div>
                 `;
+
+        keranjangCard
+          .querySelector(".btn-beli-krj")
+          .addEventListener("click", function () {
+            const hargaLabel = keranjangCard.querySelector(
+              ".harga-produk-label"
+            ).textContent;
+            hargaProdukKrj = hargaLabel.replace("Rp", "").trim();
+            stokTersisa =
+              keranjangCard.querySelector(".stok-tersisa").textContent;
+            console.log("Harga Produk Krj:", hargaProdukKrj);
+
+            // Panggil fungsi showAddDetailBelanja dan showAlamat
+            showAddDetailBelanja();
+            showAlamat();
+
+            const produkIdInput = document.createElement("input");
+            produkIdInput.type = "hidden";
+            produkIdInput.name = "produk_id";
+            produkIdInput.value = keranjang.produk_id;
+            document
+              .getElementById("addDetailBelanja")
+              .appendChild(produkIdInput);
+          });
 
         // Menambahkan histori-card ke container histori
         keranjangContainer.appendChild(keranjangCard);
@@ -521,3 +556,130 @@ function closeModal() {
     document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
   }
 }
+
+function showAlamat() {
+  fetch("../php/get_user_info.php")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Data fetched:", data);
+
+      if (data.error) {
+        console.error("Error fetching user:", data.error);
+      } else {
+        console.log("User address:", data.alamat);
+        document.getElementById("alamat").value = data.alamat;
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+}
+
+function showAddDetailBelanja() {
+  document.getElementById("modal-beli").style.display = "flex";
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function cekJumlahBeli(event) {
+  event.preventDefault(); // Mencegah pengiriman formulir secara default
+  var jumlah_beli = parseInt(document.getElementById("jumlah_beli").value, 10);
+
+  if (jumlah_beli > stokTersisa) {
+    closeModal();
+    var modalHTML = `
+                    <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
+                            <span class="close" onclick="closeModal('modal-error')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                            <h2 style="text-align: center;">Maaf</h2>
+                            <p>Jumlah beli melebihi jumlah ketersediaan produk</p>
+                        </div>
+                    </div>
+                `;
+
+    // Memasukkan modal ke dalam halaman
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+    // Mencegah scroll background saat modal ditampilkan
+    document.body.style.overflow = "hidden";
+
+    return false; // Mencegah pengiriman formulir
+  } else {
+    submitDetailBelanja();
+    // Jika jumlah_beli valid, kembalikan true untuk melanjutkan pengiriman formulir
+    return true;
+  }
+}
+
+function closeModalBeli() {
+  document.getElementById("modal-beli").style.display = "none";
+  document.body.style.overflow = "";
+}
+
+function submitDetailBelanja() {
+  const formData = new FormData(document.getElementById("addDetailBelanja"));
+
+  fetch("../php/tambah_detail_belanja.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.text(); // Ubah menjadi text jika PHP tidak mengembalikan JSON
+    })
+    .then((data) => {
+      console.log("Response from server:", data);
+      if (data.includes("Insert successful")) {
+        closeModalBeli(); // Tutup modal jika berhasil
+        alert("Pembelian berhasil!"); // Tampilkan pesan sukses
+        window.location.href = "../html/home.html"; // Redirect ke halaman utama
+      } else {
+        alert("Gagal melakukan pembelian, silakan coba lagi.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Terjadi kesalahan, silakan coba lagi.");
+    });
+}
+
+fetch("../php/get_metode_pembayaran.php")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    const select = document.getElementById("metode_pembayaran");
+    // Clear existing options
+    select.innerHTML =
+      '<option value="" disabled selected>Pilih metode pembayaran</option>';
+    data.forEach((item) => {
+      const option = document.createElement("option");
+      option.value = item.id; // Gunakan ID sebagai value
+      option.textContent = item.metode_pembayaran; // Tampilkan nama metode
+      select.appendChild(option);
+    });
+
+    select.addEventListener("change", (event) => {
+      const selectedId = event.target.value; // Ambil nilai ID dari option yang dipilih
+      console.log("ID metode pembayaran yang dipilih:", selectedId);
+
+      // Update hidden input field for metode_pembayaran_id
+      const metodePembayaranIdInput = document.createElement("input");
+      metodePembayaranIdInput.type = "hidden";
+      metodePembayaranIdInput.name = "metode_pembayaran_id";
+      metodePembayaranIdInput.value = selectedId;
+      document
+        .getElementById("addDetailBelanja")
+        .appendChild(metodePembayaranIdInput);
+    });
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+    alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
+  });
