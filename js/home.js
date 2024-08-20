@@ -221,101 +221,6 @@ function showTokoSaya() {
     .catch((error) => console.error("Error fetching user info:", error));
 }
 
-function showHistori() {
-  document.getElementById("product-container").style.display = "none";
-  document.getElementById("toko-saya").style.display = "none";
-  document.getElementById("histori").style.display = "block";
-  document.getElementById("keranjang").style.display = "none";
-  document.getElementById("detail-product").style.display = "none";
-
-  loadHistori();
-}
-
-function loadHistori() {
-    const historiContainer = document.getElementById("histori");
-    while (historiContainer.firstChild) {
-      historiContainer.removeChild(historiContainer.firstChild);
-    }
-  // Fetch data dari PHP
-  fetch("../php/get_histori.php")
-    .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
-    .then((data) => {
-      const historiContainer = document.getElementById("histori");
-      historiContainer.style.display = "block"; // Menampilkan container histori
-
-      data.forEach((histori) => {
-        // Membuat elemen histori-card baru
-        console.log("Histori:", histori);
-        const historiCard = document.createElement("div");
-        historiCard.className = "histori-card";
-        tanggalBeli = formatTanggal(histori.created_at);
-
-        historiCard.innerHTML = `
-                    <div class="tanggal-container">
-                        <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
-                    </div>
-                    <br>
-                    <div style="display: flex; flex-flow: row; width: 100%;">
-                        <div style="width: 300px; height: 250px;">
-                            <img src="${histori.image_url}">
-                        </div>
-                        <div class="details">
-                            <div>
-                                <label class="sub-title">${histori.nama_produk}</label>
-                                <label>Rp${histori.harga_produk}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Toko</label>
-                                <label>${histori.nama_vendor} (${histori.kota})</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Jumlah</label>
-                                <label>${histori.jumlah_beli}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Total</label>
-                                <label>Rp${histori.total}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Metode Pembayaran</label>
-                                <label>${histori.metode_pembayaran}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Dikirim ke </label>
-                                <label>${histori.alamat_pengiriman}</label>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-        // Menambahkan histori-card ke container histori
-        historiContainer.appendChild(historiCard);
-      });
-    })
-    .catch((error) => console.error("Error fetching data:", error));
-}
-
-function formatTanggal(tanggal) {
-  const optionsTanggal = { weekday: "long", day: "numeric", month: "long" };
-  const optionsWaktu = { hour: "2-digit", minute: "2-digit" };
-
-  // Mengubah string tanggal menjadi objek Date
-  const date = new Date(tanggal);
-
-  const formattedTanggal = date.toLocaleDateString("id-ID", optionsTanggal);
-  const formattedWaktu = date.toLocaleTimeString("id-ID", optionsWaktu);
-
-  return `${formattedTanggal} ${formattedWaktu} WIB`;
-}
-
-function showKeranjang() {
-  document.getElementById("product-container").style.display = "none";
-  document.getElementById("toko-saya").style.display = "none";
-  document.getElementById("histori").style.display = "none";
-  document.getElementById("keranjang").style.display = "block";
-  document.getElementById("detail-product").style.display = "none";
-}
-
 function showAddProductStoreForm() {
   var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
@@ -424,14 +329,6 @@ function showAddStoreForm() {
   document.body.style.overflow = "hidden";
 }
 
-function closeModal() {
-  var modal = document.getElementById("modal");
-  if (modal) {
-    modal.remove();
-    document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
-  }
-}
-
 function submitStoreForm(event) {
   event.preventDefault(); // Prevent default form submission
 
@@ -458,4 +355,169 @@ function submitStoreForm(event) {
       console.error("Error:", error);
       // Handle network errors or other exceptions
     });
+}
+
+function showHistori() {
+  document.getElementById("product-container").style.display = "none";
+  document.getElementById("toko-saya").style.display = "none";
+  document.getElementById("histori").style.display = "block";
+  document.getElementById("keranjang").style.display = "none";
+  document.getElementById("detail-product").style.display = "none";
+
+  loadHistori();
+}
+
+function loadHistori() {
+  const historiContainer = document.getElementById("histori");
+  while (historiContainer.firstChild) {
+    historiContainer.removeChild(historiContainer.firstChild);
+  }
+  // Fetch data dari PHP
+  fetch("../php/get_histori.php")
+    .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
+    .then((data) => {
+      const historiContainer = document.getElementById("histori");
+      historiContainer.style.display = "block"; // Menampilkan container histori
+
+      data.forEach((histori) => {
+        // Membuat elemen histori-card baru
+        console.log("Histori:", histori);
+        const historiCard = document.createElement("div");
+        historiCard.className = "histori-card";
+        tanggalBeli = formatTanggal(histori.created_at);
+
+        historiCard.innerHTML = `
+                    <div class="tanggal-container">
+                        <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
+                    </div>
+                    <br>
+                    <div style="display: flex; flex-flow: row; width: 100%;">
+                        <div style="width: 300px; height: 250px;">
+                            <img src="${histori.image_url}">
+                        </div>
+                        <div class="details">
+                            <div>
+                                <label class="sub-title">${histori.nama_produk}</label>
+                                <label>Rp${histori.harga_produk}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Toko</label>
+                                <label>${histori.nama_vendor} (${histori.kota})</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Jumlah</label>
+                                <label>${histori.jumlah_beli}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Total</label>
+                                <label>Rp${histori.total}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Metode Pembayaran</label>
+                                <label>${histori.metode_pembayaran}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Dikirim ke </label>
+                                <label>${histori.alamat_pengiriman}</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+        // Menambahkan histori-card ke container histori
+        historiContainer.appendChild(historiCard);
+      });
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+function formatTanggal(tanggal) {
+  const optionsTanggal = { weekday: "long", day: "numeric", month: "long" };
+  const optionsWaktu = { hour: "2-digit", minute: "2-digit" };
+
+  // Mengubah string tanggal menjadi objek Date
+  const date = new Date(tanggal);
+
+  const formattedTanggal = date.toLocaleDateString("id-ID", optionsTanggal);
+  const formattedWaktu = date.toLocaleTimeString("id-ID", optionsWaktu);
+
+  return `${formattedTanggal} ${formattedWaktu} WIB`;
+}
+
+function showKeranjang() {
+  document.getElementById("product-container").style.display = "none";
+  document.getElementById("toko-saya").style.display = "none";
+  document.getElementById("histori").style.display = "none";
+  document.getElementById("keranjang").style.display = "block";
+  document.getElementById("detail-product").style.display = "none";
+
+  loadKeranjang();
+}
+
+function loadKeranjang() {
+  const keranjangContainer = document.getElementById("keranjang");
+  while (keranjangContainer.firstChild) {
+    keranjangContainer.removeChild(keranjangContainer.firstChild);
+  }
+  // Fetch data dari PHP
+  fetch("../php/get_keranjang.php")
+    .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
+    .then((data) => {
+      const keranjangContainer = document.getElementById("keranjang");
+      keranjangContainer.style.display = "block"; // Menampilkan container histori
+
+      data.forEach((keranjang) => {
+        // Membuat elemen histori-card baru
+        console.log("Keranjang:", keranjang);
+        const keranjangCard = document.createElement("div");
+        keranjangCard.className = "keranjang-card";
+        tanggalAddKeranjang = formatTanggal(keranjang.created_at);
+
+        keranjangCard.innerHTML = `
+                    <div class="tanggal-container-krj">
+                        <label style="font-weight: bold; color: #00a69c;">${tanggalAddKeranjang}</label>
+                    </div>
+                    <br>
+                    <div style="display: flex; flex-flow: row; width: 100%;">
+                        <div style="width: 300px; height: 250px;">
+                            <img src="${keranjang.image_url}">
+                        </div>
+                        <div class="details-krj">
+                            <div>
+                                <label class="sub-title-krj">${keranjang.nama_produk}</label>
+                                <label>Rp${keranjang.harga_produk}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title-krj">Toko</label>
+                                <label>${keranjang.nama_vendor} (${keranjang.kota})</label>
+                            </div>
+                            <div>
+                                <label class="sub-title-krj">Jumlah</label>
+                                <label>${keranjang.jumlah}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title-krj">Total</label>
+                                <label>Rp${keranjang.total}</label>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                              <button class="btn-hps-krj">Hapus</button>
+                              <button class="btn-beli-krj">Beli Sekarang</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+        // Menambahkan histori-card ke container histori
+        keranjangContainer.appendChild(keranjangCard);
+      });
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+function closeModal() {
+  var modal = document.getElementById("modal");
+  if (modal) {
+    modal.remove();
+    document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
+  }
 }

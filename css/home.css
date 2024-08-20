@@ -161,7 +161,8 @@ main {
   /* Add margin bottom to create space between rows */
 }
 
-.histori-card {
+.histori-card,
+.keranjang-card {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 20px;
@@ -170,13 +171,15 @@ main {
   margin-bottom: 20px;
 }
 
-.histori-card img {
+.histori-card img,
+.keranjang-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.histori-card .details {
+.histori-card .details,
+.keranjang-card .details-krj {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -184,15 +187,18 @@ main {
   margin-right: 20px;
 }
 
-.details {
+.details,
+.details-krj {
   width: 100%;
 }
 
-.histori-card {
+.histori-card,
+.keranjang-card {
   gap: 10px;
 }
 
-.histori-card .details div {
+.histori-card .details div,
+.keranjang-card .details-krj div {
   display: flex;
   flex-flow: row;
   justify-content: space-between;
@@ -207,8 +213,25 @@ main {
   justify-content: flex-end; /* Menempatkan item di sebelah kanan container */
 }
 
-.sub-title{
+.sub-title,
+.sub-title-krj {
   font-weight: bold;
   color: #475353;
   /* color: #00a69c; */
+}
+
+.btn-hps-krj , .btn-beli-krj{
+  flex: 1;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.btn-hps-krj{
+  background-color: rgb(221, 104, 104);
+}
+
+.btn-beli-krj{
+  background-color: #00A69C
 }
