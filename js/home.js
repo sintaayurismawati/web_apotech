@@ -1,61 +1,126 @@
-document.addEventListener('DOMContentLoaded', function () {
-    showProduct();
+document.addEventListener("DOMContentLoaded", function () {
+  showProduct();
 });
 
 // Function to remove 'active' class from all links and add to the clicked one
 function setActiveLink(link) {
-    const links = document.querySelectorAll('.nav-links a');
-    links.forEach(item => {
-        item.classList.remove('active');
-    });
-    link.classList.add('active');
+  const links = document.querySelectorAll(".nav-links a");
+  links.forEach((item) => {
+    item.classList.remove("active");
+  });
+  link.classList.add("active");
 }
 
 // Add event listeners to all nav-links
-document.querySelectorAll('.nav-links a').forEach(item => {
-    item.addEventListener('click', function () {
-        setActiveLink(this);
-    });
+document.querySelectorAll(".nav-links a").forEach((item) => {
+  item.addEventListener("click", function () {
+    setActiveLink(this);
+  });
 });
 
 function initializeProductDisplay(products) {
-    const productStoreContainer = document.createElement('div');
+  const productStoreContainer = document.createElement("div");
 
-    let currentRow = document.createElement('div');
-    currentRow.className = 'product-row';
-    productStoreContainer.appendChild(currentRow);
+  let currentRow = document.createElement("div");
+  currentRow.className = "product-row";
+  productStoreContainer.appendChild(currentRow);
 
-    products.forEach((product, index) => {
-        const productItem = document.createElement('div');
-        productItem.className = 'product-item';
-        productItem.id = 'product-item';
-        productItem.addEventListener('click', () =>
-            window.location.href = '../html/detail_product.html'
-        );
+  products.forEach((product, index) => {
+    const productItem = document.createElement("div");
+    productItem.className = "product-item";
+    productItem.id = "product-item";
+    productItem.addEventListener(
+      "click",
+      () => (window.location.href = "../html/detail_product.html")
+    );
 
-        const productImage = document.createElement('img');
-        productImage.className = 'product-image';
+    const productImage = document.createElement("img");
+    productImage.className = "product-image";
+    productImage.src = product.image_url;
+    productImage.alt = "product image";
+
+    const productDetails = document.createElement("div");
+    productDetails.className = "product-details";
+
+    const productName = document.createElement("div");
+    productName.className = "product-name";
+    productName.textContent = product.nama_produk;
+
+    const productPrice = document.createElement("div");
+    productPrice.className = "product-price";
+    productPrice.textContent = `Price: ${product.harga_produk}`;
+
+    // const productCity = document.createElement('div');
+    // productCity.className = 'product-city';
+    // productCity.textContent = `City: ${product.city}`;
+
+    productDetails.appendChild(productName);
+    productDetails.appendChild(productPrice);
+    // productDetails.appendChild(productCity);
+
+    productItem.appendChild(productImage);
+    productItem.appendChild(productDetails);
+
+    currentRow.appendChild(productItem);
+
+    // Check if current row has 4 products
+    if ((index + 1) % 4 === 0) {
+      // Create a new row if current row is full
+      currentRow = document.createElement("div");
+      currentRow.className = "product-row";
+      productStoreContainer.appendChild(currentRow);
+    }
+  });
+  return productStoreContainer;
+}
+
+function showAllProducts() {
+  const productContainer = document.getElementById("product-container");
+  while (productContainer.firstChild) {
+    productContainer.removeChild(productContainer.firstChild);
+  }
+  fetch("../php/get_all_product.php")
+    .then((response) => {
+      console.log("Fetch response:", response);
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Data fetched:", data);
+
+      let currentRow = document.createElement("div");
+      currentRow.className = "product-row";
+      productContainer.appendChild(currentRow);
+
+      data.forEach((product, index) => {
+        console.log("Product:", product);
+
+        const productItem = document.createElement("div");
+        productItem.className = "product-item";
+        productItem.id = "product-item";
+        productItem.addEventListener("click", () => {
+          localStorage.setItem("selectedProduct", JSON.stringify(product));
+          console.log("Product saved to localStorage:", product);
+          window.location.href = "../html/detail_produk.html";
+        });
+
+        const productImage = document.createElement("img");
+        productImage.className = "product-image";
         productImage.src = product.image_url;
         productImage.alt = "product image";
 
-        const productDetails = document.createElement('div');
-        productDetails.className = 'product-details';
+        const productDetails = document.createElement("div");
+        productDetails.className = "product-details";
 
-        const productName = document.createElement('div');
-        productName.className = 'product-name';
+        const productName = document.createElement("div");
+        productName.className = "product-name";
         productName.textContent = product.nama_produk;
 
-        const productPrice = document.createElement('div');
-        productPrice.className = 'product-price';
-        productPrice.textContent = `Price: ${product.harga_produk}`;
-
-        // const productCity = document.createElement('div');
-        // productCity.className = 'product-city';
-        // productCity.textContent = `City: ${product.city}`;
+        const productPrice = document.createElement("div");
+        productPrice.className = "product-price";
+        productPrice.textContent = `Rp ${product.harga_produk}`;
 
         productDetails.appendChild(productName);
         productDetails.appendChild(productPrice);
-        // productDetails.appendChild(productCity);
 
         productItem.appendChild(productImage);
         productItem.appendChild(productDetails);
@@ -64,118 +129,53 @@ function initializeProductDisplay(products) {
 
         // Check if current row has 4 products
         if ((index + 1) % 4 === 0) {
-            // Create a new row if current row is full
-            currentRow = document.createElement('div');
-            currentRow.className = 'product-row';
-            productStoreContainer.appendChild(currentRow);
+          // Create a new row if current row is full
+          currentRow = document.createElement("div");
+          currentRow.className = "product-row";
+          productContainer.appendChild(currentRow);
         }
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching products:", error);
     });
-    return productStoreContainer;
 }
-
-function showAllProducts() {
-    const productContainer = document.getElementById('product-container');
-    while (productContainer.firstChild) {
-        productContainer.removeChild(productContainer.firstChild);
-    }
-    fetch('../php/get_all_product.php')
-        .then(response => {
-            console.log('Fetch response:', response);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data fetched:', data);
-
-            let currentRow = document.createElement('div');
-            currentRow.className = 'product-row';
-            productContainer.appendChild(currentRow);
-
-            data.forEach((product, index) => {
-                console.log('Product:', product);
-
-                const productItem = document.createElement('div');
-                productItem.className = 'product-item';
-                productItem.id = 'product-item';
-                productItem.addEventListener('click', () => {
-                    localStorage.setItem('selectedProduct', JSON.stringify(product));
-                    console.log('Product saved to localStorage:', product);
-                    window.location.href = '../html/detail_produk.html';
-                });
-
-                const productImage = document.createElement('img');
-                productImage.className = 'product-image';
-                productImage.src = product.image_url;
-                productImage.alt = "product image";
-
-                const productDetails = document.createElement('div');
-                productDetails.className = 'product-details';
-
-                const productName = document.createElement('div');
-                productName.className = 'product-name';
-                productName.textContent = product.nama_produk;
-
-                const productPrice = document.createElement('div');
-                productPrice.className = 'product-price';
-                productPrice.textContent = `Rp ${product.harga_produk}`;
-
-                productDetails.appendChild(productName);
-                productDetails.appendChild(productPrice);
-
-                productItem.appendChild(productImage);
-                productItem.appendChild(productDetails);
-
-                currentRow.appendChild(productItem);
-
-                // Check if current row has 4 products
-                if ((index + 1) % 4 === 0) {
-                    // Create a new row if current row is full
-                    currentRow = document.createElement('div');
-                    currentRow.className = 'product-row';
-                    productContainer.appendChild(currentRow);
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching products:', error);
-        });
-}
-
 
 function showProduct() {
-    document.getElementById("product-container").style.display = "block";
-    document.getElementById("toko-saya").style.display = "none";
-    document.getElementById("histori").style.display = "none";
-    document.getElementById("keranjang").style.display = "none";
-    document.getElementById("detail-product").style.display = "none";
+  document.getElementById("product-container").style.display = "block";
+  document.getElementById("toko-saya").style.display = "none";
+  document.getElementById("histori").style.display = "none";
+  document.getElementById("keranjang").style.display = "none";
+  document.getElementById("detail-product").style.display = "none";
 
-    showAllProducts()
+  showAllProducts();
 }
 
 function showTokoSaya() {
-    document.getElementById("product-container").style.display = "none";
-    document.getElementById("toko-saya").style.display = "block";
-    document.getElementById("histori").style.display = "none";
-    document.getElementById("keranjang").style.display = "none";
-    document.getElementById("detail-product").style.display = "none";
+  document.getElementById("product-container").style.display = "none";
+  document.getElementById("toko-saya").style.display = "block";
+  document.getElementById("histori").style.display = "none";
+  document.getElementById("keranjang").style.display = "none";
+  document.getElementById("detail-product").style.display = "none";
 
-    fetch('../php/get_toko_saya.php')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            var tokoSayaDiv = document.getElementById('toko-saya');
+  fetch("../php/get_toko_saya.php")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      var tokoSayaDiv = document.getElementById("toko-saya");
 
-            if (data.error) {
-                // Handle error case
-                tokoSayaDiv.innerHTML = `
+      if (data.error) {
+        // Handle error case
+        tokoSayaDiv.innerHTML = `
                     <div class="img-data-empty" style="display:flex; flex-flow:column; justify-content:center; height:100%; width:100%;  align-items:center;">
                         <img src="images/no_data_found.jpeg" alt="No Data Found" >
                         <p>${data.error}</p>
                         <button onclick="showAddStoreForm()" class="button-buka-toko" style="width:10%; padding: 10px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Buka Toko</button>
                     </div>
                 `;
-            } else {
-                if (data.status == 0) {
-                    tokoSayaDiv.innerHTML = `
+      } else {
+        if (data.status == 0) {
+          tokoSayaDiv.innerHTML = `
                         <div class="profil-store" style="display:flex; flex-flow: row; justify-content:center; gap:130px; align-items:center;">
                             <div style="display:flex; flex-flow:column; text-align: center;">
                                 <div class="circle-container" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;">
@@ -185,68 +185,143 @@ function showTokoSaya() {
                             </div>
                             <div class="store-summary" style="display:flex; flex-flow: row; justify-content: space-between; gap:100px;">
                                 <div class="jumlah-produk" style="text-align: center;">
-                                    <h3 style="color:#475353;">Jumlah Produk</h3>
+                                    <h3 style="color:#475353;">Produk</h3>
                                     <h1 style="color:#00A69C;">20</h1>
                                 </div>
                                 <div class="jumlah-produk" style="text-align: center;">
-                                    <h3 style="color:#475353;">Produk Terjual</h3>
+                                    <h3 style="color:#475353;">Terjual</h3>
                                     <h1 style="color:#00A69C;">20</h1>
                                 </div>
                                 <div class="jumlah-produk" style="text-align: center;">
-                                    <h3 style="color:#475353;">Jumlah Kunjungan</h3>
+                                    <h3 style="color:#475353;">Kunjungan</h3>
                                     <h1 style="color:#00A69C;">20</h1>
                                 </div>
                                 <div class="jumlah-produk" style="text-align: center;">
                                     <h3 style="color:#475353;">Keranjang</h3>
                                     <h1 style="color:#00A69C;">100</h1>
-                                </div>
-                                <div class="jumlah-produk" style="text-align: center;">
-                                    <h3 style="color:#475353;">Rating</h3>
-                                    <h1 style="color:#00A69C;">4.5</h1>
-                                </div>
+                                </div>                                
                             </div>
                         </div>
                         <hr>
                     `;
-                    showPrdouctStore(); // Panggil fungsi untuk menampilkan produk
-                } else {
-                    // Handle successful data retrieval
-                    tokoSayaDiv.innerHTML = `
+          showPrdouctStore(); // Panggil fungsi untuk menampilkan produk
+        } else {
+          // Handle successful data retrieval
+          tokoSayaDiv.innerHTML = `
                         <p>Nama Toko: ${data.nama_vendor}</p>
                     `;
-                }
-            }
+        }
+      }
 
-            var btnTambahToko = document.querySelector('.button-buka-toko');
-            btnTambahToko.addEventListener('mouseover', function () {
-                this.style.backgroundColor = '#aaafab'; // Warna latar belakang saat hover
-            });
+      var btnTambahToko = document.querySelector(".button-buka-toko");
+      btnTambahToko.addEventListener("mouseover", function () {
+        this.style.backgroundColor = "#aaafab"; // Warna latar belakang saat hover
+      });
 
-            btnTambahToko.addEventListener('mouseout', function () {
-                this.style.backgroundColor = '#00A69C'; // Kembali ke warna latar belakang asli setelah hover
-            });
-        })
-        .catch(error => console.error('Error fetching user info:', error));
+      btnTambahToko.addEventListener("mouseout", function () {
+        this.style.backgroundColor = "#00A69C"; // Kembali ke warna latar belakang asli setelah hover
+      });
+    })
+    .catch((error) => console.error("Error fetching user info:", error));
 }
 
 function showHistori() {
-    document.getElementById("product-container").style.display = "none";
-    document.getElementById("toko-saya").style.display = "none";
-    document.getElementById("histori").style.display = "block";
-    document.getElementById("keranjang").style.display = "none";
-    document.getElementById("detail-product").style.display = "none";
+  document.getElementById("product-container").style.display = "none";
+  document.getElementById("toko-saya").style.display = "none";
+  document.getElementById("histori").style.display = "block";
+  document.getElementById("keranjang").style.display = "none";
+  document.getElementById("detail-product").style.display = "none";
+
+  loadHistori();
+}
+
+function loadHistori() {
+    const historiContainer = document.getElementById("histori");
+    while (historiContainer.firstChild) {
+      historiContainer.removeChild(historiContainer.firstChild);
+    }
+  // Fetch data dari PHP
+  fetch("../php/get_histori.php")
+    .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
+    .then((data) => {
+      const historiContainer = document.getElementById("histori");
+      historiContainer.style.display = "block"; // Menampilkan container histori
+
+      data.forEach((histori) => {
+        // Membuat elemen histori-card baru
+        console.log("Histori:", histori);
+        const historiCard = document.createElement("div");
+        historiCard.className = "histori-card";
+        tanggalBeli = formatTanggal(histori.created_at);
+
+        historiCard.innerHTML = `
+                    <div class="tanggal-container">
+                        <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
+                    </div>
+                    <br>
+                    <div style="display: flex; flex-flow: row; width: 100%;">
+                        <div style="width: 300px; height: 250px;">
+                            <img src="${histori.image_url}">
+                        </div>
+                        <div class="details">
+                            <div>
+                                <label class="sub-title">${histori.nama_produk}</label>
+                                <label>Rp${histori.harga_produk}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Toko</label>
+                                <label>${histori.nama_vendor} (${histori.kota})</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Jumlah</label>
+                                <label>${histori.jumlah_beli}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Total</label>
+                                <label>Rp${histori.total}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Metode Pembayaran</label>
+                                <label>${histori.metode_pembayaran}</label>
+                            </div>
+                            <div>
+                                <label class="sub-title">Dikirim ke </label>
+                                <label>${histori.alamat_pengiriman}</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+        // Menambahkan histori-card ke container histori
+        historiContainer.appendChild(historiCard);
+      });
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+function formatTanggal(tanggal) {
+  const optionsTanggal = { weekday: "long", day: "numeric", month: "long" };
+  const optionsWaktu = { hour: "2-digit", minute: "2-digit" };
+
+  // Mengubah string tanggal menjadi objek Date
+  const date = new Date(tanggal);
+
+  const formattedTanggal = date.toLocaleDateString("id-ID", optionsTanggal);
+  const formattedWaktu = date.toLocaleTimeString("id-ID", optionsWaktu);
+
+  return `${formattedTanggal} ${formattedWaktu} WIB`;
 }
 
 function showKeranjang() {
-    document.getElementById("product-container").style.display = "none";
-    document.getElementById("toko-saya").style.display = "none";
-    document.getElementById("histori").style.display = "none";
-    document.getElementById("keranjang").style.display = "block";
-    document.getElementById("detail-product").style.display = "none";
+  document.getElementById("product-container").style.display = "none";
+  document.getElementById("toko-saya").style.display = "none";
+  document.getElementById("histori").style.display = "none";
+  document.getElementById("keranjang").style.display = "block";
+  document.getElementById("detail-product").style.display = "none";
 }
 
 function showAddProductStoreForm() {
-    var modalHTML = `
+  var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
                 <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
@@ -276,32 +351,32 @@ function showAddProductStoreForm() {
             </div>
         </div>
     `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
 // Function to show product store
 function showPrdouctStore() {
-    fetch('../php/get_product_store.php')
-        .then(response => response.json())
-        .then(data => {
-            var tokoSayaDiv = document.getElementById('toko-saya');
+  fetch("../php/get_product_store.php")
+    .then((response) => response.json())
+    .then((data) => {
+      var tokoSayaDiv = document.getElementById("toko-saya");
 
-            if (data.error) {
-                console.error(data.error);
-            } else {
-                // Jika tidak ada produk
-                if (data.length === 0) {
-                    const noProductDiv = document.createElement('div');
-                    noProductDiv.innerHTML = `
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        // Jika tidak ada produk
+        if (data.length === 0) {
+          const noProductDiv = document.createElement("div");
+          noProductDiv.innerHTML = `
                     <div style="display:flex; flex-flow:column; justify-content: center; margin-top:70px; width:100%; height:100%; align-items:center;">
                         <img src="images/empty.png" alt="Deskripsi Gambar" style="width: 250px; height: 250px">
                         <p>Belum ada produk</p>
                         <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style="width:15%; padding: 10px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
                     </div>`;
-                    tokoSayaDiv.appendChild(noProductDiv);
-                } else {
-                    const productStoreDiv = document.createElement('div');
-                    productStoreDiv.innerHTML = `
+          tokoSayaDiv.appendChild(noProductDiv);
+        } else {
+          const productStoreDiv = document.createElement("div");
+          productStoreDiv.innerHTML = `
                     <div style="display:flex; flex-flow:column;">
                         <div style="display:flex; justify-content:space-between; align-items: center;">
                         <h2>Produk</h2>
@@ -309,20 +384,20 @@ function showPrdouctStore() {
                         </div>
                     </div>
                     `;
-                    tokoSayaDiv.appendChild(productStoreDiv);
-                    // soon
+          tokoSayaDiv.appendChild(productStoreDiv);
+          // soon
 
-                    // Tampilkan produk
-                    tokoSayaDiv.appendChild(initializeProductDisplay(data));
-                }
-            }
-        })
-        .catch(error => console.error('Error fetching products:', error));
+          // Tampilkan produk
+          tokoSayaDiv.appendChild(initializeProductDisplay(data));
+        }
+      }
+    })
+    .catch((error) => console.error("Error fetching products:", error));
 }
 
 function showAddStoreForm() {
-    // Menampilkan popup modal
-    var modalHTML = `
+  // Menampilkan popup modal
+  var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative;">
                 <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
@@ -346,45 +421,45 @@ function showAddStoreForm() {
         </div>
     `;
 
-    // Memasukkan modal ke dalam halaman
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
 
-    // Mencegah scroll background saat modal ditampilkan
-    document.body.style.overflow = 'hidden';
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
 }
 
 function closeModal() {
-    var modal = document.getElementById('modal');
-    if (modal) {
-        modal.remove();
-        document.body.style.overflow = ''; // Mengembalikan scroll saat modal ditutup
-    }
+  var modal = document.getElementById("modal");
+  if (modal) {
+    modal.remove();
+    document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
+  }
 }
 
 function submitStoreForm(event) {
-    event.preventDefault(); // Prevent default form submission
+  event.preventDefault(); // Prevent default form submission
 
-    // Collect form data
-    const formData = new FormData(document.getElementById('addStoreForm'));
+  // Collect form data
+  const formData = new FormData(document.getElementById("addStoreForm"));
 
-    fetch('../php/tambah_toko.php', {
-        method: 'POST',
-        body: formData
+  fetch("../php/tambah_toko.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        // Handle success case
+        closeModal(); // Close modal after successful submission
+        // Optionally, you can redirect or refresh the page here
+      } else {
+        // Handle error case
+        console.error("Error adding store:", data.error);
+        // Optionally, display an error message to the user
+      }
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Handle success case
-                closeModal(); // Close modal after successful submission
-                // Optionally, you can redirect or refresh the page here
-            } else {
-                // Handle error case
-                console.error('Error adding store:', data.error);
-                // Optionally, display an error message to the user
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Handle network errors or other exceptions
-        });
+    .catch((error) => {
+      console.error("Error:", error);
+      // Handle network errors or other exceptions
+    });
 }
