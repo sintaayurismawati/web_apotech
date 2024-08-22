@@ -11,10 +11,7 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 
     // $stmt = $conn->prepare("SELECT * FROM detail_produk WHERE user_id=? ORDER BY created_at DESC");
-    $stmt = $conn->prepare("SELECT k.jumlah,
-                                   k.total,
-                                   k.created_at,
-                                   k.produk_id,
+    $stmt = $conn->prepare("SELECT k.*,
                                    p.nama_produk, 
                                    p.harga_produk, 
                                    p.image_url,

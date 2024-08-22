@@ -518,6 +518,12 @@ function loadKeranjang() {
                     </div>
                 `;
 
+        const produkIdInput = document.createElement("input");
+        produkIdInput.type = "hidden";
+        produkIdInput.name = "produk_id";
+        produkIdInput.value = keranjang.produk_id;
+        document.getElementById("addDetailBelanja").appendChild(produkIdInput);
+
         keranjangCard
           .querySelector(".btn-beli-krj")
           .addEventListener("click", function () {
@@ -532,15 +538,28 @@ function loadKeranjang() {
             // Panggil fungsi showAddDetailBelanja dan showAlamat
             showAddDetailBelanja();
             showAlamat();
-
-            const produkIdInput = document.createElement("input");
-            produkIdInput.type = "hidden";
-            produkIdInput.name = "produk_id";
-            produkIdInput.value = keranjang.produk_id;
-            document
-              .getElementById("addDetailBelanja")
-              .appendChild(produkIdInput);
           });
+
+        const btnHapusKrj = keranjangCard.querySelector(".btn-hps-krj");
+        btnHapusKrj.addEventListener("click", function () {
+          // const keranjangId = keranjang.id;
+          const keranjangId = parseInt(keranjang.id, 10);
+
+          fetch("../php/delete_keranjang.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: keranjangId }),
+          })
+            .then((response) => response.text())
+            .then((result) => {
+              console.log(result); // Tampilkan hasil dari delete_keranjang.php
+              // Hapus keranjangCard dari tampilan jika perlu
+              keranjangCard.remove();
+            })
+            .catch((error) => console.error("Error deleting:", error));
+        });
 
         // Menambahkan histori-card ke container histori
         keranjangContainer.appendChild(keranjangCard);
