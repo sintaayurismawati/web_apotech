@@ -29,7 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
     produkIdInput.name = "produk_id";
     produkIdInput.value = selectedProduct.id;
     document.getElementById("addDetailBelanja").appendChild(produkIdInput);
-    document.getElementById("addKeranjang").appendChild(produkIdInput);
+
+    const produkIdInput2 = document.createElement("input");
+    produkIdInput2.type = "hidden";
+    produkIdInput2.name = "produk_id";
+    produkIdInput2.value = selectedProduct.id;
+    document.getElementById("addKeranjang").appendChild(produkIdInput2);
 
     document.getElementById("jumlah_beli").addEventListener("input", () => {
       const jumlahBeli =
