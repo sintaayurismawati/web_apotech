@@ -219,7 +219,7 @@ function submitDetailBelanja() {
 }
 
 function submitKeranjang() {
-  const formData = new FormData(document.getElementById("addKeranjang"));
+  const formData = new FormData(document.getElementById("addDetailBelanja"));
 
   fetch("../php/tambah_keranjang.php", {
     method: "POST",
@@ -235,10 +235,12 @@ function submitKeranjang() {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
         closeModal("modal-beli"); // Tutup modal jika berhasil
-        alert("Produk telah masuk keranjang!"); // Tampilkan pesan sukses
-        window.location.href = "../html/home.html"; // Redirect ke halaman utama
+        showModalSuccess("Produk telah masuk keranjang!");
+        // alert("Produk telah masuk keranjang!"); // Tampilkan pesan sukses
+        // window.location.href = "../html/home.html"; // Redirect ke halaman utama
       } else {
-        alert("Gagal melakukan pembelian, silakan coba lagi.");
+        showModalFail("Silahkan coba lagi!");
+        // alert("Gagal melakukan pembelian, silakan coba lagi.");
       }
     })
     .catch((error) => {
@@ -328,7 +330,7 @@ fetch("../php/get_metode_pembayaran.php")
     alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
   });
 
-  // function closeModalBeli() {
+// function closeModalBeli() {
 //   document.getElementById("modal-beli").style.display = "none";
 //   document.body.style.overflow = "";
 // }
@@ -345,7 +347,6 @@ fetch("../php/get_metode_pembayaran.php")
 //     document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
 //   }
 // }
-
 
 // function submitDetailBelanja(event) {
 //   event.preventDefault(); // Prevent default form submission
