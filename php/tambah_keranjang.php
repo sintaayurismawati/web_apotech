@@ -11,11 +11,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_SESSION['user_id'])) { // Periksa apakah user_id ada di sesi
         $user_id = $_SESSION['user_id'];
         $produk_id = (int) $_POST['produk_id'];
-        $jumlah = (int) $_POST['jumlah_keranjang'];
-        $total = (int) $_POST['total2'];
 
-        $stmt = $conn->prepare("INSERT INTO keranjang (user_id, produk_id, jumlah, total) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("iiii", $user_id, $produk_id, $jumlah, $total);
+        $stmt = $conn->prepare("INSERT INTO keranjang (user_id, produk_id) VALUES (?, ?)");
+        $stmt->bind_param("ii", $user_id, $produk_id);
         if ($stmt->execute()) {
             echo "Insert successful";
             // header("Location: ../html/home.html?addKeranjang=success");

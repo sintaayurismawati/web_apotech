@@ -53,22 +53,24 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("total_hidden").value = total;
     });
 
-    document.getElementById("jumlah_keranjang").addEventListener("input", () => {
-      const jumlahKeranjang =
-        parseInt(document.getElementById("jumlah_keranjang").value, 10) || 0;
-      const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
-      const total2 = jumlahKeranjang * hargaProduk;
+    document
+      .getElementById("jumlah_keranjang")
+      .addEventListener("input", () => {
+        const jumlahKeranjang =
+          parseInt(document.getElementById("jumlah_keranjang").value, 10) || 0;
+        const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
+        const total2 = jumlahKeranjang * hargaProduk;
 
-      // Logging values to console for debugging
-      console.log("Jumlah Keranjang:", jumlahKeranjang);
-      console.log("Harga Produk:", hargaProduk);
-      console.log("Total:", total2);
+        // Logging values to console for debugging
+        console.log("Jumlah Keranjang:", jumlahKeranjang);
+        console.log("Harga Produk:", hargaProduk);
+        console.log("Total:", total2);
 
-      document.getElementById(
-        "total2"
-      ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
-      document.getElementById("total_hidden2").value = total2;
-    });
+        document.getElementById(
+          "total2"
+        ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
+        document.getElementById("total_hidden2").value = total2;
+      });
   } else {
     alert("No product selected");
   }
@@ -111,7 +113,7 @@ function cekJumlahBeli(event) {
   var jumlah_beli = parseInt(document.getElementById("jumlah_beli").value, 10);
 
   if (jumlah_beli > jumlah_stok) {
-    closeModal();
+    // closeModal();
     var modalHTML = `
                     <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
@@ -136,58 +138,52 @@ function cekJumlahBeli(event) {
   }
 }
 
-function cekJumlahKeranjang(event) {
-  event.preventDefault(); // Mencegah pengiriman formulir secara default
+// function cekJumlahKeranjang(event) {
+//   event.preventDefault(); // Mencegah pengiriman formulir secara default
 
-  var jumlah_stok = parseInt(
-    document
-      .getElementById("jumlah_stok")
-      .textContent.replace("Tersisa : ", ""),
-    10
-  );
-  var jumlah_keranjang = parseInt(document.getElementById("jumlah_keranjang").value, 10);
+//   var jumlah_stok = parseInt(
+//     document
+//       .getElementById("jumlah_stok")
+//       .textContent.replace("Tersisa : ", ""),
+//     10
+//   );
+//   var jumlah_keranjang = parseInt(
+//     document.getElementById("jumlah_keranjang").value,
+//     10
+//   );
 
-  if (jumlah_keranjang > jumlah_stok) {
-    closeModal();
-    var modalHTML = `
-                    <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
-                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
-                            <span class="close" onclick="closeModal('modal-error')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
-                            <h2 style="text-align: center;">Maaf</h2>
-                            <p>Jumlah beli melebihi jumlah ketersediaan produk</p>
-                        </div>
-                    </div>
-                `;
+//   if (jumlah_keranjang > jumlah_stok) {
+//     // closeModal();
+//     var modalHTML = `
+//                     <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+//                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
+//                             <span class="close" onclick="closeModal('modal-error')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+//                             <h2 style="text-align: center;">Maaf</h2>
+//                             <p>Jumlah beli melebihi jumlah ketersediaan produk</p>
+//                         </div>
+//                     </div>
+//                 `;
 
-    // Memasukkan modal ke dalam halaman
-    document.body.insertAdjacentHTML("beforeend", modalHTML);
+//     // Memasukkan modal ke dalam halaman
+//     document.body.insertAdjacentHTML("beforeend", modalHTML);
 
-    // Mencegah scroll background saat modal ditampilkan
-    document.body.style.overflow = "hidden";
+//     // Mencegah scroll background saat modal ditampilkan
+//     document.body.style.overflow = "hidden";
 
-    return false; // Mencegah pengiriman formulir
-  } else {
-    submitKeranjang();
-    // Jika jumlah_beli valid, kembalikan true untuk melanjutkan pengiriman formulir
-    return true;
-  }
-}
+//     return false; // Mencegah pengiriman formulir
+//   } else {
+//     submitKeranjang();
+//     // Jika jumlah_beli valid, kembalikan true untuk melanjutkan pengiriman formulir
+//     return true;
+//   }
+// }
 
-function closeModalBeli() {
-  document.getElementById("modal-beli").style.display = "none";
+function closeModal(modal_id) {
+  document.getElementById(modal_id).style.display = "none";
   document.body.style.overflow = "";
-}
 
-function closeModalKeranjang() {
-  document.getElementById("modal-keranjang").style.display = "none";
-  document.body.style.overflow = "";
-}
-
-function closeModal(modalId = "modal") {
-  var modal = document.getElementById(modalId);
-  if (modal) {
-    modal.remove();
-    document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
+  if (modal_id === "modal-success") {
+    window.location.href = "../html/home.html";
   }
 }
 
@@ -207,11 +203,13 @@ function submitDetailBelanja() {
     .then((data) => {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
-        closeModalBeli(); // Tutup modal jika berhasil
-        alert("Pembelian berhasil!"); // Tampilkan pesan sukses
-        window.location.href = "../html/home.html"; // Redirect ke halaman utama
+        closeModal("modal-beli"); // Tutup modal jika berhasil
+        // alert("Pembelian berhasil!");
+        showModalSuccess("Pembelian berhasil!");
+        // window.location.href = "../html/home.html"; // Redirect ke halaman utama
       } else {
-        alert("Gagal melakukan pembelian, silakan coba lagi.");
+        showModalFail("Silahkan coba lagi!");
+        // alert("Gagal melakukan pembelian, silakan coba lagi.");
       }
     })
     .catch((error) => {
@@ -236,7 +234,7 @@ function submitKeranjang() {
     .then((data) => {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
-        closeModalBeli(); // Tutup modal jika berhasil
+        closeModal("modal-beli"); // Tutup modal jika berhasil
         alert("Produk telah masuk keranjang!"); // Tampilkan pesan sukses
         window.location.href = "../html/home.html"; // Redirect ke halaman utama
       } else {
@@ -253,33 +251,44 @@ function showAddKeranjang() {
   document.getElementById("modal-keranjang").style.display = "flex";
   document.body.style.overflow = "hidden";
 }
-// function submitDetailBelanja(event) {
-//   event.preventDefault(); // Prevent default form submission
 
-//   // Collect form data
-//   const formData = new FormData(document.getElementById("addDetailBelanja"));
+function showModalSuccess(keterangan) {
+  var modalHTML = `
+                    <div id="modal-success" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                        <img src="../images/success-icon.png" alt="Success Image" style="max-width: 100px; margin-bottom: 10px;">    
+                        <h2>Sukses</h2>
+                            <p>${keterangan}</p>
+                             <button onclick="closeModal('modal-success')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                        </div>
+                    </div>
+                `;
 
-//   fetch("../php/tambah_detail_belanja.php", {
-//     method: "POST",
-//     body: formData,
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       if (data.success) {
-//         // Handle success case
-//         closeModal(); // Close modal after successful submission
-//         // Optionally, you can redirect or refresh the page here
-//       } else {
-//         // Handle error case
-//         console.error("Error adding store:", data.error);
-//         // Optionally, display an error message to the user
-//       }
-//     })
-//     .catch((error) => {
-//       console.error("Error:", error);
-//       // Handle network errors or other exceptions
-//     });
-// }
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function showModalFail(keterangan) {
+  var modalHTML = `
+                    <div id="modal-fail" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                          <img src="../images/fail-icon.png" alt="Fail Image" style="max-width: 100px; margin-bottom: 10px;">    
+                          <h2>Gagal</h2>
+                          <p>${keterangan}</p>
+                          <button onclick="closeModal('modal-fail')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
 
 fetch("../php/get_metode_pembayaran.php")
   .then((response) => {
@@ -318,3 +327,50 @@ fetch("../php/get_metode_pembayaran.php")
     console.error("Error:", error);
     alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
   });
+
+  // function closeModalBeli() {
+//   document.getElementById("modal-beli").style.display = "none";
+//   document.body.style.overflow = "";
+// }
+
+// function closeModalKeranjang() {
+//   document.getElementById("modal-keranjang").style.display = "none";
+//   document.body.style.overflow = "";
+// }
+
+// function closeModal(modalId = "modal") {
+//   var modal = document.getElementById(modalId);
+//   if (modal) {
+//     modal.remove();
+//     document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
+//   }
+// }
+
+
+// function submitDetailBelanja(event) {
+//   event.preventDefault(); // Prevent default form submission
+
+//   // Collect form data
+//   const formData = new FormData(document.getElementById("addDetailBelanja"));
+
+//   fetch("../php/tambah_detail_belanja.php", {
+//     method: "POST",
+//     body: formData,
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       if (data.success) {
+//         // Handle success case
+//         closeModal(); // Close modal after successful submission
+//         // Optionally, you can redirect or refresh the page here
+//       } else {
+//         // Handle error case
+//         console.error("Error adding store:", data.error);
+//         // Optionally, display an error message to the user
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error:", error);
+//       // Handle network errors or other exceptions
+//     });
+// }
