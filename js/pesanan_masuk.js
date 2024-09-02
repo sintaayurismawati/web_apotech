@@ -49,16 +49,15 @@ function loadPesanan() {
                                 <label>${pesanan_masuk.alamat_pengiriman}</label>
                             </div>
                             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button class="btn-hps-krj">Batalkan Pesanan</button>
-                        <button class="btn-beli-krj">Konfirmasi Telah Dikirim</button>
+                        <button class="btn-hps-psn">Batalkan Pesanan</button>
+                        <button class="btn-konfirm-pengiriman">Konfirmasi Telah Dikirim</button>
                     </div>
                         </div>
                     </div>
                 `;
 
-        const btnHapusKrj = pesananCard.querySelector(".btn-hps-krj");
-        btnHapusKrj.addEventListener("click", function () {
-          // const keranjangId = keranjang.id;
+        const btnHapusPsn = pesananCard.querySelector(".btn-hps-psn");
+        btnHapusPsn.addEventListener("click", function () {
           const pesananId = parseInt(pesanan_masuk.id, 10);
 
           fetch("../php/delete_pesanan_vendor.php", {
@@ -68,13 +67,46 @@ function loadPesanan() {
             },
             body: JSON.stringify({ id: pesananId }),
           })
-            .then((response) => response.text())
+            .then((response) => response.json()) // Ubah ini menjadi .json() untuk parse JSON
             .then((result) => {
-              console.log(result); // Tampilkan hasil dari delete_keranjang.php
-              // Hapus keranjangCard dari tampilan jika perlu
-              pesananCard.remove();
+              if (result.status === "success") {
+                console.log(result.message);
+                pesananCard.remove(); // Hapus kartu pesanan dari tampilan
+                showModalSuccess("Pesanan telah dibatalkan."); // Tampilkan modal sukses
+              } else {
+                console.log(result.message);
+                showModalFail("Silahkan coba lagi!"); // Tampilkan modal gagal
+              }
             })
             .catch((error) => console.error("Error deleting:", error));
+        });
+
+        const btnKonfirmPengiriman = pesananCard.querySelector(
+          ".btn-konfirm-pengiriman"
+        );
+        btnKonfirmPengiriman.addEventListener("click", function () {
+          // const keranjangId = keranjang.id;
+          const pesananId = parseInt(pesanan_masuk.id, 10);
+
+          fetch("../php/konfirmasi_pengiriman.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: pesananId }),
+          })
+            .then((response) => response.json()) // Ubah ini menjadi .json() untuk parse JSON
+            .then((result) => {
+              if (result.status === "success") {
+                console.log(result.message);
+                pesananCard.remove(); // Hapus kartu pesanan dari tampilan
+                showModalSuccess("Pengiriman telah dikonfirmasi."); // Tampilkan modal sukses
+              } else {
+                console.log(result.message);
+                showModalFail("Silahkan coba lagi!"); // Tampilkan modal gagal
+              }
+            })
+            .catch((error) => console.error("Error :", error));
         });
 
         // Menambahkan histori-card ke container histori
@@ -95,4 +127,50 @@ function formatTanggal(tanggal) {
   const formattedWaktu = date.toLocaleTimeString("id-ID", optionsWaktu);
 
   return `${formattedTanggal} ${formattedWaktu} WIB`;
+}
+
+function closeModal(modal_id) {
+  const modal = document.getElementById(modal_id);
+  if (modal) {
+    modal.remove(); // Menghapus modal dari DOM setelah ditutup
+  }
+  document.body.style.overflow = "";
+}
+
+function showModalSuccess(keterangan) {
+  var modalHTML = `
+                    <div id="modal-success" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                        <img src="../images/success-icon.png" alt="Success Image" style="max-width: 100px; margin-bottom: 10px;">    
+                        <h2>Sukses</h2>
+                            <p>${keterangan}</p>
+                             <button onclick="closeModal('modal-success')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function showModalFail(keterangan) {
+  var modalHTML = `
+                    <div id="modal-fail" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                          <img src="../images/fail-icon.png" alt="Fail Image" style="max-width: 100px; margin-bottom: 10px;">    
+                          <h2>Gagal</h2>
+                          <p>${keterangan}</p>
+                          <button onclick="closeModal('modal-fail')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
 }

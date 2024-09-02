@@ -91,8 +91,8 @@ main {
   /* color: #00a69c; */
 }
 
-.btn-hps-krj,
-.btn-beli-krj {
+.btn-hps-psn,
+.btn-konfirm-pengiriman {
   flex: 1;
   color: white;
   border: none;
@@ -100,10 +100,10 @@ main {
   cursor: pointer;
 }
 
-.btn-hps-krj {
+.btn-hps-psn {
   background-color: rgb(221, 104, 104);
 }
 
-.btn-beli-krj {
+.btn-konfirm-pengiriman {
   background-color: #00a69c;
 }

@@ -16,11 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare("UPDATE detail_belanja SET status='Dibatalkan Vendor' WHERE id=?");
         $stmt->bind_param("i", $pesanan_id);
         if ($stmt->execute()) {
-            echo "Update successful";
-            // header("Location: ../html/home.html?addKeranjang=success");
+            echo json_encode(["status" => "success", "message" => "Update successful"]);
         } else {
-            echo "Update error: " . $stmt->error;
-            // header("Location: ../html/home.html?addKeranjang=error");
+            echo json_encode(["status" => "error", "message" => "Update error: " . $stmt->error]);
         }
 
         $stmt->close();

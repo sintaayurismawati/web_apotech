@@ -264,8 +264,9 @@ function showPrdouctStore() {
                         <div style="display:flex; justify-content:space-between; align-items: center;">
                         <h2>Produk</h2>
                         <div style="display:flex; flex-flow:row; gap:10px;">
-                          <button onclick="window.location.href = '../html/pesanan_masuk.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Pesanan Masuk</button>
                           <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
+                          <button onclick="window.location.href = '../html/pesanan_masuk.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Pesanan Masuk</button>
+                          <button onclick="window.location.href = '../html/pesanan_masuk.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Riwayat Penjualan</button>
                         </div>
                         </div>
                     </div>
@@ -287,7 +288,7 @@ function showAddProductStoreForm() {
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
                 <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Produk</h2>
-                <form id="addStoreForm" action="..php/tambah_produk_toko.php" method="post">
+                <form id="addStoreForm" action="../php/tambah_produk_toko.php" method="post">
                     <div style="display:flex; flex-flow:column;">
                         <label for="nama_produk" style="margin-top: 10px;">Nama Produk:</label>
                         <input type="text" id="nama_produk" name="nama_produk" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
