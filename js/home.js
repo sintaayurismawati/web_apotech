@@ -184,7 +184,7 @@ function showTokoSaya() {
         // Handle error case
         tokoSayaDiv.innerHTML = `
                     <div class="img-data-empty" style="display:flex; flex-flow:column; justify-content:center; height:100%; width:100%;  align-items:center;">
-                        <img src="images/no_data_found.jpeg" alt="No Data Found" >
+                        <img src="../images/no_data_found.jpeg" alt="No Data Found" >
                         <p>${data.error}</p>
                         <button onclick="showAddStoreForm()" class="button-buka-toko" style="width:10%; padding: 10px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Buka Toko</button>
                     </div>
@@ -237,6 +237,50 @@ function showTokoSaya() {
     .catch((error) => console.error("Error fetching user info:", error));
 }
 
+// Function to show product store
+function showPrdouctStore() {
+  fetch("../php/get_product_store.php")
+    .then((response) => response.json())
+    .then((data) => {
+      var tokoSayaDiv = document.getElementById("toko-saya");
+
+      if (data.error) {
+        console.error(data.error);
+      } else {
+        // Jika tidak ada produk
+        if (data.length === 0) {
+          const noProductDiv = document.createElement("div");
+          noProductDiv.innerHTML = `
+                    <div style="display:flex; flex-flow:column; justify-content: center; margin-top:70px; width:100%; height:100%; align-items:center;">
+                        <img src="../images/empty.png" alt="Deskripsi Gambar" style="width: 250px; height: 250px">
+                        <p>Belum ada produk</p>
+                        <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style="width:15%; padding: 10px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
+                    </div>`;
+          tokoSayaDiv.appendChild(noProductDiv);
+        } else {
+          const productStoreDiv = document.createElement("div");
+          productStoreDiv.innerHTML = `
+                    <div style="display:flex; flex-flow:column;">
+                        <div style="display:flex; justify-content:space-between; align-items: center;">
+                        <h2>Produk</h2>
+                        <div style="display:flex; flex-flow:row; gap:10px;">
+                          <button onclick="window.location.href = '../html/pesanan_masuk.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Pesanan Masuk</button>
+                          <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
+                        </div>
+                        </div>
+                    </div>
+                    `;
+          tokoSayaDiv.appendChild(productStoreDiv);
+          // soon
+
+          // Tampilkan produk
+          tokoSayaDiv.appendChild(initializeProductDisplay(data));
+        }
+      }
+    })
+    .catch((error) => console.error("Error fetching products:", error));
+}
+
 function showAddProductStoreForm() {
   var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
@@ -269,47 +313,6 @@ function showAddProductStoreForm() {
         </div>
     `;
   document.body.insertAdjacentHTML("beforeend", modalHTML);
-}
-
-// Function to show product store
-function showPrdouctStore() {
-  fetch("../php/get_product_store.php")
-    .then((response) => response.json())
-    .then((data) => {
-      var tokoSayaDiv = document.getElementById("toko-saya");
-
-      if (data.error) {
-        console.error(data.error);
-      } else {
-        // Jika tidak ada produk
-        if (data.length === 0) {
-          const noProductDiv = document.createElement("div");
-          noProductDiv.innerHTML = `
-                    <div style="display:flex; flex-flow:column; justify-content: center; margin-top:70px; width:100%; height:100%; align-items:center;">
-                        <img src="images/empty.png" alt="Deskripsi Gambar" style="width: 250px; height: 250px">
-                        <p>Belum ada produk</p>
-                        <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style="width:15%; padding: 10px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
-                    </div>`;
-          tokoSayaDiv.appendChild(noProductDiv);
-        } else {
-          const productStoreDiv = document.createElement("div");
-          productStoreDiv.innerHTML = `
-                    <div style="display:flex; flex-flow:column;">
-                        <div style="display:flex; justify-content:space-between; align-items: center;">
-                        <h2>Produk</h2>
-                            <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style="width:13%; height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
-                        </div>
-                    </div>
-                    `;
-          tokoSayaDiv.appendChild(productStoreDiv);
-          // soon
-
-          // Tampilkan produk
-          tokoSayaDiv.appendChild(initializeProductDisplay(data));
-        }
-      }
-    })
-    .catch((error) => console.error("Error fetching products:", error));
 }
 
 function showAddStoreForm() {
