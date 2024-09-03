@@ -37,6 +37,10 @@
 // });
 
 document.addEventListener("DOMContentLoaded", () => {
+  getDetailProduk();
+});
+
+function getDetailProduk() {
   const selectedProductVendor = JSON.parse(
     localStorage.getItem("selectedProductVendor")
   );
@@ -74,13 +78,44 @@ document.addEventListener("DOMContentLoaded", () => {
             data.harga_produk;
           document.getElementById("edit_jumlah_stok").value = data.jumlah_stok;
           document.getElementById("edit_deskripsi").value = data.deskripsi;
+          document.getElementById("edit_produk_id").value = data.id;
         }
       })
       .catch((error) => console.error("Error:", error));
   } else {
     alert("No product selected");
   }
-});
+}
+
+// function updateDetailProduk() {
+//   const selectedProductVendor = JSON.parse(
+//     localStorage.getItem("selectedProductVendor")
+//   );
+//   if (selectedProductVendor) {
+//     const produk_id = selectedProductVendor.id; // Mengambil produk_id dari localStorage
+//     console.log("Produk ID:", produk_id);
+//     // AJAX untuk mengirim produk_id ke PHP
+//     fetch("../php/update_detail_produk.php", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ produk_id: produk_id }), // Mengirim produk_id ke PHP
+//     })
+//       .then((response) => response.json())
+//       .then((data) => {
+//         if (data.error) {
+//           console.error(data.error); // Menangani kesalahan dari PHP
+//           alert("Error fetching product details.");
+//         } else {
+//           console.log(data);
+//         }
+//       })
+//       .catch((error) => console.error("Error:", error));
+//   } else {
+//     alert("No product selected");
+//   }
+// }
 
 function showEdit() {
   document.getElementById("modal-edit").style.display = "flex";
