@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApoTech</title>
+    <link rel="stylesheet" href="../css/detail_produk_vendor.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <img
+          src="../images/Logo_ApoTech.png"
+          style="height: 40px; width: 200px"
+          class="logo"
+        />
+      </div>
+    </nav>
+    <main>
+      <div class="container-detail">
+        <div style="display: flex; flex-flow: column; gap: 20px">
+          <div class="container-gambar-produk">
+            <img id="image_url" class="image_url" />
+          </div>
+          <div class="buttons">
+            <button class="btn btn-edit" onclick="submitKeranjang()">
+              Edit
+            </button>
+            <button
+              class="btn btn-hapus"
+              onclick="showAddDetailBelanja(), showAlamat()"
+            >
+              Hapus
+            </button>
+          </div>
+        </div>
+        <div class="keterangan-produk">
+          <div>
+            <h1 id="nama_produk"></h1>
+            <h2 id="harga_produk" class="harga_produk"></h2>
+            <p id="jumlah_stok"></p>
+            <!-- <div class="kota-toko">
+                        <p>Kategori</p>
+                        <p id="kategori_produk"></p>
+                    </div> -->
+            <!-- <div class="profil-toko">
+                        <p>Toko</p>
+                        <div style="display: flex; flex-flow: row; align-items: center; gap: 5px;">
+                            <div class="circle-container"
+                                style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden;">
+                                <img id="image_profil" style="width: 100%; height: 100%;">
+                            </div>
+                            <p id="nama_vendor"></p>
+                        </div>
+                    </div> -->
+            <!-- <div class="kota-toko">
+                        <p>Dikirim dari</p>
+                        <p id="kota"></p>
+                    </div> -->
+          </div>
+          <hr style="width: 100%" />
+          <div class="container-deskripsi-produk">
+            <h1>Deskripsi</h1>
+            <p id="deskripsi-produk"></p>
+          </div>
+          <!-- <div class="buttons">
+            <button class="btn btn-edit" onclick="submitKeranjang()">
+              Edit
+            </button>
+            <button
+              class="btn btn-hapus"
+              onclick="showAddDetailBelanja(), showAlamat()"
+            >
+              Hapus
+            </button>
+          </div> -->
+        </div>
+      </div>
+      <!-- <hr style="width: 92%" />
+      <div class="container-deskripsi-produk">
+        <h1>Deskripsi</h1>
+        <p id="deskripsi-produk"></p>
+      </div> -->
+      <div
+        id="modal-beli"
+        class="modal"
+        style="
+          display: none;
+          justify-content: center;
+          align-items: center;
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+        "
+      >
+        <div
+          class="modal-content"
+          style="
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+            max-height: 80%;
+            overflow-y: auto;
+          "
+        >
+          <span
+            class="close"
+            onclick="closeModal('modal-beli')"
+            style="
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            "
+            >&times;</span
+          >
+          <h2 style="text-align: center">Detail Pembelian</h2>
+          <row>
+            <form
+              id="addDetailBelanja"
+              action="../php/tambah_detail_belanja.php"
+              method="post"
+              onsubmit="cekJumlahBeli(event)"
+            >
+              <label for="jumlah_beli" style="margin-top: 10px"
+                >Jumlah beli:</label
+              >
+              <input
+                type="number"
+                id="jumlah_beli"
+                name="jumlah_beli"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              />
+              <label for="metode_pembayaran" style="margin-top: 10px"
+                >Metode Pembayaran:</label
+              >
+              <select
+                required
+                id="metode_pembayaran"
+                name="metode_pembayaran"
+                style="
+                  width: 98.5%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              >
+                <option value="" disabled selected>
+                  Pilih metode pembayaran
+                </option>
+              </select>
+              <label for="alamat" style="margin-top: 10px">Alamat:</label>
+              <br />
+              <textarea
+                name="alamat"
+                id="alamat"
+                rows="6"
+                cols="50"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              ></textarea>
+              <!-- <input type="text" id="total" name="total" required style="width: 95%; height:30px; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"> -->
+              <h2 style="text-align: right" id="total">Total: Rp0</h2>
+              <input type="hidden" id="total_hidden" name="total" />
+              <div style="text-align: right">
+                <input
+                  type="submit"
+                  id="btn-next"
+                  value="Checkout"
+                  style="
+                    background-color: #00a69c;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-align: right;
+                  "
+                />
+              </div>
+            </form>
+          </row>
+        </div>
+      </div>
+      <!---->
+      <div
+        id="modal-keranjang"
+        class="modal"
+        style="
+          display: none;
+          justify-content: center;
+          align-items: center;
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+        "
+      >
+        <div
+          class="modal-content"
+          style="
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            max-width: 400px;
+            border-radius: 10px;
+            position: relative;
+            max-height: 80%;
+            overflow-y: auto;
+          "
+        >
+          <span
+            class="close"
+            onclick="closeModal('modal-keranjang')"
+            style="
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            "
+            >&times;</span
+          >
+          <h3 style="text-align: center">Jumlah</h3>
+          <row>
+            <form
+              id="addKeranjang"
+              action="../php/tambah_keranjang.php"
+              method="post"
+              onsubmit="cekJumlahKeranjang(event)"
+            >
+              <input
+                type="number"
+                id="jumlah_keranjang"
+                name="jumlah_keranjang"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              />
+              <br />
+              <h2 style="text-align: right" id="total2">Total: Rp0</h2>
+              <input type="hidden" id="total_hidden" name="total" />
+              <input type="hidden" id="total_hidden2" name="total2" />
+              <div style="text-align: right">
+                <input
+                  type="submit"
+                  id="btn-next"
+                  value="Masukkan Keranjang"
+                  style="
+                    background-color: #00a69c;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-align: right;
+                  "
+                />
+              </div>
+            </form>
+          </row>
+        </div>
+      </div>
+    </main>
+    <script src="../js/detail_produk_vendor.js"></script>
+  </body>
+</html>

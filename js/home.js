@@ -45,10 +45,11 @@ function initializeProductDisplay(products) {
     const productItem = document.createElement("div");
     productItem.className = "product-item";
     productItem.id = "product-item";
-    productItem.addEventListener(
-      "click",
-      () => (window.location.href = "../html/detail_product.html")
-    );
+    productItem.addEventListener("click", () => {
+      localStorage.setItem("selectedProductVendor", JSON.stringify(product));
+      console.log("Product saved to localStorage:", product);
+      window.location.href = "../html/detail_produk_vendor.html";
+    });
 
     const productImage = document.createElement("img");
     productImage.className = "product-image";
@@ -66,13 +67,8 @@ function initializeProductDisplay(products) {
     productPrice.className = "product-price";
     productPrice.textContent = `Price: ${product.harga_produk}`;
 
-    // const productCity = document.createElement('div');
-    // productCity.className = 'product-city';
-    // productCity.textContent = `City: ${product.city}`;
-
     productDetails.appendChild(productName);
     productDetails.appendChild(productPrice);
-    // productDetails.appendChild(productCity);
 
     productItem.appendChild(productImage);
     productItem.appendChild(productDetails);
@@ -202,15 +198,15 @@ function showTokoSaya() {
                             <div class="store-summary" style="display:flex; flex-flow: row; justify-content: space-between; gap:100px;">
                                 <div class="jumlah-produk" style="text-align: center;">
                                     <h3 style="color:#475353;">Produk</h3>
-                                    <h1 style="color:#00A69C;">20</h1>
+                                    <h1 style="color:#00A69C;">${data.jumlah_produk}</h1>
                                 </div>
                                 <div class="jumlah-produk" style="text-align: center;">
                                     <h3 style="color:#475353;">Terjual</h3>
-                                    <h1 style="color:#00A69C;">20</h1>
+                                    <h1 style="color:#00A69C;">${data.jumlah_terjual}</h1>
                                 </div>
                                 <div class="jumlah-produk" style="text-align: center;">
                                     <h3 style="color:#475353;">Keranjang</h3>
-                                    <h1 style="color:#00A69C;">100</h1>
+                                    <h1 style="color:#00A69C;">${data.jumlah_keranjang}</h1>
                                 </div>                                
                             </div>
                         </div>

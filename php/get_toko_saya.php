@@ -10,7 +10,16 @@ if (!$conn) {
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];;
 
-    $stmt = $conn->prepare("SELECT * FROM vendor WHERE user_id = ?");
+    $stmt = $conn->prepare("SELECT v.*,
+                            COUNT(DISTINCT p.id) AS jumlah_produk,
+                            COUNT(DISTINCT db.id) AS jumlah_terjual,
+                            COUNT(DISTINCT k.id) AS jumlah_keranjang
+                            FROM vendor v
+                            LEFT JOIN produk p ON p.vendor_id = v.id
+                            LEFT JOIN detail_belanja db ON db.produk_id = p.id
+                            LEFT JOIN keranjang k ON k.produk_id = p.id
+                            WHERE v.user_id = ?
+                            GROUP BY v.id;");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
