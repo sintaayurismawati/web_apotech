@@ -44,24 +44,10 @@ main {
   /* background-color: aqua; */
 }
 
-/* .container-deskripsi-produk {
-  margin-left: 20px;
-  margin-right: 60px;
-} */
-
-.profil-toko {
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-}
-
 .container-gambar-produk {
   height: 300px;
   width: 300px;
   background-color: rgb(228, 234, 234);
-  /* display: flex;
-    justify-content: center;
-    align-items: center; */
   overflow: hidden;
 }
 
@@ -81,13 +67,6 @@ main {
 
 .harga_produk {
   color: green;
-}
-
-.kota-toko {
-  /* width: 200px; */
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
 }
 
 .buttons {

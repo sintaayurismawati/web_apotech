@@ -28,9 +28,7 @@
             <img id="image_url" class="image_url" />
           </div>
           <div class="buttons">
-            <button class="btn btn-edit" onclick="submitKeranjang()">
-              Edit
-            </button>
+            <button class="btn btn-edit" onclick="showEdit()">Edit</button>
             <button
               class="btn btn-hapus"
               onclick="showAddDetailBelanja(), showAlamat()"
@@ -44,50 +42,16 @@
             <h1 id="nama_produk"></h1>
             <h2 id="harga_produk" class="harga_produk"></h2>
             <p id="jumlah_stok"></p>
-            <!-- <div class="kota-toko">
-                        <p>Kategori</p>
-                        <p id="kategori_produk"></p>
-                    </div> -->
-            <!-- <div class="profil-toko">
-                        <p>Toko</p>
-                        <div style="display: flex; flex-flow: row; align-items: center; gap: 5px;">
-                            <div class="circle-container"
-                                style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden;">
-                                <img id="image_profil" style="width: 100%; height: 100%;">
-                            </div>
-                            <p id="nama_vendor"></p>
-                        </div>
-                    </div> -->
-            <!-- <div class="kota-toko">
-                        <p>Dikirim dari</p>
-                        <p id="kota"></p>
-                    </div> -->
           </div>
           <hr style="width: 100%" />
           <div class="container-deskripsi-produk">
             <h1>Deskripsi</h1>
             <p id="deskripsi-produk"></p>
           </div>
-          <!-- <div class="buttons">
-            <button class="btn btn-edit" onclick="submitKeranjang()">
-              Edit
-            </button>
-            <button
-              class="btn btn-hapus"
-              onclick="showAddDetailBelanja(), showAlamat()"
-            >
-              Hapus
-            </button>
-          </div> -->
         </div>
       </div>
-      <!-- <hr style="width: 92%" />
-      <div class="container-deskripsi-produk">
-        <h1>Deskripsi</h1>
-        <p id="deskripsi-produk"></p>
-      </div> -->
       <div
-        id="modal-beli"
+        id="modal-edit"
         class="modal"
         style="
           display: none;
@@ -119,7 +83,7 @@
         >
           <span
             class="close"
-            onclick="closeModal('modal-beli')"
+            onclick="closeModal('modal-edit')"
             style="
               color: #aaa;
               float: right;
@@ -136,13 +100,13 @@
               method="post"
               onsubmit="cekJumlahBeli(event)"
             >
-              <label for="jumlah_beli" style="margin-top: 10px"
-                >Jumlah beli:</label
+              <label for="edit_nama_produk" style="margin-top: 10px"
+                >Nama Produk :</label
               >
               <input
-                type="number"
-                id="jumlah_beli"
-                name="jumlah_beli"
+                type="text"
+                id="edit_nama_produk"
+                name="edit_nama_produk"
                 required
                 style="
                   width: 95%;
@@ -152,30 +116,45 @@
                   border-radius: 5px;
                 "
               />
-              <label for="metode_pembayaran" style="margin-top: 10px"
-                >Metode Pembayaran:</label
+              <label for="edit_harga_produk" style="margin-top: 10px"
+                >Harga Produk :</label
               >
-              <select
+              <input
+                type="number"
+                id="edit_harga_produk"
+                name="edit_harga_produk"
                 required
-                id="metode_pembayaran"
-                name="metode_pembayaran"
                 style="
-                  width: 98.5%;
+                  width: 95%;
                   padding: 10px;
                   margin-bottom: 10px;
                   border: 1px solid #ccc;
                   border-radius: 5px;
                 "
+              />
+              <label for="edit_jumlah_stok" style="margin-top: 10px"
+                >Jumlah Stok :</label
               >
-                <option value="" disabled selected>
-                  Pilih metode pembayaran
-                </option>
-              </select>
-              <label for="alamat" style="margin-top: 10px">Alamat:</label>
+              <input
+                type="number"
+                id="edit_jumlah_stok"
+                name="edit_jumlah_stock"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              />
+              <label for="edit_deskripsi" style="margin-top: 10px"
+                >Deskripsi :</label
+              >
               <br />
               <textarea
-                name="alamat"
-                id="alamat"
+                name="edit_deskripsi"
+                id="edit_deskripsi"
                 rows="6"
                 cols="50"
                 required
@@ -187,14 +166,11 @@
                   border-radius: 5px;
                 "
               ></textarea>
-              <!-- <input type="text" id="total" name="total" required style="width: 95%; height:30px; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"> -->
-              <h2 style="text-align: right" id="total">Total: Rp0</h2>
-              <input type="hidden" id="total_hidden" name="total" />
               <div style="text-align: right">
                 <input
                   type="submit"
                   id="btn-next"
-                  value="Checkout"
+                  value="Simpan"
                   style="
                     background-color: #00a69c;
                     color: white;
@@ -283,6 +259,130 @@
                   type="submit"
                   id="btn-next"
                   value="Masukkan Keranjang"
+                  style="
+                    background-color: #00a69c;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-align: right;
+                  "
+                />
+              </div>
+            </form>
+          </row>
+        </div>
+      </div>
+      <div
+        id="modal-edit"
+        class="modal"
+        style="
+          display: none;
+          justify-content: center;
+          align-items: center;
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+        "
+      >
+        <div
+          class="modal-content"
+          style="
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+            max-height: 80%;
+            overflow-y: auto;
+          "
+        >
+          <span
+            class="close"
+            onclick="closeModalBeli()"
+            style="
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            "
+            >&times;</span
+          >
+          <h2 style="text-align: center">Detail Pembelian</h2>
+          <row>
+            <form
+              id="addDetailBelanja"
+              action="../php/tambah_detail_belanja.php"
+              method="post"
+              onsubmit="cekJumlahBeli(event)"
+            >
+              <label for="jumlah_beli" style="margin-top: 10px"
+                >Jumlah beli:</label
+              >
+              <input
+                type="number"
+                id="jumlah_beli"
+                name="jumlah_beli"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              />
+              <label for="metode_pembayaran" style="margin-top: 10px"
+                >Metode Pembayaran:</label
+              >
+              <select
+                required
+                id="metode_pembayaran"
+                name="metode_pembayaran"
+                style="
+                  width: 98.5%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              >
+                <option value="" disabled selected>
+                  Pilih metode pembayaran
+                </option>
+              </select>
+              <label for="alamat" style="margin-top: 10px">Alamat:</label>
+              <br />
+              <textarea
+                name="alamat"
+                id="alamat"
+                rows="6"
+                cols="50"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              ></textarea>
+              <!-- <input type="text" id="total" name="total" required style="width: 95%; height:30px; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"> -->
+              <h2 style="text-align: right" id="total">Total: Rp0</h2>
+              <input type="hidden" id="total_hidden" name="total" />
+              <div style="text-align: right">
+                <input
+                  type="submit"
+                  id="btn-next"
+                  value="Checkout"
                   style="
                     background-color: #00a69c;
                     color: white;

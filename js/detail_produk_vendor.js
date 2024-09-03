@@ -1,40 +1,93 @@
+// document.addEventListener("DOMContentLoaded", () => {
+//   const selectedProductVendor = JSON.parse(
+//     localStorage.getItem("selectedProductVendor")
+//   );
+//   console.log(
+//     "Selected Product Vendor from localStorage:",
+//     selectedProductVendor
+//   );
+
+//   if (selectedProductVendor) {
+//     document.getElementById("image_url").src = selectedProductVendor.image_url;
+//     document.getElementById("nama_produk").textContent =
+//       selectedProductVendor.nama_produk;
+//     document.getElementById(
+//       "harga_produk"
+//     ).textContent = `Rp${selectedProductVendor.harga_produk}`;
+//     document.getElementById(
+//       "jumlah_stok"
+//     ).textContent = `Tersisa : ${selectedProductVendor.jumlah_stok}`;
+//     document.getElementById("deskripsi-produk").textContent =
+//       selectedProductVendor.deskripsi;
+
+//     const produkIdInput = document.createElement("input");
+//     produkIdInput.type = "hidden";
+//     produkIdInput.name = "produk_id";
+//     produkIdInput.value = selectedProductVendor.id;
+//     document.getElementById("addDetailBelanja").appendChild(produkIdInput);
+
+//     const produkIdInput2 = document.createElement("input");
+//     produkIdInput2.type = "hidden";
+//     produkIdInput2.name = "produk_id";
+//     produkIdInput2.value = selectedProductVendor.id;
+//     document.getElementById("addKeranjang").appendChild(produkIdInput2);
+//   } else {
+//     alert("No product selected");
+//   }
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
   const selectedProductVendor = JSON.parse(
     localStorage.getItem("selectedProductVendor")
   );
-  console.log(
-    "Selected Product Vendor from localStorage:",
-    selectedProductVendor
-  );
-
   if (selectedProductVendor) {
-    document.getElementById("image_url").src = selectedProductVendor.image_url;
-    document.getElementById("nama_produk").textContent =
-      selectedProductVendor.nama_produk;
-    document.getElementById(
-      "harga_produk"
-    ).textContent = `Rp${selectedProductVendor.harga_produk}`;
-    document.getElementById(
-      "jumlah_stok"
-    ).textContent = `Tersisa : ${selectedProductVendor.jumlah_stok}`;
-    document.getElementById("deskripsi-produk").textContent =
-      selectedProductVendor.deskripsi;
+    const produk_id = selectedProductVendor.id; // Mengambil produk_id dari localStorage
 
-    const produkIdInput = document.createElement("input");
-    produkIdInput.type = "hidden";
-    produkIdInput.name = "produk_id";
-    produkIdInput.value = selectedProductVendor.id;
-    document.getElementById("addDetailBelanja").appendChild(produkIdInput);
-
-    const produkIdInput2 = document.createElement("input");
-    produkIdInput2.type = "hidden";
-    produkIdInput2.name = "produk_id";
-    produkIdInput2.value = selectedProductVendor.id;
-    document.getElementById("addKeranjang").appendChild(produkIdInput2);
+    // AJAX untuk mengirim produk_id ke PHP
+    fetch("../php/get_detail_produk.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ produk_id: produk_id }), // Mengirim produk_id ke PHP
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.error(data.error); // Menangani kesalahan dari PHP
+          alert("Error fetching product details.");
+        } else {
+          // Menampilkan data produk yang diterima dari PHP
+          console.log(data);
+          document.getElementById("image_url").src = data.image_url;
+          document.getElementById("nama_produk").textContent = data.nama_produk;
+          document.getElementById(
+            "harga_produk"
+          ).textContent = `Rp${data.harga_produk}`;
+          document.getElementById(
+            "jumlah_stok"
+          ).textContent = `Tersisa : ${data.jumlah_stok}`;
+          document.getElementById("deskripsi-produk").textContent =
+            data.deskripsi;
+          document.getElementById("edit_nama_produk").value = data.nama_produk;
+          document.getElementById("edit_harga_produk").value =
+            data.harga_produk;
+          document.getElementById("edit_jumlah_stok").value = data.jumlah_stok;
+          document.getElementById("edit_deskripsi").value = data.deskripsi;
+        }
+      })
+      .catch((error) => console.error("Error:", error));
   } else {
     alert("No product selected");
   }
 });
+
+function showEdit() {
+  document.getElementById("modal-edit").style.display = "flex";
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
 
 function closeModal(modal_id) {
   document.getElementById(modal_id).style.display = "none";
