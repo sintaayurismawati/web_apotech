@@ -85,6 +85,9 @@ html {
 main {
   margin-top: 100px;
   padding: 0px;
+  margin-left: 60px;
+  margin-right: 60px;
+  align-items: center;
 }
 
 .product-container,
@@ -100,8 +103,6 @@ main {
     width: 230px;
     background-color: #ffffff; */
   margin-bottom: 20px;
-  margin-left: 60px;
-  margin-right: 60px;
   /* border-radius: 20px;
     box-shadow: 0 3px 2px 2px rgba(0, 0, 0, 0.1); */
 }
@@ -220,7 +221,8 @@ main {
   /* color: #00a69c; */
 }
 
-.btn-hps-krj , .btn-beli-krj{
+.btn-hps-krj,
+.btn-beli-krj {
   flex: 1;
   color: white;
   border: none;
@@ -228,10 +230,33 @@ main {
   cursor: pointer;
 }
 
-.btn-hps-krj{
+.btn-hps-krj {
   background-color: rgb(221, 104, 104);
 }
 
-.btn-beli-krj{
-  background-color: #00A69C
+.btn-beli-krj {
+  background-color: #00a69c;
+}
+
+.btn-da,
+.btn-sd,
+.btn-s {
+  background-color: #aaafab;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 200px;
+  height: 50px;
+}
+
+.btn-h:hover {
+  background-color: #c1f5f1;
+}
+
+.active-h {
+  background-color: #00a69c;
 }

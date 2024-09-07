@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  initializeButtonToggle();
   showProduct();
 
   document.getElementById("jumlah_beli").addEventListener("input", () => {
@@ -156,7 +157,7 @@ function showAllProducts() {
 function showProduct() {
   document.getElementById("product-container").style.display = "block";
   document.getElementById("toko-saya").style.display = "none";
-  document.getElementById("histori").style.display = "none";
+  document.getElementById("histori-1").style.display = "none";
   document.getElementById("keranjang").style.display = "none";
   document.getElementById("detail-product").style.display = "none";
 
@@ -166,7 +167,7 @@ function showProduct() {
 function showTokoSaya() {
   document.getElementById("product-container").style.display = "none";
   document.getElementById("toko-saya").style.display = "block";
-  document.getElementById("histori").style.display = "none";
+  document.getElementById("histori-1").style.display = "none";
   document.getElementById("keranjang").style.display = "none";
   document.getElementById("detail-product").style.display = "none";
 
@@ -282,7 +283,7 @@ function showAddProductStoreForm() {
   var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
-                <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                <span class="close" onclick="closeModal("modal")" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Produk</h2>
                 <form id="addStoreForm" action="../php/tambah_produk_toko.php" method="post">
                     <div style="display:flex; flex-flow:column;">
@@ -317,7 +318,7 @@ function showAddStoreForm() {
   var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative;">
-                <span class="close" onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                <span class="close" onclick="closeModal("modal")" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Toko</h2>
                 <form id="addStoreForm" action="../php/tambah_toko.php" method="post">
                     <div style="display:flex; flex-flow:column; gap:5px;">
@@ -359,7 +360,7 @@ function submitStoreForm(event) {
     .then((data) => {
       if (data.success) {
         // Handle success case
-        closeModal(); // Close modal after successful submission
+        closeModal("modal"); // Close modal after successful submission
         // Optionally, you can redirect or refresh the page here
       } else {
         // Handle error case
@@ -376,20 +377,20 @@ function submitStoreForm(event) {
 function showHistori() {
   document.getElementById("product-container").style.display = "none";
   document.getElementById("toko-saya").style.display = "none";
-  document.getElementById("histori").style.display = "block";
+  document.getElementById("histori-1").style.display = "block";
   document.getElementById("keranjang").style.display = "none";
   document.getElementById("detail-product").style.display = "none";
 
-  loadHistori();
+  loadHistori("Dalam Antrian");
 }
 
-function loadHistori() {
+function loadHistori(status) {
   const historiContainer = document.getElementById("histori");
   while (historiContainer.firstChild) {
     historiContainer.removeChild(historiContainer.firstChild);
   }
   // Fetch data dari PHP
-  fetch("../php/get_histori.php")
+  fetch(`../php/get_histori.php?status=${encodeURIComponent(status)}`)
     .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
     .then((data) => {
       const historiContainer = document.getElementById("histori");
@@ -400,7 +401,10 @@ function loadHistori() {
         console.log("Histori:", histori);
         const historiCard = document.createElement("div");
         historiCard.className = "histori-card";
+        historiCard.id = `histori-card-${histori.id}`;
         tanggalBeli = formatTanggal(histori.created_at);
+        const showCancelButton = status === "Dalam Antrian";
+        const showUlasanButton = status === "Selesai";
 
         historiCard.innerHTML = `
                     <div class="tanggal-container">
@@ -413,12 +417,16 @@ function loadHistori() {
                         </div>
                         <div class="details">
                             <div>
-                                <label class="sub-title">${histori.nama_produk}</label>
+                                <label class="sub-title">${
+                                  histori.nama_produk
+                                }</label>
                                 <label>Rp${histori.harga_produk}</label>
                             </div>
                             <div>
                                 <label class="sub-title">Toko</label>
-                                <label>${histori.nama_vendor} (${histori.kota})</label>
+                                <label>${histori.nama_vendor} (${
+          histori.kota
+        })</label>
                             </div>
                             <div>
                                 <label class="sub-title">Jumlah</label>
@@ -436,6 +444,16 @@ function loadHistori() {
                                 <label class="sub-title">Dikirim ke </label>
                                 <label>${histori.alamat_pengiriman}</label>
                             </div>
+                            ${
+                              showCancelButton
+                                ? `<button class="btn-batalkan" style="height:35px; border:none; border-radius:10px; background-color: rgb(221, 104, 104); color: #fff; cursor: pointer;" onclick="showModalConfirm(${histori.id})">Batalkan</button>`
+                                : ""
+                            }
+                            ${
+                              showUlasanButton && histori.ulasan == ""
+                                ? `<button class="btn-ulasan" style="height:35px; border:none; border-radius:10px; background-color: #00a69c; color: #fff; cursor: pointer;">Beri Ulasan</button>`
+                                : ""
+                            }
                         </div>
                     </div>
                 `;
@@ -445,6 +463,30 @@ function loadHistori() {
       });
     })
     .catch((error) => console.error("Error fetching data:", error));
+}
+
+function deleteHistori() {
+  if (pesananIdToDelete !== null) {
+    fetch("../php/delete_detail_belanja.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: pesananIdToDelete }), // Kirim ID pesanan yang tersimpan
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.status === "success") {
+          console.log(result.message);
+          document.getElementById(`histori-card-${pesananIdToDelete}`).remove(); // Hapus kartu pesanan dari tampilan
+          showModalSuccess("Pesanan telah dibatalkan.");
+        } else {
+          console.log(result.message);
+          showModalFail("Silahkan coba lagi!");
+        }
+      })
+      .catch((error) => console.error("Error deleting:", error));
+  }
 }
 
 function formatTanggal(tanggal) {
@@ -463,7 +505,7 @@ function formatTanggal(tanggal) {
 function showKeranjang() {
   document.getElementById("product-container").style.display = "none";
   document.getElementById("toko-saya").style.display = "none";
-  document.getElementById("histori").style.display = "none";
+  document.getElementById("histori-1").style.display = "none";
   document.getElementById("keranjang").style.display = "block";
   document.getElementById("detail-product").style.display = "none";
 
@@ -568,11 +610,20 @@ function loadKeranjang() {
     .catch((error) => console.error("Error fetching data:", error));
 }
 
-function closeModal() {
-  var modal = document.getElementById("modal");
-  if (modal) {
-    modal.remove();
-    document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
+// function closeModal() {
+//   var modal = document.getElementById("modal");
+//   if (modal) {
+//     modal.remove();
+//     document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
+//   }
+// }
+
+function closeModal(modal_id) {
+  document.getElementById(modal_id).style.display = "none";
+  document.body.style.overflow = "";
+
+  if (modal_id === "modal-success") {
+    window.location.href = "../html/home.html";
   }
 }
 
@@ -606,7 +657,7 @@ function cekJumlahBeli(event) {
   var jumlah_beli = parseInt(document.getElementById("jumlah_beli").value, 10);
 
   if (jumlah_beli > stokTersisa) {
-    closeModal();
+    closeModal("modal");
     var modalHTML = `
                     <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
@@ -631,10 +682,10 @@ function cekJumlahBeli(event) {
   }
 }
 
-function closeModalBeli() {
-  document.getElementById("modal-beli").style.display = "none";
-  document.body.style.overflow = "";
-}
+// function closeModalBeli() {
+//   document.getElementById("modal-beli").style.display = "none";
+//   document.body.style.overflow = "";
+// }
 
 function submitDetailBelanja() {
   const formData = new FormData(document.getElementById("addDetailBelanja"));
@@ -652,7 +703,7 @@ function submitDetailBelanja() {
     .then((data) => {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
-        closeModalBeli(); // Tutup modal jika berhasil
+        closeModal("modal-beli"); // Tutup modal jika berhasil
         alert("Pembelian berhasil!"); // Tampilkan pesan sukses
         window.location.href = "../html/home.html"; // Redirect ke halaman utama
       } else {
@@ -702,3 +753,96 @@ fetch("../php/get_metode_pembayaran.php")
     console.error("Error:", error);
     alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
   });
+
+function initializeButtonToggle() {
+  // Ambil semua tombol dengan class .btn
+  const buttons = document.querySelectorAll(".btn-h");
+
+  // Tambahkan event listener ke setiap tombol
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Hapus kelas 'active' dari semua tombol
+      buttons.forEach((btn) => btn.classList.remove("active-h"));
+
+      // Tambahkan kelas 'active' ke tombol yang diklik
+      this.classList.add("active-h");
+    });
+  });
+}
+
+document
+  .getElementById("btn-dalam-antrian")
+  .addEventListener("click", function () {
+    loadHistori("Dalam Antrian");
+  });
+
+document
+  .getElementById("btn-sedang-diproses")
+  .addEventListener("click", function () {
+    loadHistori("Sedang Diproses");
+  });
+
+document.getElementById("btn-selesai").addEventListener("click", function () {
+  loadHistori("Selesai");
+});
+
+function showModalSuccess(keterangan) {
+  var modalHTML = `
+                    <div id="modal-success" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                        <img src="../images/success-icon.png" alt="Success Image" style="max-width: 100px; margin-bottom: 10px;">    
+                        <h2>Sukses</h2>
+                            <p>${keterangan}</p>
+                             <button onclick="closeModal('modal-success')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function showModalFail(keterangan) {
+  var modalHTML = `
+                    <div id="modal-fail" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                          <img src="../images/fail-icon.png" alt="Fail Image" style="max-width: 100px; margin-bottom: 10px;">    
+                          <h2>Gagal</h2>
+                          <p>${keterangan}</p>
+                          <button onclick="closeModal('modal-fail')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+let pesananIdToDelete = null;
+
+function showModalConfirm(pesananId) {
+  pesananIdToDelete = pesananId;
+  var modalHTML = `
+                    <div id="modal-confirm" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                            <p>Apakah anda yakin untuk menghapus?</p>
+                            <div style="display: flex; flex-flow: row;">
+                              <button onclick="deleteHistori()" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Ya</button>
+                              <button onclick="closeModal('modal-confirm')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Tidak</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
