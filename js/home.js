@@ -283,9 +283,9 @@ function showAddProductStoreForm() {
   var modalHTML = `
         <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
-                <span class="close" onclick="closeModal("modal")" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                <span class="close" onclick="closeModal('modal')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Produk</h2>
-                <form id="addStoreForm" action="../php/tambah_produk_toko.php" method="post">
+                <form id="addProductStoreForm" action="../php/tambah_produk_toko.php" method="post">
                     <div style="display:flex; flex-flow:column;">
                         <label for="nama_produk" style="margin-top: 10px;">Nama Produk:</label>
                         <input type="text" id="nama_produk" name="nama_produk" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
@@ -396,17 +396,33 @@ function loadHistori(status) {
       const historiContainer = document.getElementById("histori");
       historiContainer.style.display = "block"; // Menampilkan container histori
 
-      data.forEach((histori) => {
-        // Membuat elemen histori-card baru
-        console.log("Histori:", histori);
-        const historiCard = document.createElement("div");
-        historiCard.className = "histori-card";
-        historiCard.id = `histori-card-${histori.id}`;
-        tanggalBeli = formatTanggal(histori.created_at);
-        const showCancelButton = status === "Dalam Antrian";
-        const showUlasanButton = status === "Selesai";
+      if (!data || data.length === 0) {
+        console.log("histori kosong");
+        const noDataFound = document.createElement("div");
+        noDataFound.className = "histori-noDataFound";
 
-        historiCard.innerHTML = `
+        noDataFound.innerHTML = `
+          <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+          <img
+          src="../images/no_data_found.jpeg"
+          style="height: 300px; width: 300px; align-items: center;"
+          />
+          <h4>Data tidak ditemukan.</h4>
+          </div>
+        `;
+        historiContainer.appendChild(noDataFound);
+      } else {
+        data.forEach((histori) => {
+          // Membuat elemen histori-card baru
+          console.log("Histori:", histori);
+          const historiCard = document.createElement("div");
+          historiCard.className = "histori-card";
+          historiCard.id = `histori-card-${histori.id}`;
+          tanggalBeli = formatTanggal(histori.created_at);
+          const showCancelButton = status === "Dalam Antrian";
+          const showUlasanButton = status === "Selesai";
+
+          historiCard.innerHTML = `
                     <div class="tanggal-container">
                         <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
                     </div>
@@ -425,8 +441,8 @@ function loadHistori(status) {
                             <div>
                                 <label class="sub-title">Toko</label>
                                 <label>${histori.nama_vendor} (${
-          histori.kota
-        })</label>
+            histori.kota
+          })</label>
                             </div>
                             <div>
                                 <label class="sub-title">Jumlah</label>
@@ -451,21 +467,78 @@ function loadHistori(status) {
                             }
                             ${
                               showUlasanButton && histori.ulasan == ""
-                                ? `<button class="btn-ulasan" style="height:35px; border:none; border-radius:10px; background-color: #00a69c; color: #fff; cursor: pointer;">Beri Ulasan</button>`
+                                ? `<button class="btn-ulasan" style="height:35px; border:none; border-radius:10px; background-color: #00a69c; color: #fff; cursor: pointer;" onclick="showAddUlasanForm(${histori.id})";>Beri Ulasan</button>`
                                 : ""
                             }
                         </div>
                     </div>
                 `;
 
-        // Menambahkan histori-card ke container histori
-        historiContainer.appendChild(historiCard);
-      });
+          // Menambahkan histori-card ke container histori
+          historiContainer.appendChild(historiCard);
+        });
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+function showAddUlasanForm(id) {
+  const historiId = id;
+  var modalHTML = `
+        <div id="modal-ulasan" class="modal-ulasan" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+            <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
+                <span class="close" onclick="closeModal('modal-ulasan')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                <h2 style="text-align: center;">Ulasan</h2>
+                <form id="addUlasanForm" action="" method="post" onsubmit="return false;">
+                    <div style="display:flex; flex-flow:column;">
+                        <textarea id="ulasan" name="ulasan" style="height: 100px; width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+                    </div>
+                    <button style="background-color: #00A69C; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="kirimUlasan(${historiId})">Kirim</button>
+                </form>
+            </div>
+        </div>
+    `;
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+}
+
+function kirimUlasan(id) {
+  const ulasan = document.getElementById("ulasan").value;
+
+  if (!ulasan.trim()) {
+    alert("Ulasan tidak boleh kosong!");
+    return; // Berhenti jika ulasan kosong
+  }
+
+  fetch("../php/tambah_ulasan.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ulasan: ulasan,
+      id: id,
+    }),
+  })
+    .then((response) => {
+      console.log("Response received:", response);
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Data received:", data);
+      if (data.status === "success") {
+        closeModal("modal-ulasan");
+        showModalSuccess("Ulasan berhasil dikirim.");
+      } else {
+        console.log("Update error:", data.message);
+        showModalFail("Silahkan coba lagi!");
+      }
     })
     .catch((error) => console.error("Error fetching data:", error));
 }
 
 function deleteHistori() {
+  const historiContainer = document.getElementById("histori");
+  closeModal("modal-confirm");
   if (pesananIdToDelete !== null) {
     fetch("../php/delete_detail_belanja.php", {
       method: "POST",
@@ -479,6 +552,22 @@ function deleteHistori() {
         if (result.status === "success") {
           console.log(result.message);
           document.getElementById(`histori-card-${pesananIdToDelete}`).remove(); // Hapus kartu pesanan dari tampilan
+          if (historiContainer.children.length === 0) {
+            const noDataFound = document.createElement("div");
+            noDataFound.className = "histori-noDataFound";
+
+            noDataFound.innerHTML = `
+              <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+                <img
+                  src="../images/no_data_found.jpeg"
+                  style="height: 300px; width: 300px; align-items: center;"
+                />
+                <h4>Data tidak ditemukan.</h4>
+              </div>
+            `;
+            // Menambahkan noDataFound ke historiContainer
+            historiContainer.appendChild(noDataFound);
+          }
           showModalSuccess("Pesanan telah dibatalkan.");
         } else {
           console.log(result.message);
@@ -619,12 +708,8 @@ function loadKeranjang() {
 // }
 
 function closeModal(modal_id) {
-  document.getElementById(modal_id).style.display = "none";
+  document.getElementById(modal_id).remove();
   document.body.style.overflow = "";
-
-  if (modal_id === "modal-success") {
-    window.location.href = "../html/home.html";
-  }
 }
 
 function showAlamat() {
@@ -787,6 +872,7 @@ document.getElementById("btn-selesai").addEventListener("click", function () {
 });
 
 function showModalSuccess(keterangan) {
+  console.log("showModalSuccess called with:", keterangan);
   var modalHTML = `
                     <div id="modal-success" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
