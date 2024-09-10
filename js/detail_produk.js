@@ -330,12 +330,12 @@ function showUlasan(produk_id) {
           // ulasanCard.id = `ulasan-card-${ulasan.id}`;
 
           ulasanCard.innerHTML = `
-          <div style="display:flex; flex-flow:column">
+          <div style="display:flex; flex-flow:column;">
             <div>
               <i class="fas fa-user" style="border: 2px solid #000; border-radius: 50%; padding: 5px; margin-right: 8px;"></i>
               <label class="sub-title">${ulasan.username}</label>
             </div>
-            <label style="margin-left:40px;">${ulasan.ulasan}</label>
+            <label style="margin-left:40px; margin-right:20px; word-wrap: break-word;">${ulasan.ulasan}</label>
           </div>
           `;
           listUlasanContainer.appendChild(ulasanCard);

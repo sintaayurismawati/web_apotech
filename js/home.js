@@ -164,6 +164,91 @@ function showProduct() {
   showAllProducts();
 }
 
+document.querySelectorAll(".dropdown-item").forEach((item) => {
+  item.addEventListener("click", function (event) {
+    event.preventDefault(); // Mencegah tindakan default link
+    console.log(this.getAttribute("data-value")); // Cetak nilai yang diklik
+
+    document.getElementById("product-container").style.display = "block";
+    document.getElementById("toko-saya").style.display = "none";
+    document.getElementById("histori-1").style.display = "none";
+    document.getElementById("keranjang").style.display = "none";
+    document.getElementById("detail-product").style.display = "none";
+
+    const kategoriProduk = this.getAttribute("data-value");
+
+    const productContainer = document.getElementById("product-container");
+    while (productContainer.firstChild) {
+      productContainer.removeChild(productContainer.firstChild);
+    }
+
+    fetch(
+      `../php/get_product_by_category.php?kategori=${encodeURIComponent(
+        kategoriProduk
+      )}`
+    )
+      .then((response) => {
+        console.log("Fetch response:", response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Data fetched:", data);
+
+        let currentRow = document.createElement("div");
+        currentRow.className = "product-row";
+        productContainer.appendChild(currentRow);
+
+        data.forEach((product, index) => {
+          console.log("Product:", product);
+
+          const productItem = document.createElement("div");
+          productItem.className = "product-item";
+          productItem.id = "product-item";
+          productItem.addEventListener("click", () => {
+            localStorage.setItem("selectedProduct", JSON.stringify(product));
+            console.log("Product saved to localStorage:", product);
+            window.location.href = "../html/detail_produk.html";
+          });
+
+          const productImage = document.createElement("img");
+          productImage.className = "product-image";
+          productImage.src = product.image_url;
+          productImage.alt = "product image";
+
+          const productDetails = document.createElement("div");
+          productDetails.className = "product-details";
+
+          const productName = document.createElement("div");
+          productName.className = "product-name";
+          productName.textContent = product.nama_produk;
+
+          const productPrice = document.createElement("div");
+          productPrice.className = "product-price";
+          productPrice.textContent = `Rp ${product.harga_produk}`;
+
+          productDetails.appendChild(productName);
+          productDetails.appendChild(productPrice);
+
+          productItem.appendChild(productImage);
+          productItem.appendChild(productDetails);
+
+          currentRow.appendChild(productItem);
+
+          // Check if current row has 4 products
+          if ((index + 1) % 4 === 0) {
+            // Create a new row if current row is full
+            currentRow = document.createElement("div");
+            currentRow.className = "product-row";
+            productContainer.appendChild(currentRow);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  });
+});
+
 function showTokoSaya() {
   document.getElementById("product-container").style.display = "none";
   document.getElementById("toko-saya").style.display = "block";
@@ -478,7 +563,7 @@ function loadHistori(status) {
                           ? `
                           <div style="margin-top:20px; margin-left:20px; margin-right:20px; display:flex; flex-flow:column; background-color: #fbffbf; padding: 15px 40px 15px 40px; border:none; border-radius:10px;">
                             <label class="sub-title">Ulasan :</label>
-                            <label>${histori.ulasan}</label>
+                            <label style="word-wrap: break-word;">${histori.ulasan}</label>
                           </div>
                         `
                           : ""
