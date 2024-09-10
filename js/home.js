@@ -427,50 +427,62 @@ function loadHistori(status) {
                         <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
                     </div>
                     <br>
-                    <div style="display: flex; flex-flow: row; width: 100%;">
-                        <div style="width: 300px; height: 250px;">
-                            <img src="${histori.image_url}">
-                        </div>
-                        <div class="details">
-                            <div>
-                                <label class="sub-title">${
-                                  histori.nama_produk
-                                }</label>
-                                <label>Rp${histori.harga_produk}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Toko</label>
-                                <label>${histori.nama_vendor} (${
+                    <div style="display:flex; flex-flow:column;">
+                      <div style="display: flex; flex-flow: row; width: 100%;">
+                          <div style="width: 300px; height: 250px;">
+                              <img src="${histori.image_url}">
+                          </div>
+                          <div class="details">
+                              <div>
+                                  <label class="sub-title">${
+                                    histori.nama_produk
+                                  }</label>
+                                  <label>Rp${histori.harga_produk}</label>
+                              </div>
+                              <div>
+                                  <label class="sub-title">Toko</label>
+                                  <label>${histori.nama_vendor} (${
             histori.kota
           })</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Jumlah</label>
-                                <label>${histori.jumlah_beli}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Total</label>
-                                <label>Rp${histori.total}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Metode Pembayaran</label>
-                                <label>${histori.metode_pembayaran}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Dikirim ke </label>
-                                <label>${histori.alamat_pengiriman}</label>
-                            </div>
-                            ${
-                              showCancelButton
-                                ? `<button class="btn-batalkan" style="height:35px; border:none; border-radius:10px; background-color: rgb(221, 104, 104); color: #fff; cursor: pointer;" onclick="showModalConfirm(${histori.id})">Batalkan</button>`
-                                : ""
-                            }
-                            ${
-                              showUlasanButton && histori.ulasan == ""
-                                ? `<button class="btn-ulasan" style="height:35px; border:none; border-radius:10px; background-color: #00a69c; color: #fff; cursor: pointer;" onclick="showAddUlasanForm(${histori.id})";>Beri Ulasan</button>`
-                                : ""
-                            }
-                        </div>
+                              </div>
+                              <div>
+                                  <label class="sub-title">Jumlah</label>
+                                  <label>${histori.jumlah_beli}</label>
+                              </div>
+                              <div>
+                                  <label class="sub-title">Total</label>
+                                  <label>Rp${histori.total}</label>
+                              </div>
+                              <div>
+                                  <label class="sub-title">Metode Pembayaran</label>
+                                  <label>${histori.metode_pembayaran}</label>
+                              </div>
+                              <div>
+                                  <label class="sub-title">Dikirim ke </label>
+                                  <label>${histori.alamat_pengiriman}</label>
+                              </div>
+                              ${
+                                showCancelButton
+                                  ? `<button class="btn-batalkan" style="height:35px; border:none; border-radius:10px; background-color: rgb(221, 104, 104); color: #fff; cursor: pointer;" onclick="showModalConfirm(${histori.id})">Batalkan</button>`
+                                  : ""
+                              }
+                              ${
+                                showUlasanButton && histori.ulasan == ""
+                                  ? `<button class="btn-ulasan" style="height:35px; border:none; border-radius:10px; background-color: #00a69c; color: #fff; cursor: pointer;" onclick="showAddUlasanForm(${histori.id})";>Beri Ulasan</button>`
+                                  : ""
+                              }
+                          </div>
+                      </div>
+                      ${
+                        histori.ulasan != ""
+                          ? `
+                          <div style="margin-top:20px; margin-left:20px; margin-right:20px; display:flex; flex-flow:column; background-color: #fbffbf; padding: 15px 40px 15px 40px; border:none; border-radius:10px;">
+                            <label class="sub-title">Ulasan :</label>
+                            <label>${histori.ulasan}</label>
+                          </div>
+                        `
+                          : ""
+                      }
                     </div>
                 `;
 

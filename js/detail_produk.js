@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
   console.log("Selected Product:", selectedProduct);
 
+  showUlasan(selectedProduct.id);
+
   if (selectedProduct) {
     document.getElementById("image_url").src = selectedProduct.image_url;
     document.getElementById("nama_produk").textContent =
@@ -289,6 +291,61 @@ fetch("../php/get_metode_pembayaran.php")
     console.error("Error:", error);
     alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
   });
+
+function showUlasan(produk_id) {
+  fetch(
+    `../php/get_ulasan_produk.php?produk_id=${encodeURIComponent(produk_id)}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Data fetched:", data);
+
+      const listUlasanContainer = document.getElementById(
+        "container-list-ulasan"
+      );
+      while (listUlasanContainer.firstChild) {
+        listUlasanContainer.removeChild(listUlasanContainer.firstChild);
+      }
+
+      if (!data || data.length == 0) {
+        console.log("belum ada ulasan");
+        const noDataFound = document.createElement("div");
+        noDataFound.className = "ulasan-noDataFound";
+
+        noDataFound.innerHTML = `
+          <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+          <img
+          src="../images/no_data_found.jpeg"
+          style="height: 300px; width: 300px; align-items: center;"
+          />
+          <h4>Belum ada ulasan untuk produk ini.</h4>
+          </div>
+        `;
+        listUlasanContainer.appendChild(noDataFound);
+      } else {
+        data.forEach((ulasan) => {
+          console.log("ulasan :", ulasan);
+          const ulasanCard = document.createElement("div");
+          ulasanCard.className = "ulasan-card";
+          // ulasanCard.id = `ulasan-card-${ulasan.id}`;
+
+          ulasanCard.innerHTML = `
+          <div style="display:flex; flex-flow:column">
+            <div>
+              <i class="fas fa-user" style="border: 2px solid #000; border-radius: 50%; padding: 5px; margin-right: 8px;"></i>
+              <label class="sub-title">${ulasan.username}</label>
+            </div>
+            <label style="margin-left:40px;">${ulasan.ulasan}</label>
+          </div>
+          `;
+          listUlasanContainer.appendChild(ulasanCard);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+}
 
 // function closeModalBeli() {
 //   document.getElementById("modal-beli").style.display = "none";
