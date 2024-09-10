@@ -309,10 +309,14 @@ function showUlasan(produk_id) {
 
       if (!data || data.length == 0) {
         console.log("belum ada ulasan");
-        const noDataFound = document.createElement("div");
-        noDataFound.className = "ulasan-noDataFound";
+      } else {
+        data.forEach((ulasan) => {
+          if (ulasan.ulasan == "") {
+            console.log("belum ada ulasan");
+            const noDataFound = document.createElement("div");
+            noDataFound.className = "ulasan-noDataFound";
 
-        noDataFound.innerHTML = `
+            noDataFound.innerHTML = `
           <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
           <img
           src="../images/no_data_found.jpeg"
@@ -321,15 +325,14 @@ function showUlasan(produk_id) {
           <h4>Belum ada ulasan untuk produk ini.</h4>
           </div>
         `;
-        listUlasanContainer.appendChild(noDataFound);
-      } else {
-        data.forEach((ulasan) => {
-          console.log("ulasan :", ulasan);
-          const ulasanCard = document.createElement("div");
-          ulasanCard.className = "ulasan-card";
-          // ulasanCard.id = `ulasan-card-${ulasan.id}`;
+            listUlasanContainer.appendChild(noDataFound);
+          } else {
+            console.log("ulasan :", ulasan);
+            const ulasanCard = document.createElement("div");
+            ulasanCard.className = "ulasan-card";
+            // ulasanCard.id = `ulasan-card-${ulasan.id}`;
 
-          ulasanCard.innerHTML = `
+            ulasanCard.innerHTML = `
           <div style="display:flex; flex-flow:column;">
             <div>
               <i class="fas fa-user" style="border: 2px solid #000; border-radius: 50%; padding: 5px; margin-right: 8px;"></i>
@@ -338,7 +341,8 @@ function showUlasan(produk_id) {
             <label style="margin-left:40px; margin-right:20px; word-wrap: break-word;">${ulasan.ulasan}</label>
           </div>
           `;
-          listUlasanContainer.appendChild(ulasanCard);
+            listUlasanContainer.appendChild(ulasanCard);
+          }
         });
       }
     })
