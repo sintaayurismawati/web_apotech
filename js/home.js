@@ -348,7 +348,7 @@ function showPrdouctStore() {
                         <div style="display:flex; flex-flow:row; gap:10px;">
                           <button onclick="showAddProductStoreForm()" class="button-tambah-produk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Tambahkan Produk</button>
                           <button onclick="window.location.href = '../html/pesanan_masuk.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Pesanan Masuk</button>
-                          <button onclick="window.location.href = '../html/pesanan_masuk.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Riwayat Penjualan</button>
+                          <button onclick="window.location.href = '../html/riwayat_penjualan_vendor.html'" class="button-pesanan-masuk" style=" height : 50px; background-color: #00A69C; color: white; border: none; border-radius: 20px; cursor: pointer;">Riwayat Penjualan</button>
                         </div>
                         </div>
                     </div>
