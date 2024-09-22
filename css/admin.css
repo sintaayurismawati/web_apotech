@@ -106,3 +106,10 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #ddd; /* Warna saat di-hover */
 }
+
+.delete-icon {
+  color: red;
+}
+.delete-icon:hover {
+  color: darkred;
+}
