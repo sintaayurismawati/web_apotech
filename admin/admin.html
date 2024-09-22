@@ -29,17 +29,20 @@
         class="logo"
       />
       <div style="margin-top: 18px">
-        <!-- <hr style="width: auto" /> -->
-        <a href="#">Manage User</a>
-        <hr style="width: auto" />
-        <a href="#">Manage Vendor</a>
-        <hr style="width: auto" />
-        <a href="#">Manage Product</a>
-        <hr style="width: auto" />
+        <ul id="menu-list">
+          <li class="active">
+            <a href="#" onclick="get_user()">Manage User</a>
+          </li>
+          <hr style="width: auto" />
+          <li><a href="#">Manage Vendor</a></li>
+          <hr style="width: auto" />
+          <li><a href="#" onclick="get_product()">Manage Product</a></li>
+          <hr style="width: auto" />
+        </ul>
       </div>
     </div>
     <main>
-      <div class="user">
+      <div id="user" class="user" style="display: none">
         <table
           id="user-table"
           border="1"
@@ -61,7 +64,29 @@
         </table>
       </div>
       <div class="vendor"></div>
-      <div class="produk"></div>
+      <div id="product" class="product" style="display: none">
+        <table
+          id="product-table"
+          border="1"
+          style="width: 100%; text-align: center"
+        >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Produk</th>
+              <th>Vendor</th>
+              <th>Kategori</th>
+              <th>Harga</th>
+              <th>Stok</th>
+              <th>Deskripsi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari riwayat akan dimasukkan di sini -->
+          </tbody>
+        </table>
+      </div>
     </main>
     <script src="../js/admin.js"></script>
   </body>

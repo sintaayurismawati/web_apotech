@@ -113,3 +113,22 @@ tr:hover {
 .delete-icon:hover {
   color: darkred;
 }
+
+/* Style untuk list item */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li a {
+  display: block;
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+/* Warna font putih ketika item terpilih */
+ul li.active a {
+  color: white;
+  background-color: #333; /* optional: memberikan background gelap untuk item terpilih */
+}
