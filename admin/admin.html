@@ -34,7 +34,7 @@
             <a href="#" onclick="get_user()">Manage User</a>
           </li>
           <hr style="width: auto" />
-          <li><a href="#">Manage Vendor</a></li>
+          <li><a href="#" onclick="get_vendor()">Manage Vendor</a></li>
           <hr style="width: auto" />
           <li><a href="#" onclick="get_product()">Manage Product</a></li>
           <hr style="width: auto" />
@@ -63,7 +63,52 @@
           </tbody>
         </table>
       </div>
-      <div class="vendor"></div>
+
+      <div id="vendor" class="vendor" style="display: none">
+        <table
+          id="vendor-table"
+          border="1"
+          style="width: 100%; text-align: center"
+        >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nama Vendor</th>
+              <th>Pemilik</th>
+              <th>Kota</th>
+              <th>Alamat</th>
+              <th>Telepon</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari riwayat akan dimasukkan di sini -->
+          </tbody>
+        </table>
+      </div>
+
+      <div id="user" class="user" style="display: none">
+        <table
+          id="user-table"
+          border="1"
+          style="width: 100%; text-align: center"
+        >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Telepon</th>
+              <th>Alamat</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari riwayat akan dimasukkan di sini -->
+          </tbody>
+        </table>
+      </div>
       <div id="product" class="product" style="display: none">
         <table
           id="product-table"
