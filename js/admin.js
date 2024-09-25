@@ -243,6 +243,13 @@ function get_vendor() {
               disableVendor(vendor.id)
             );
             cellAksi.appendChild(disableIcon);
+
+            const reportIcon = document.createElement("i");
+            reportIcon.classList.add("fas", "fa-file-alt", "report-icon");
+            reportIcon.style.cursor = "pointer";
+            reportIcon.style.marginLeft = "10px";
+            reportIcon.addEventListener("click", () => viewReport(vendor.id)); // Ganti dengan fungsi yang sesuai
+            cellAksi.appendChild(reportIcon);
           } else if (vendor.status === "Nonaktif") {
             // Tampilkan enableIcon (fa-unlock) jika status adalah nonaktif
             const enableIcon = document.createElement("i");
@@ -250,6 +257,13 @@ function get_vendor() {
             enableIcon.style.cursor = "pointer";
             enableIcon.addEventListener("click", () => enableVendor(vendor.id));
             cellAksi.appendChild(enableIcon);
+
+            const reportIcon = document.createElement("i");
+            reportIcon.classList.add("fas", "fa-file-alt", "report-icon");
+            reportIcon.style.cursor = "pointer";
+            reportIcon.style.marginLeft = "10px";
+            reportIcon.addEventListener("click", () => viewReport(vendor.id)); // Ganti dengan fungsi yang sesuai
+            cellAksi.appendChild(reportIcon);
           } else if (vendor.status === "Belum Dikonfirmasi") {
             // Tampilkan confirmIcon (fa-check-circle) jika status belum dikonfirmasi
             const confirmIcon = document.createElement("i");

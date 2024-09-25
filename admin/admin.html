@@ -14,20 +14,32 @@
     <nav class="navbar">
       <div class="container">
         <!-- <i class="fas fa-bars" id="menu-icon"></i> -->
-        <!-- <img
+        <img
           src="../images/Logo_ApoTech.png"
           style="height: 40px; width: 200px"
           class="logo"
-        /> -->
+        />
+        <a
+          id="logout-link"
+          href="../php/logout.php"
+          style="
+            float: right;
+            display: flex;
+            align-items: center;
+            color: #575757;
+          "
+        >
+          <i
+            class="fas fa-sign-out-alt"
+            style="margin-right: 5px; color: #575757"
+            title="Logout"
+          ></i>
+          <span>Logout</span>
+        </a>
       </div>
     </nav>
     <div id="sidebar" class="sidebar">
       <!-- <a href="#" class="close-btn" id="close-btn">&times;</a> -->
-      <img
-        src="../images/Logo_ApoTech.png"
-        style="height: 40px; width: 200px"
-        class="logo"
-      />
       <div style="margin-top: 18px">
         <ul id="menu-list">
           <li class="active">
@@ -63,7 +75,6 @@
           </tbody>
         </table>
       </div>
-
       <div id="vendor" class="vendor" style="display: none">
         <table
           id="vendor-table"
@@ -87,7 +98,6 @@
           </tbody>
         </table>
       </div>
-
       <div id="user" class="user" style="display: none">
         <table
           id="user-table"

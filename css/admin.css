@@ -7,7 +7,8 @@ html {
 }
 
 .navbar {
-  background-color: #00a69c;
+  /* background-color: #00a69c; */
+  background-color: #bbebe7;
   padding: 0px;
   position: fixed;
   top: 0;
@@ -36,12 +37,14 @@ main {
 }
 
 .sidebar {
+  margin-top: 80px;
   height: 100%;
   width: 250px;
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #bbebe7;
+  /* background-color: #bbebe7; */
+  background-color: #00a69c;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 18px;
@@ -52,14 +55,15 @@ main {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 18px;
-  color: #00a69c;
+  /* color: #00a69c; */
+  color: white;
   display: block;
   transition: 0.3s;
 }
 
-.sidebar a:hover {
+/* .sidebar a:hover {
   background-color: #575757;
-}
+} */
 
 .close-btn {
   position: absolute;
@@ -99,6 +103,10 @@ th {
   color: white;
 }
 
+table tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* Warna baris ganjil */
+}
+
 tr:nth-child(even) {
   background-color: #f2f2f2; /* Warna baris genap */
 }
@@ -129,6 +137,6 @@ ul li a {
 
 /* Warna font putih ketika item terpilih */
 ul li.active a {
-  color: white;
-  background-color: #333; /* optional: memberikan background gelap untuk item terpilih */
+  color: #4a5a59;
+  /* background-color: #333; */
 }
