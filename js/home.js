@@ -272,7 +272,7 @@ function showTokoSaya() {
                     </div>
                 `;
       } else {
-        if (data.status == 0) {
+        if (data.status == "Aktif") {
           tokoSayaDiv.innerHTML = `
                         <div class="profil-store" style="display:flex; flex-flow: row; justify-content:center; gap:130px; align-items:center;">
                             <div style="display:flex; flex-flow:column; text-align: center;">

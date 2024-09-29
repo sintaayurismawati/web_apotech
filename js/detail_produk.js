@@ -1,82 +1,194 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Retrieve product and user data from localStorage
+  // showDetailProduct();
+  getDetailProduk();
+});
+
+function getDetailProduk() {
   const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
   console.log("Selected Product:", selectedProduct);
-
-  showUlasan(selectedProduct.id);
-
   if (selectedProduct) {
-    document.getElementById("image_url").src = selectedProduct.image_url;
-    document.getElementById("nama_produk").textContent =
-      selectedProduct.nama_produk;
-    document.getElementById(
-      "harga_produk"
-    ).textContent = `Rp${selectedProduct.harga_produk}`;
-    document.getElementById(
-      "jumlah_stok"
-    ).textContent = `Tersisa : ${selectedProduct.jumlah_stok}`;
-    document.getElementById("kategori_produk").textContent =
-      selectedProduct.kategori_produk;
-    document.getElementById("nama_vendor").textContent =
-      selectedProduct.nama_vendor;
-    document.getElementById("image_profil").src = selectedProduct.image_profil;
+    const produk_id = selectedProduct.id; // Mengambil produk_id dari localStorage
 
-    document.getElementById("kota").textContent = selectedProduct.kota;
-    document.getElementById("deskripsi-produk").textContent =
-      selectedProduct.deskripsi;
+    // AJAX untuk mengirim produk_id ke PHP
+    fetch("../php/get_detail_produk.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ produk_id: produk_id }), // Mengirim produk_id ke PHP
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.error(data.error); // Menangani kesalahan dari PHP
+          alert("Error fetching product details.");
+        } else {
+          showUlasan(produk_id);
 
-    // Add hidden input for produk_id in the form
-    const produkIdInput = document.createElement("input");
-    produkIdInput.type = "hidden";
-    produkIdInput.name = "produk_id";
-    produkIdInput.value = selectedProduct.id;
-    document.getElementById("addDetailBelanja").appendChild(produkIdInput);
+          document.getElementById("image_url").src = selectedProduct.image_url;
+          document.getElementById("nama_produk").textContent =
+            selectedProduct.nama_produk;
+          document.getElementById(
+            "harga_produk"
+          ).textContent = `Rp${selectedProduct.harga_produk}`;
+          document.getElementById(
+            "jumlah_stok"
+          ).textContent = `Tersisa : ${selectedProduct.jumlah_stok}`;
+          document.getElementById("kategori_produk").textContent =
+            selectedProduct.kategori_produk;
+          document.getElementById("nama_vendor").textContent =
+            selectedProduct.nama_vendor;
+          document.getElementById("image_profil").src =
+            selectedProduct.image_profil;
 
-    const produkIdInput2 = document.createElement("input");
-    produkIdInput2.type = "hidden";
-    produkIdInput2.name = "produk_id";
-    produkIdInput2.value = selectedProduct.id;
-    document.getElementById("addKeranjang").appendChild(produkIdInput2);
+          document.getElementById("kota").textContent = selectedProduct.kota;
+          document.getElementById("deskripsi-produk").textContent =
+            selectedProduct.deskripsi;
 
-    document.getElementById("jumlah_beli").addEventListener("input", () => {
-      const jumlahBeli =
-        parseInt(document.getElementById("jumlah_beli").value, 10) || 0;
-      const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
-      const total = jumlahBeli * hargaProduk;
+          // Add hidden input for produk_id in the form
+          const produkIdInput = document.createElement("input");
+          produkIdInput.type = "hidden";
+          produkIdInput.name = "produk_id";
+          produkIdInput.value = selectedProduct.id;
+          document
+            .getElementById("addDetailBelanja")
+            .appendChild(produkIdInput);
 
-      // Logging values to console for debugging
-      console.log("Jumlah Beli:", jumlahBeli);
-      console.log("Harga Produk:", hargaProduk);
-      console.log("Total:", total);
+          const produkIdInput2 = document.createElement("input");
+          produkIdInput2.type = "hidden";
+          produkIdInput2.name = "produk_id";
+          produkIdInput2.value = selectedProduct.id;
+          document.getElementById("addKeranjang").appendChild(produkIdInput2);
 
-      document.getElementById(
-        "total"
-      ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
-      document.getElementById("total_hidden").value = total;
-    });
+          document
+            .getElementById("jumlah_beli")
+            .addEventListener("input", () => {
+              const jumlahBeli =
+                parseInt(document.getElementById("jumlah_beli").value, 10) || 0;
+              const hargaProduk =
+                parseInt(selectedProduct.harga_produk, 10) || 0;
+              const total = jumlahBeli * hargaProduk;
 
-    document
-      .getElementById("jumlah_keranjang")
-      .addEventListener("input", () => {
-        const jumlahKeranjang =
-          parseInt(document.getElementById("jumlah_keranjang").value, 10) || 0;
-        const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
-        const total2 = jumlahKeranjang * hargaProduk;
+              // Logging values to console for debugging
+              console.log("Jumlah Beli:", jumlahBeli);
+              console.log("Harga Produk:", hargaProduk);
+              console.log("Total:", total);
 
-        // Logging values to console for debugging
-        console.log("Jumlah Keranjang:", jumlahKeranjang);
-        console.log("Harga Produk:", hargaProduk);
-        console.log("Total:", total2);
+              document.getElementById(
+                "total"
+              ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
+              document.getElementById("total_hidden").value = total;
+            });
 
-        document.getElementById(
-          "total2"
-        ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
-        document.getElementById("total_hidden2").value = total2;
-      });
+          document
+            .getElementById("jumlah_keranjang")
+            .addEventListener("input", () => {
+              const jumlahKeranjang =
+                parseInt(
+                  document.getElementById("jumlah_keranjang").value,
+                  10
+                ) || 0;
+              const hargaProduk =
+                parseInt(selectedProduct.harga_produk, 10) || 0;
+              const total2 = jumlahKeranjang * hargaProduk;
+
+              // Logging values to console for debugging
+              console.log("Jumlah Keranjang:", jumlahKeranjang);
+              console.log("Harga Produk:", hargaProduk);
+              console.log("Total:", total2);
+
+              document.getElementById(
+                "total2"
+              ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
+              document.getElementById("total_hidden2").value = total2;
+            });
+        }
+      })
+      .catch((error) => console.error("Error:", error));
   } else {
     alert("No product selected");
   }
-});
+}
+
+// function showDetailProduct() {
+//   // Retrieve product and user data from localStorage
+//   const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
+//   console.log("Selected Product:", selectedProduct);
+
+//   showUlasan(selectedProduct.id);
+
+//   if (selectedProduct) {
+//     document.getElementById("image_url").src = selectedProduct.image_url;
+//     document.getElementById("nama_produk").textContent =
+//       selectedProduct.nama_produk;
+//     document.getElementById(
+//       "harga_produk"
+//     ).textContent = `Rp${selectedProduct.harga_produk}`;
+//     document.getElementById(
+//       "jumlah_stok"
+//     ).textContent = `Tersisa : ${selectedProduct.jumlah_stok}`;
+//     document.getElementById("kategori_produk").textContent =
+//       selectedProduct.kategori_produk;
+//     document.getElementById("nama_vendor").textContent =
+//       selectedProduct.nama_vendor;
+//     document.getElementById("image_profil").src = selectedProduct.image_profil;
+
+//     document.getElementById("kota").textContent = selectedProduct.kota;
+//     document.getElementById("deskripsi-produk").textContent =
+//       selectedProduct.deskripsi;
+
+//     // Add hidden input for produk_id in the form
+//     const produkIdInput = document.createElement("input");
+//     produkIdInput.type = "hidden";
+//     produkIdInput.name = "produk_id";
+//     produkIdInput.value = selectedProduct.id;
+//     document.getElementById("addDetailBelanja").appendChild(produkIdInput);
+
+//     const produkIdInput2 = document.createElement("input");
+//     produkIdInput2.type = "hidden";
+//     produkIdInput2.name = "produk_id";
+//     produkIdInput2.value = selectedProduct.id;
+//     document.getElementById("addKeranjang").appendChild(produkIdInput2);
+
+//     document.getElementById("jumlah_beli").addEventListener("input", () => {
+//       const jumlahBeli =
+//         parseInt(document.getElementById("jumlah_beli").value, 10) || 0;
+//       const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
+//       const total = jumlahBeli * hargaProduk;
+
+//       // Logging values to console for debugging
+//       console.log("Jumlah Beli:", jumlahBeli);
+//       console.log("Harga Produk:", hargaProduk);
+//       console.log("Total:", total);
+
+//       document.getElementById(
+//         "total"
+//       ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
+//       document.getElementById("total_hidden").value = total;
+//     });
+
+//     document
+//       .getElementById("jumlah_keranjang")
+//       .addEventListener("input", () => {
+//         const jumlahKeranjang =
+//           parseInt(document.getElementById("jumlah_keranjang").value, 10) || 0;
+//         const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
+//         const total2 = jumlahKeranjang * hargaProduk;
+
+//         // Logging values to console for debugging
+//         console.log("Jumlah Keranjang:", jumlahKeranjang);
+//         console.log("Harga Produk:", hargaProduk);
+//         console.log("Total:", total2);
+
+//         document.getElementById(
+//           "total2"
+//         ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
+//         document.getElementById("total_hidden2").value = total2;
+//       });
+//   } else {
+//     alert("No product selected");
+//   }
+// }
 
 function showAlamat() {
   fetch("../php/get_user_info.php")
@@ -143,10 +255,6 @@ function cekJumlahBeli(event) {
 function closeModal(modal_id) {
   document.getElementById(modal_id).style.display = "none";
   document.body.style.overflow = "";
-
-  if (modal_id === "modal-success") {
-    window.location.href = "../html/home.html";
-  }
 }
 
 function submitDetailBelanja() {
@@ -169,6 +277,7 @@ function submitDetailBelanja() {
         // alert("Pembelian berhasil!");
         showModalSuccess("Pembelian berhasil!");
         // window.location.href = "../html/home.html"; // Redirect ke halaman utama
+        showDetailProduct();
       } else {
         showModalFail("Silahkan coba lagi!");
         // alert("Gagal melakukan pembelian, silakan coba lagi.");
@@ -198,8 +307,6 @@ function submitKeranjang() {
       if (data.includes("Insert successful")) {
         closeModal("modal-beli"); // Tutup modal jika berhasil
         showModalSuccess("Produk telah masuk keranjang!");
-        // alert("Produk telah masuk keranjang!"); // Tampilkan pesan sukses
-        // window.location.href = "../html/home.html"; // Redirect ke halaman utama
       } else {
         showModalFail("Silahkan coba lagi!");
         // alert("Gagal melakukan pembelian, silakan coba lagi.");
@@ -309,6 +416,61 @@ function showUlasan(produk_id) {
 
       if (!data || data.length == 0) {
         console.log("belum ada ulasan");
+        const noDataFound = document.createElement("div");
+        noDataFound.className = "ulasan-noDataFound";
+
+        noDataFound.innerHTML = `
+          <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+          <img
+          src="../images/no_data_found.jpeg"
+          style="height: 300px; width: 300px; align-items: center;"
+          />
+          <h4>Belum ada ulasan untuk produk ini.</h4>
+          </div>
+        `;
+        listUlasanContainer.appendChild(noDataFound);
+      } else {
+        data.forEach((ulasan) => {
+          console.log("ulasan :", ulasan);
+          const ulasanCard = document.createElement("div");
+          ulasanCard.className = "ulasan-card";
+          // ulasanCard.id = `ulasan-card-${ulasan.id}`;
+
+          ulasanCard.innerHTML = `
+          <div style="display:flex; flex-flow:column;">
+            <div>
+              <i class="fas fa-user" style="border: 2px solid #000; border-radius: 50%; padding: 5px; margin-right: 8px;"></i>
+              <label class="sub-title">${ulasan.username}</label>
+            </div>
+            <label style="margin-left:40px; margin-right:20px; word-wrap: break-word;">${ulasan.ulasan}</label>
+          </div>
+          `;
+          listUlasanContainer.appendChild(ulasanCard);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+}
+
+function showDetailProduct(produk_id) {
+  fetch(
+    `../php/get_ulasan_produk.php?produk_id=${encodeURIComponent(produk_id)}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Data fetched:", data);
+
+      const listUlasanContainer = document.getElementById(
+        "container-list-ulasan"
+      );
+      while (listUlasanContainer.firstChild) {
+        listUlasanContainer.removeChild(listUlasanContainer.firstChild);
+      }
+
+      if (!data || data.length == 0) {
+        console.log("belum ada ulasan");
       } else {
         data.forEach((ulasan) => {
           if (ulasan.ulasan == "") {
@@ -350,89 +512,3 @@ function showUlasan(produk_id) {
       console.error("Error fetching user:", error);
     });
 }
-
-// function closeModalBeli() {
-//   document.getElementById("modal-beli").style.display = "none";
-//   document.body.style.overflow = "";
-// }
-
-// function closeModalKeranjang() {
-//   document.getElementById("modal-keranjang").style.display = "none";
-//   document.body.style.overflow = "";
-// }
-
-// function closeModal(modalId = "modal") {
-//   var modal = document.getElementById(modalId);
-//   if (modal) {
-//     modal.remove();
-//     document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
-//   }
-// }
-
-// function submitDetailBelanja(event) {
-//   event.preventDefault(); // Prevent default form submission
-
-//   // Collect form data
-//   const formData = new FormData(document.getElementById("addDetailBelanja"));
-
-//   fetch("../php/tambah_detail_belanja.php", {
-//     method: "POST",
-//     body: formData,
-//   })
-//     .then((response) => response.json())
-//     .then((data) => {
-//       if (data.success) {
-//         // Handle success case
-//         closeModal(); // Close modal after successful submission
-//         // Optionally, you can redirect or refresh the page here
-//       } else {
-//         // Handle error case
-//         console.error("Error adding store:", data.error);
-//         // Optionally, display an error message to the user
-//       }
-//     })
-//     .catch((error) => {
-//       console.error("Error:", error);
-//       // Handle network errors or other exceptions
-//     });
-// }
-
-// function cekJumlahKeranjang(event) {
-//   event.preventDefault(); // Mencegah pengiriman formulir secara default
-
-//   var jumlah_stok = parseInt(
-//     document
-//       .getElementById("jumlah_stok")
-//       .textContent.replace("Tersisa : ", ""),
-//     10
-//   );
-//   var jumlah_keranjang = parseInt(
-//     document.getElementById("jumlah_keranjang").value,
-//     10
-//   );
-
-//   if (jumlah_keranjang > jumlah_stok) {
-//     // closeModal();
-//     var modalHTML = `
-//                     <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
-//                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
-//                             <span class="close" onclick="closeModal('modal-error')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
-//                             <h2 style="text-align: center;">Maaf</h2>
-//                             <p>Jumlah beli melebihi jumlah ketersediaan produk</p>
-//                         </div>
-//                     </div>
-//                 `;
-
-//     // Memasukkan modal ke dalam halaman
-//     document.body.insertAdjacentHTML("beforeend", modalHTML);
-
-//     // Mencegah scroll background saat modal ditampilkan
-//     document.body.style.overflow = "hidden";
-
-//     return false; // Mencegah pengiriman formulir
-//   } else {
-//     submitKeranjang();
-//     // Jika jumlah_beli valid, kembalikan true untuk melanjutkan pengiriman formulir
-//     return true;
-//   }
-// }

@@ -11,7 +11,11 @@ if (isset($_SESSION['user_id'])) {
     // $stmt = $conn->prepare("SELECT * FROM produk");
     $produk_id = (int) $_GET['produk_id']; 
 
-    $stmt = $conn->prepare("SELECT db.ulasan, u.username FROM detail_belanja db JOIN users u ON db.user_id = u.id WHERE produk_id=?");
+    $stmt = $conn->prepare("SELECT db.ulasan, u.username 
+                            FROM detail_belanja db 
+                            JOIN users u ON db.user_id = u.id 
+                            WHERE produk_id=?
+                            AND db.ulasan IS NOT NULL");
     $stmt->bind_param("i", $produk_id);
     $stmt->execute();
     $result = $stmt->get_result();
