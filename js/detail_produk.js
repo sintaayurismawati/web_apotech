@@ -25,31 +25,28 @@ function getDetailProduk() {
         } else {
           showUlasan(produk_id);
 
-          document.getElementById("image_url").src = selectedProduct.image_url;
-          document.getElementById("nama_produk").textContent =
-            selectedProduct.nama_produk;
+          document.getElementById("image_url").src = data.image_url;
+          document.getElementById("nama_produk").textContent = data.nama_produk;
           document.getElementById(
             "harga_produk"
-          ).textContent = `Rp${selectedProduct.harga_produk}`;
+          ).textContent = `Rp${data.harga_produk}`;
           document.getElementById(
             "jumlah_stok"
-          ).textContent = `Tersisa : ${selectedProduct.jumlah_stok}`;
+          ).textContent = `Tersisa : ${data.jumlah_stok}`;
           document.getElementById("kategori_produk").textContent =
-            selectedProduct.kategori_produk;
-          document.getElementById("nama_vendor").textContent =
-            selectedProduct.nama_vendor;
-          document.getElementById("image_profil").src =
-            selectedProduct.image_profil;
+            data.kategori_produk;
+          document.getElementById("nama_vendor").textContent = data.nama_vendor;
+          document.getElementById("image_profil").src = data.image_profil;
 
-          document.getElementById("kota").textContent = selectedProduct.kota;
+          document.getElementById("kota").textContent = data.kota;
           document.getElementById("deskripsi-produk").textContent =
-            selectedProduct.deskripsi;
+            data.deskripsi;
 
           // Add hidden input for produk_id in the form
           const produkIdInput = document.createElement("input");
           produkIdInput.type = "hidden";
           produkIdInput.name = "produk_id";
-          produkIdInput.value = selectedProduct.id;
+          produkIdInput.value = produk_id;
           document
             .getElementById("addDetailBelanja")
             .appendChild(produkIdInput);
@@ -57,7 +54,7 @@ function getDetailProduk() {
           const produkIdInput2 = document.createElement("input");
           produkIdInput2.type = "hidden";
           produkIdInput2.name = "produk_id";
-          produkIdInput2.value = selectedProduct.id;
+          produkIdInput2.value = produk_id;
           document.getElementById("addKeranjang").appendChild(produkIdInput2);
 
           document
@@ -65,8 +62,7 @@ function getDetailProduk() {
             .addEventListener("input", () => {
               const jumlahBeli =
                 parseInt(document.getElementById("jumlah_beli").value, 10) || 0;
-              const hargaProduk =
-                parseInt(selectedProduct.harga_produk, 10) || 0;
+              const hargaProduk = parseInt(data.harga_produk, 10) || 0;
               const total = jumlahBeli * hargaProduk;
 
               // Logging values to console for debugging
@@ -88,8 +84,7 @@ function getDetailProduk() {
                   document.getElementById("jumlah_keranjang").value,
                   10
                 ) || 0;
-              const hargaProduk =
-                parseInt(selectedProduct.harga_produk, 10) || 0;
+              const hargaProduk = parseInt(data.harga_produk, 10) || 0;
               const total2 = jumlahKeranjang * hargaProduk;
 
               // Logging values to console for debugging
@@ -109,86 +104,6 @@ function getDetailProduk() {
     alert("No product selected");
   }
 }
-
-// function showDetailProduct() {
-//   // Retrieve product and user data from localStorage
-//   const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
-//   console.log("Selected Product:", selectedProduct);
-
-//   showUlasan(selectedProduct.id);
-
-//   if (selectedProduct) {
-//     document.getElementById("image_url").src = selectedProduct.image_url;
-//     document.getElementById("nama_produk").textContent =
-//       selectedProduct.nama_produk;
-//     document.getElementById(
-//       "harga_produk"
-//     ).textContent = `Rp${selectedProduct.harga_produk}`;
-//     document.getElementById(
-//       "jumlah_stok"
-//     ).textContent = `Tersisa : ${selectedProduct.jumlah_stok}`;
-//     document.getElementById("kategori_produk").textContent =
-//       selectedProduct.kategori_produk;
-//     document.getElementById("nama_vendor").textContent =
-//       selectedProduct.nama_vendor;
-//     document.getElementById("image_profil").src = selectedProduct.image_profil;
-
-//     document.getElementById("kota").textContent = selectedProduct.kota;
-//     document.getElementById("deskripsi-produk").textContent =
-//       selectedProduct.deskripsi;
-
-//     // Add hidden input for produk_id in the form
-//     const produkIdInput = document.createElement("input");
-//     produkIdInput.type = "hidden";
-//     produkIdInput.name = "produk_id";
-//     produkIdInput.value = selectedProduct.id;
-//     document.getElementById("addDetailBelanja").appendChild(produkIdInput);
-
-//     const produkIdInput2 = document.createElement("input");
-//     produkIdInput2.type = "hidden";
-//     produkIdInput2.name = "produk_id";
-//     produkIdInput2.value = selectedProduct.id;
-//     document.getElementById("addKeranjang").appendChild(produkIdInput2);
-
-//     document.getElementById("jumlah_beli").addEventListener("input", () => {
-//       const jumlahBeli =
-//         parseInt(document.getElementById("jumlah_beli").value, 10) || 0;
-//       const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
-//       const total = jumlahBeli * hargaProduk;
-
-//       // Logging values to console for debugging
-//       console.log("Jumlah Beli:", jumlahBeli);
-//       console.log("Harga Produk:", hargaProduk);
-//       console.log("Total:", total);
-
-//       document.getElementById(
-//         "total"
-//       ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
-//       document.getElementById("total_hidden").value = total;
-//     });
-
-//     document
-//       .getElementById("jumlah_keranjang")
-//       .addEventListener("input", () => {
-//         const jumlahKeranjang =
-//           parseInt(document.getElementById("jumlah_keranjang").value, 10) || 0;
-//         const hargaProduk = parseInt(selectedProduct.harga_produk, 10) || 0;
-//         const total2 = jumlahKeranjang * hargaProduk;
-
-//         // Logging values to console for debugging
-//         console.log("Jumlah Keranjang:", jumlahKeranjang);
-//         console.log("Harga Produk:", hargaProduk);
-//         console.log("Total:", total2);
-
-//         document.getElementById(
-//           "total2"
-//         ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
-//         document.getElementById("total_hidden2").value = total2;
-//       });
-//   } else {
-//     alert("No product selected");
-//   }
-// }
 
 function showAlamat() {
   fetch("../php/get_user_info.php")
@@ -252,9 +167,13 @@ function cekJumlahBeli(event) {
   }
 }
 
-function closeModal(modal_id) {
+function closeModal(modal_id, keterangan) {
   document.getElementById(modal_id).style.display = "none";
   document.body.style.overflow = "";
+
+  if (keterangan === "Pembelian berhasil!") {
+    getDetailProduk();
+  }
 }
 
 function submitDetailBelanja() {
@@ -277,7 +196,6 @@ function submitDetailBelanja() {
         // alert("Pembelian berhasil!");
         showModalSuccess("Pembelian berhasil!");
         // window.location.href = "../html/home.html"; // Redirect ke halaman utama
-        showDetailProduct();
       } else {
         showModalFail("Silahkan coba lagi!");
         // alert("Gagal melakukan pembelian, silakan coba lagi.");
@@ -330,7 +248,7 @@ function showModalSuccess(keterangan) {
                         <img src="../images/success-icon.png" alt="Success Image" style="max-width: 100px; margin-bottom: 10px;">    
                         <h2>Sukses</h2>
                             <p>${keterangan}</p>
-                             <button onclick="closeModal('modal-success')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                             <button onclick="closeModal('modal-success', '${keterangan}')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
                         </div>
                     </div>
                 `;
@@ -360,44 +278,6 @@ function showModalFail(keterangan) {
   // Mencegah scroll background saat modal ditampilkan
   document.body.style.overflow = "hidden";
 }
-
-fetch("../php/get_metode_pembayaran.php")
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  })
-  .then((data) => {
-    const select = document.getElementById("metode_pembayaran");
-    // Clear existing options
-    select.innerHTML =
-      '<option value="" disabled selected>Pilih metode pembayaran</option>';
-    data.forEach((item) => {
-      const option = document.createElement("option");
-      option.value = item.id; // Gunakan ID sebagai value
-      option.textContent = item.metode_pembayaran; // Tampilkan nama metode
-      select.appendChild(option);
-    });
-
-    select.addEventListener("change", (event) => {
-      const selectedId = event.target.value; // Ambil nilai ID dari option yang dipilih
-      console.log("ID metode pembayaran yang dipilih:", selectedId);
-
-      // Update hidden input field for metode_pembayaran_id
-      const metodePembayaranIdInput = document.createElement("input");
-      metodePembayaranIdInput.type = "hidden";
-      metodePembayaranIdInput.name = "metode_pembayaran_id";
-      metodePembayaranIdInput.value = selectedId;
-      document
-        .getElementById("addDetailBelanja")
-        .appendChild(metodePembayaranIdInput);
-    });
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-    alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
-  });
 
 function showUlasan(produk_id) {
   fetch(
@@ -454,61 +334,40 @@ function showUlasan(produk_id) {
     });
 }
 
-function showDetailProduct(produk_id) {
-  fetch(
-    `../php/get_ulasan_produk.php?produk_id=${encodeURIComponent(produk_id)}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Data fetched:", data);
-
-      const listUlasanContainer = document.getElementById(
-        "container-list-ulasan"
-      );
-      while (listUlasanContainer.firstChild) {
-        listUlasanContainer.removeChild(listUlasanContainer.firstChild);
-      }
-
-      if (!data || data.length == 0) {
-        console.log("belum ada ulasan");
-      } else {
-        data.forEach((ulasan) => {
-          if (ulasan.ulasan == "") {
-            console.log("belum ada ulasan");
-            const noDataFound = document.createElement("div");
-            noDataFound.className = "ulasan-noDataFound";
-
-            noDataFound.innerHTML = `
-          <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
-          <img
-          src="../images/no_data_found.jpeg"
-          style="height: 300px; width: 300px; align-items: center;"
-          />
-          <h4>Belum ada ulasan untuk produk ini.</h4>
-          </div>
-        `;
-            listUlasanContainer.appendChild(noDataFound);
-          } else {
-            console.log("ulasan :", ulasan);
-            const ulasanCard = document.createElement("div");
-            ulasanCard.className = "ulasan-card";
-            // ulasanCard.id = `ulasan-card-${ulasan.id}`;
-
-            ulasanCard.innerHTML = `
-          <div style="display:flex; flex-flow:column;">
-            <div>
-              <i class="fas fa-user" style="border: 2px solid #000; border-radius: 50%; padding: 5px; margin-right: 8px;"></i>
-              <label class="sub-title">${ulasan.username}</label>
-            </div>
-            <label style="margin-left:40px; margin-right:20px; word-wrap: break-word;">${ulasan.ulasan}</label>
-          </div>
-          `;
-            listUlasanContainer.appendChild(ulasanCard);
-          }
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching user:", error);
+fetch("../php/get_metode_pembayaran.php")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    const select = document.getElementById("metode_pembayaran");
+    // Clear existing options
+    select.innerHTML =
+      '<option value="" disabled selected>Pilih metode pembayaran</option>';
+    data.forEach((item) => {
+      const option = document.createElement("option");
+      option.value = item.id; // Gunakan ID sebagai value
+      option.textContent = item.metode_pembayaran; // Tampilkan nama metode
+      select.appendChild(option);
     });
-}
+
+    select.addEventListener("change", (event) => {
+      const selectedId = event.target.value; // Ambil nilai ID dari option yang dipilih
+      console.log("ID metode pembayaran yang dipilih:", selectedId);
+
+      // Update hidden input field for metode_pembayaran_id
+      const metodePembayaranIdInput = document.createElement("input");
+      metodePembayaranIdInput.type = "hidden";
+      metodePembayaranIdInput.name = "metode_pembayaran_id";
+      metodePembayaranIdInput.value = selectedId;
+      document
+        .getElementById("addDetailBelanja")
+        .appendChild(metodePembayaranIdInput);
+    });
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+    alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
+  });

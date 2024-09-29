@@ -12,7 +12,11 @@ $input = json_decode(file_get_contents("php://input"), true);
 $produk_id = $input['produk_id'] ?? null;
 
 if (isset($_SESSION['user_id']) && $produk_id !== null) {
-    $stmt = $conn->prepare("SELECT * FROM produk WHERE id = ?");
+    $stmt = $conn->prepare("SELECT p.*, v.* 
+                            FROM produk p 
+                            JOIN vendor v ON p.vendor_id = v.id 
+                            WHERE p.id = ?;
+");
     $stmt->bind_param("i", $produk_id);
     $stmt->execute();
     $result = $stmt->get_result();

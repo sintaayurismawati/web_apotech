@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt_update_stock->close();
             }
         } else {
-            echo "Stok tidak mencukupi.";
+            echo "Stok tidak mencukupi.jumlah stok = $jumlah_stok";
         }
 
         $stmt->close();
