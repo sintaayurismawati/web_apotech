@@ -334,40 +334,42 @@ function showUlasan(produk_id) {
     });
 }
 
-fetch("../php/get_metode_pembayaran.php")
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  })
-  .then((data) => {
-    const select = document.getElementById("metode_pembayaran");
-    // Clear existing options
-    select.innerHTML =
-      '<option value="" disabled selected>Pilih metode pembayaran</option>';
-    data.forEach((item) => {
-      const option = document.createElement("option");
-      option.value = item.id; // Gunakan ID sebagai value
-      option.textContent = item.metode_pembayaran; // Tampilkan nama metode
-      select.appendChild(option);
-    });
+function getMetodePembayaran() {
+  fetch("../php/get_metode_pembayaran.php")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const select = document.getElementById("metode_pembayaran");
+      // Clear existing options
+      select.innerHTML =
+        '<option value="" disabled selected>Pilih metode pembayaran</option>';
+      data.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.id; // Gunakan ID sebagai value
+        option.textContent = item.metode_pembayaran; // Tampilkan nama metode
+        select.appendChild(option);
+      });
 
-    select.addEventListener("change", (event) => {
-      const selectedId = event.target.value; // Ambil nilai ID dari option yang dipilih
-      console.log("ID metode pembayaran yang dipilih:", selectedId);
+      select.addEventListener("change", (event) => {
+        const selectedId = event.target.value; // Ambil nilai ID dari option yang dipilih
+        console.log("ID metode pembayaran yang dipilih:", selectedId);
 
-      // Update hidden input field for metode_pembayaran_id
-      const metodePembayaranIdInput = document.createElement("input");
-      metodePembayaranIdInput.type = "hidden";
-      metodePembayaranIdInput.name = "metode_pembayaran_id";
-      metodePembayaranIdInput.value = selectedId;
-      document
-        .getElementById("addDetailBelanja")
-        .appendChild(metodePembayaranIdInput);
+        // Update hidden input field for metode_pembayaran_id
+        const metodePembayaranIdInput = document.createElement("input");
+        metodePembayaranIdInput.type = "hidden";
+        metodePembayaranIdInput.name = "metode_pembayaran_id";
+        metodePembayaranIdInput.value = selectedId;
+        document
+          .getElementById("addDetailBelanja")
+          .appendChild(metodePembayaranIdInput);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
     });
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-    alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
-  });
+}

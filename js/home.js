@@ -1009,7 +1009,28 @@ function showModalFail(keterangan) {
 
 let pesananIdToDelete = null;
 
-function showModalConfirm(pesananId) {
+function showModalConfirm2(pesananId) {
+  pesananIdToDelete = pesananId;
+  var modalHTML = `
+                    <div id="modal-confirm" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                            <p>Apakah anda yakin untuk menghapus?</p>
+                            <div style="display: flex; flex-flow: row;">
+                              <button onclick="deleteHistori()" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Ya</button>
+                              <button onclick="closeModal('modal-confirm')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Tidak</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function showModalConfirm(keterangan, produkId, pesananId) {
   pesananIdToDelete = pesananId;
   var modalHTML = `
                     <div id="modal-confirm" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
