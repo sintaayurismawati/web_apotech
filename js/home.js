@@ -192,56 +192,72 @@ document.querySelectorAll(".dropdown-item").forEach((item) => {
         return response.json();
       })
       .then((data) => {
-        console.log("Data fetched:", data);
+        if (!data || data.length === 0) {
+          const noDataFound = document.createElement("div");
+          noDataFound.className = "histori-noDataFound";
+          noDataFound.innerHTML = `
+              <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+                <img
+                  src="../images/no_data_found.jpeg"
+                  style="height: 300px; width: 300px; align-items: center;"
+                />
+                <h4>Maaf, produk belum tersedia.</h4>
+              </div>
+            `;
+          // Menambahkan noDataFound ke historiContainer
+          productContainer.appendChild(noDataFound);
+        } else {
+          console.log("Data fetched:", data);
 
-        let currentRow = document.createElement("div");
-        currentRow.className = "product-row";
-        productContainer.appendChild(currentRow);
+          let currentRow = document.createElement("div");
+          currentRow.className = "product-row";
+          productContainer.appendChild(currentRow);
 
-        data.forEach((product, index) => {
-          console.log("Product:", product);
+          data.forEach((product, index) => {
+            console.log("Product:", product);
 
-          const productItem = document.createElement("div");
-          productItem.className = "product-item";
-          productItem.id = "product-item";
-          productItem.addEventListener("click", () => {
-            localStorage.setItem("selectedProduct", JSON.stringify(product));
-            console.log("Product saved to localStorage:", product);
-            window.location.href = "../html/detail_produk.html";
+            const productItem = document.createElement("div");
+            productItem.className = "product-item";
+            productItem.id = "product-item";
+            productItem.addEventListener("click", () => {
+              localStorage.setItem("selectedProduct", JSON.stringify(product));
+              console.log("Product saved to localStorage:", product);
+              window.location.href = "../html/detail_produk.html";
+            });
+
+            const productImage = document.createElement("img");
+            productImage.className = "product-image";
+            productImage.src = product.image_url;
+            productImage.alt = "product image";
+
+            const productDetails = document.createElement("div");
+            productDetails.className = "product-details";
+
+            const productName = document.createElement("div");
+            productName.className = "product-name";
+            productName.textContent = product.nama_produk;
+
+            const productPrice = document.createElement("div");
+            productPrice.className = "product-price";
+            productPrice.textContent = `Rp ${product.harga_produk}`;
+
+            productDetails.appendChild(productName);
+            productDetails.appendChild(productPrice);
+
+            productItem.appendChild(productImage);
+            productItem.appendChild(productDetails);
+
+            currentRow.appendChild(productItem);
+
+            // Check if current row has 4 products
+            if ((index + 1) % 4 === 0) {
+              // Create a new row if current row is full
+              currentRow = document.createElement("div");
+              currentRow.className = "product-row";
+              productContainer.appendChild(currentRow);
+            }
           });
-
-          const productImage = document.createElement("img");
-          productImage.className = "product-image";
-          productImage.src = product.image_url;
-          productImage.alt = "product image";
-
-          const productDetails = document.createElement("div");
-          productDetails.className = "product-details";
-
-          const productName = document.createElement("div");
-          productName.className = "product-name";
-          productName.textContent = product.nama_produk;
-
-          const productPrice = document.createElement("div");
-          productPrice.className = "product-price";
-          productPrice.textContent = `Rp ${product.harga_produk}`;
-
-          productDetails.appendChild(productName);
-          productDetails.appendChild(productPrice);
-
-          productItem.appendChild(productImage);
-          productItem.appendChild(productDetails);
-
-          currentRow.appendChild(productItem);
-
-          // Check if current row has 4 products
-          if ((index + 1) % 4 === 0) {
-            // Create a new row if current row is full
-            currentRow = document.createElement("div");
-            currentRow.className = "product-row";
-            productContainer.appendChild(currentRow);
-          }
-        });
+        }
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
@@ -548,18 +564,18 @@ function loadHistori(status) {
                               </div>
                               ${
                                 showCancelButton
-                                  ? `<button class="btn-batalkan" style="height:35px; border:none; border-radius:10px; background-color: rgb(221, 104, 104); color: #fff; cursor: pointer;" onclick="showModalConfirm(${histori.id})">Batalkan</button>`
+                                  ? `<button class="btn-batalkan" style="height:35px; border:none; border-radius:10px; background-color: rgb(221, 104, 104); color: #fff; cursor: pointer;" onclick="showModalConfirm2(${histori.id})">Batalkan</button>`
                                   : ""
                               }
                               ${
-                                showUlasanButton && histori.ulasan == ""
+                                showUlasanButton && histori.ulasan == null
                                   ? `<button class="btn-ulasan" style="height:35px; border:none; border-radius:10px; background-color: #00a69c; color: #fff; cursor: pointer;" onclick="showAddUlasanForm(${histori.id})";>Beri Ulasan</button>`
                                   : ""
                               }
                           </div>
                       </div>
                       ${
-                        histori.ulasan != ""
+                        histori.ulasan != null
                           ? `
                           <div style="margin-top:20px; margin-left:20px; margin-right:20px; display:flex; flex-flow:column; background-color: #fbffbf; padding: 15px 40px 15px 40px; border:none; border-radius:10px;">
                             <label class="sub-title">Ulasan :</label>
@@ -623,6 +639,7 @@ function kirimUlasan(id) {
     .then((data) => {
       console.log("Data received:", data);
       if (data.status === "success") {
+        loadHistori("Selesai");
         closeModal("modal-ulasan");
         showModalSuccess("Ulasan berhasil dikirim.");
       } else {
@@ -707,17 +724,29 @@ function loadKeranjang() {
   fetch("../php/get_keranjang.php")
     .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
     .then((data) => {
-      const keranjangContainer = document.getElementById("keranjang");
-      keranjangContainer.style.display = "block"; // Menampilkan container histori
+      if (!data || data.length === 0) {
+        const noDataFound = document.createElement("div");
+        noDataFound.className = "histori-noDataFound";
+        noDataFound.innerHTML = `
+              <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+                <img
+                  src="../images/no_data_found.jpeg"
+                  style="height: 300px; width: 300px; align-items: center;"
+                />
+                <h4>Belum ada produk dalam keranjang.</h4>
+              </div>
+            `;
+        // Menambahkan noDataFound ke historiContainer
+        keranjangContainer.appendChild(noDataFound);
+      } else {
+        data.forEach((keranjang) => {
+          // Membuat elemen histori-card baru
+          console.log("Keranjang:", keranjang);
+          const keranjangCard = document.createElement("div");
+          keranjangCard.className = "keranjang-card";
+          tanggalAddKeranjang = formatTanggal(keranjang.created_at);
 
-      data.forEach((keranjang) => {
-        // Membuat elemen histori-card baru
-        console.log("Keranjang:", keranjang);
-        const keranjangCard = document.createElement("div");
-        keranjangCard.className = "keranjang-card";
-        tanggalAddKeranjang = formatTanggal(keranjang.created_at);
-
-        keranjangCard.innerHTML = `
+          keranjangCard.innerHTML = `
                     <div style="display: flex; flex-flow: row; width: 100%;">
                         <div style="width: 300px; height: 250px;">
                             <img src="${keranjang.image_url}">
@@ -746,52 +775,55 @@ function loadKeranjang() {
                     </div>
                 `;
 
-        const produkIdInput = document.createElement("input");
-        produkIdInput.type = "hidden";
-        produkIdInput.name = "produk_id";
-        produkIdInput.value = keranjang.produk_id;
-        document.getElementById("addDetailBelanja").appendChild(produkIdInput);
+          const produkIdInput = document.createElement("input");
+          produkIdInput.type = "hidden";
+          produkIdInput.name = "produk_id";
+          produkIdInput.value = keranjang.produk_id;
+          document
+            .getElementById("addDetailBelanja")
+            .appendChild(produkIdInput);
 
-        keranjangCard
-          .querySelector(".btn-beli-krj")
-          .addEventListener("click", function () {
-            const hargaLabel = keranjangCard.querySelector(
-              ".harga-produk-label"
-            ).textContent;
-            hargaProdukKrj = hargaLabel.replace("Rp", "").trim();
-            stokTersisa =
-              keranjangCard.querySelector(".stok-tersisa").textContent;
-            console.log("Harga Produk Krj:", hargaProdukKrj);
+          keranjangCard
+            .querySelector(".btn-beli-krj")
+            .addEventListener("click", function () {
+              const hargaLabel = keranjangCard.querySelector(
+                ".harga-produk-label"
+              ).textContent;
+              hargaProdukKrj = hargaLabel.replace("Rp", "").trim();
+              stokTersisa =
+                keranjangCard.querySelector(".stok-tersisa").textContent;
+              console.log("Harga Produk Krj:", hargaProdukKrj);
 
-            // Panggil fungsi showAddDetailBelanja dan showAlamat
-            showAddDetailBelanja();
-            showAlamat();
+              // Panggil fungsi showAddDetailBelanja dan showAlamat
+              showAddDetailBelanja();
+              showAlamat();
+            });
+
+          const btnHapusKrj = keranjangCard.querySelector(".btn-hps-krj");
+          btnHapusKrj.addEventListener("click", function () {
+            // const keranjangId = keranjang.id;
+            const keranjangId = parseInt(keranjang.id, 10);
+
+            fetch("../php/delete_keranjang.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ id: keranjangId }),
+            })
+              .then((response) => response.text())
+              .then((result) => {
+                console.log(result); // Tampilkan hasil dari delete_keranjang.php
+                // Hapus keranjangCard dari tampilan jika perlu
+                keranjangCard.remove();
+              })
+              .catch((error) => console.error("Error deleting:", error));
           });
 
-        const btnHapusKrj = keranjangCard.querySelector(".btn-hps-krj");
-        btnHapusKrj.addEventListener("click", function () {
-          // const keranjangId = keranjang.id;
-          const keranjangId = parseInt(keranjang.id, 10);
-
-          fetch("../php/delete_keranjang.php", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: keranjangId }),
-          })
-            .then((response) => response.text())
-            .then((result) => {
-              console.log(result); // Tampilkan hasil dari delete_keranjang.php
-              // Hapus keranjangCard dari tampilan jika perlu
-              keranjangCard.remove();
-            })
-            .catch((error) => console.error("Error deleting:", error));
+          // Menambahkan histori-card ke container histori
+          keranjangContainer.appendChild(keranjangCard);
         });
-
-        // Menambahkan histori-card ke container histori
-        keranjangContainer.appendChild(keranjangCard);
-      });
+      }
     })
     .catch((error) => console.error("Error fetching data:", error));
 }

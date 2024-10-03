@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // showDetailProduct();
   getDetailProduk();
+  getMetodePembayaran();
 });
 
 function getDetailProduk() {
@@ -51,12 +51,6 @@ function getDetailProduk() {
             .getElementById("addDetailBelanja")
             .appendChild(produkIdInput);
 
-          const produkIdInput2 = document.createElement("input");
-          produkIdInput2.type = "hidden";
-          produkIdInput2.name = "produk_id";
-          produkIdInput2.value = produk_id;
-          document.getElementById("addKeranjang").appendChild(produkIdInput2);
-
           document
             .getElementById("jumlah_beli")
             .addEventListener("input", () => {
@@ -74,28 +68,6 @@ function getDetailProduk() {
                 "total"
               ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
               document.getElementById("total_hidden").value = total;
-            });
-
-          document
-            .getElementById("jumlah_keranjang")
-            .addEventListener("input", () => {
-              const jumlahKeranjang =
-                parseInt(
-                  document.getElementById("jumlah_keranjang").value,
-                  10
-                ) || 0;
-              const hargaProduk = parseInt(data.harga_produk, 10) || 0;
-              const total2 = jumlahKeranjang * hargaProduk;
-
-              // Logging values to console for debugging
-              console.log("Jumlah Keranjang:", jumlahKeranjang);
-              console.log("Harga Produk:", hargaProduk);
-              console.log("Total:", total2);
-
-              document.getElementById(
-                "total2"
-              ).textContent = `Total: Rp${total2.toLocaleString("id-ID")}`;
-              document.getElementById("total_hidden2").value = total2;
             });
         }
       })
@@ -167,13 +139,19 @@ function cekJumlahBeli(event) {
   }
 }
 
-function closeModal(modal_id, keterangan) {
-  document.getElementById(modal_id).style.display = "none";
-  document.body.style.overflow = "";
+// function closeModal(modal_id, keterangan) {
+//   document.getElementById(modal_id).style.display = "none";
+//   document.body.style.overflow = "";
 
-  if (keterangan === "Pembelian berhasil!") {
-    getDetailProduk();
-  }
+//   // if (keterangan === "Pembelian berhasil!") {
+//   //   getDetailProduk();
+//   // }
+// }
+
+function closeModal(modal_id) {
+  document.getElementById(modal_id).remove();
+  document.body.style.overflow = "";
+  getDetailProduk();
 }
 
 function submitDetailBelanja() {
@@ -192,7 +170,7 @@ function submitDetailBelanja() {
     .then((data) => {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
-        closeModal("modal-beli"); // Tutup modal jika berhasil
+        closeModal("modal-beli");
         // alert("Pembelian berhasil!");
         showModalSuccess("Pembelian berhasil!");
         // window.location.href = "../html/home.html"; // Redirect ke halaman utama
@@ -223,7 +201,8 @@ function submitKeranjang() {
     .then((data) => {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
-        closeModal("modal-beli"); // Tutup modal jika berhasil
+        // closeModal("modal-beli");
+        getDetailProduk();
         showModalSuccess("Produk telah masuk keranjang!");
       } else {
         showModalFail("Silahkan coba lagi!");
@@ -236,19 +215,20 @@ function submitKeranjang() {
     });
 }
 
-function showAddKeranjang() {
-  document.getElementById("modal-keranjang").style.display = "flex";
-  document.body.style.overflow = "hidden";
-}
+// function showAddKeranjang() {
+//   document.getElementById("modal-keranjang").style.display = "flex";
+//   document.body.style.overflow = "hidden";
+// }
 
 function showModalSuccess(keterangan) {
+  console.log("showModalSuccess called with:", keterangan);
   var modalHTML = `
                     <div id="modal-success" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
                         <img src="../images/success-icon.png" alt="Success Image" style="max-width: 100px; margin-bottom: 10px;">    
                         <h2>Sukses</h2>
                             <p>${keterangan}</p>
-                             <button onclick="closeModal('modal-success', '${keterangan}')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+                             <button onclick="closeModal('modal-success')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
                         </div>
                     </div>
                 `;
