@@ -1,26 +1,33 @@
 <?php
-session_start();
+session_start(); // Mulai sesi
+
 include('db_connect.php');
 
-if (isset($_GET['id']) && isset($_SESSION['user_id'])) {
-    $prouctId = $_GET['id'];
+if (!$conn) {
+    die(json_encode(["status" => "error", "message" => "Connection failed: " . mysqli_connect_error()]));
+}
 
-    // Pastikan admin yang melakukan penghapusan
-    if ($_SESSION['user_id'] == 0) { 
-        $stmt = $conn->prepare("DELETE FROM produk WHERE id = ?");
-        $stmt->bind_param("i", $prouctId);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_SESSION['user_id'])) { 
+        $produk_id = (int) $_POST['edit_produk_id'];
+
+        $stmt = $conn->prepare("UPDATE produk SET 
+                                deleted_at = NOW()
+                                WHERE id = ?");
+        $stmt->bind_param("i", $produk_id);
+        
         if ($stmt->execute()) {
-            echo json_encode(["success" => true]);
+            echo json_encode(["status" => "success", "message" => "Update successful"]);
         } else {
-            echo json_encode(["error" => "Failed to delete product."]);
+            echo json_encode(["status" => "error", "message" => "Update error: " . $stmt->error]);
         }
+
         $stmt->close();
     } else {
-        echo json_encode(["error" => "Unauthorized action."]);
+        // Jika user_id tidak ada dalam sesi, kembali ke halaman login atau berikan pesan kesalahan
+        echo json_encode(["status" => "error", "message" => "User ID not found in session."]);
+        header("Location: ../html/login.html");
     }
 
-    $conn->close();
-} else {
-    echo json_encode(["error" => "Invalid request or no session found."]);
+    mysqli_close($conn);
 }
-?>

@@ -31,7 +31,7 @@
             <button class="btn btn-edit" onclick="showEdit()">Edit</button>
             <button
               class="btn btn-hapus"
-              onclick="showAddDetailBelanja(), showAlamat()"
+              onclick="showModalConfirm(event, 'Apakah anda yakin ingin menghapus produk ini?', deleteProduct)"
             >
               Hapus
             </button>
@@ -94,12 +94,7 @@
           >
           <h2 style="text-align: center">Edit Detail Produk</h2>
           <row>
-            <form
-              id="editDetailProduk"
-              action="../php/update_detail_produk.php"
-              method="post"
-              onsubmit=""
-            >
+            <form id="editDetailProduk" action="" method="post">
               <label for="edit_nama_produk" style="margin-top: 10px"
                 >Nama Produk :</label
               >
@@ -171,6 +166,7 @@
                   type="submit"
                   id="btn-next"
                   value="Simpan"
+                  onclick="submitUpdateForm(event)"
                   style="
                     background-color: #00a69c;
                     color: white;

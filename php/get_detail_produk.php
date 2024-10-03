@@ -12,7 +12,8 @@ $input = json_decode(file_get_contents("php://input"), true);
 $produk_id = $input['produk_id'] ?? null;
 
 if (isset($_SESSION['user_id']) && $produk_id !== null) {
-    $stmt = $conn->prepare("SELECT p.*, v.* 
+    $stmt = $conn->prepare("SELECT p.*,
+                            v.nama_vendor, v.kota, v.alamat, v.image_profil, v.no_telp, v.status 
                             FROM produk p 
                             JOIN vendor v ON p.vendor_id = v.id 
                             WHERE p.id = ?;
