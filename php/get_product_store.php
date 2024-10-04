@@ -10,7 +10,7 @@ if (!$conn) {
 if (isset($_SESSION['vendor_id'])) {
     $vendor_id = $_SESSION['vendor_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM produk WHERE vendor_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM produk WHERE vendor_id = ? AND deleted_at IS NULL");
     $stmt->bind_param("i", $vendor_id);
     $stmt->execute();
     $result = $stmt->get_result();

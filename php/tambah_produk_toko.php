@@ -21,13 +21,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = $conn->prepare("INSERT INTO produk (vendor_id, nama_produk, kategori_produk, harga_produk, jumlah_stok, deskripsi, image_url) VALUES (?, ?, ?, ?, ?, ?,?)");
         $stmt->bind_param("issiiss", $vendor_id, $nama_produk, $kategori_produk, $harga_produk, $jumlah_stok, $deskripsi, $image_url);
+
         if ($stmt->execute()) {
-            echo "Insert successful";
-            header("Location: ../html/home.html?addProductStore=success");
+            echo json_encode(["status" => "success", "message" => "Insert successful"]);
         } else {
-            echo "Insert error: " . $stmt->error;
-            header("Location: ../html/home.html?addProductStore=error");
+            echo json_encode(["status" => "error", "message" => "Insert error: " . $stmt->error]);
         }
+
+        // if ($stmt->execute()) {
+        //     echo "Insert successful";
+        //     header("Location: ../html/home.html?addProductStore=success");
+        // } else {
+        //     echo "Insert error: " . $stmt->error;
+        //     header("Location: ../html/home.html?addProductStore=error");
+        // }
 
         $stmt->close();
     } else {

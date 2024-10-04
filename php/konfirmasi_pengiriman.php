@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $data = json_decode(file_get_contents('php://input'), true);
         $pesanan_id = (int) $data['id'];
 
-        $stmt = $conn->prepare("UPDATE detail_belanja SET status='Telah Dikirim' WHERE id=?");
+        $stmt = $conn->prepare("UPDATE detail_belanja SET status='Selesai' WHERE id=?");
         $stmt->bind_param("i", $pesanan_id);
         if ($stmt->execute()) {
             echo json_encode(["status" => "success", "message" => "Update successful"]);

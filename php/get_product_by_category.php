@@ -13,7 +13,7 @@ if (isset($_SESSION['user_id'])) {
     $stmt = $conn->prepare("SELECT p.id, p.vendor_id, p.nama_produk, p.kategori_produk, p.harga_produk, p.jumlah_stok, p.jumlah_terjual, p.deskripsi, p.image_url, v.nama_vendor, v.kota, v.image_profil 
                             FROM produk p 
                             JOIN vendor v ON p.vendor_id = v.id
-                            WHERE kategori_produk=?;");
+                            WHERE kategori_produk=? AND p.deleted_at IS NULL;");
     $stmt->bind_param("s", $kategori);
     $stmt->execute();
     $result = $stmt->get_result();

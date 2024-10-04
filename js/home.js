@@ -277,6 +277,9 @@ function showTokoSaya() {
     .then((data) => {
       console.log(data);
       var tokoSayaDiv = document.getElementById("toko-saya");
+      while (tokoSayaDiv.firstChild) {
+        tokoSayaDiv.removeChild(tokoSayaDiv.firstChild);
+      }
 
       if (data.error) {
         // Handle error case
@@ -386,14 +389,21 @@ function showAddProductStoreForm() {
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
                 <span class="close" onclick="closeModal('modal')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Produk</h2>
-                <form id="addProductStoreForm" action="../php/tambah_produk_toko.php" method="post">
+                <form id="addProductStoreForm" method="post" onsubmit="submitProductStoreForm(event)">
                     <div style="display:flex; flex-flow:column;">
                         <label for="nama_produk" style="margin-top: 10px;">Nama Produk:</label>
                         <input type="text" id="nama_produk" name="nama_produk" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
                         <label for="kategori_produk" style="margin-top: 10px;">Kategori Produk:</label>
-                        <input type="text" id="kategori_produk" name="kategori_produk" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
+                        <select id="kategori_produk" name="kategori_produk" required style="width: 99%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                            <option value="" disabled selected>Pilih kategori produk</option>    
+                            <option value="Obat Kapsul">Obat Kapsul</option>
+                            <option value="Obat Sirup">Obat Sirup</option>
+                            <option value="Obat Tetes">Obat Tetes</option>
+                            <option value="Obat Oles">Obat Oles</option>
+                            <option value="Alat Medis">Alat Medis</option>
+                        </select>
+                        
                         <label for="harga_produk" style="margin-top: 10px;">Harga Produk:</label>
                         <input type="number" id="harga_produk" name="harga_produk" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
@@ -412,6 +422,32 @@ function showAddProductStoreForm() {
         </div>
     `;
   document.body.insertAdjacentHTML("beforeend", modalHTML);
+  document.body.style.overflow = "hidden";
+}
+
+function submitProductStoreForm(event) {
+  event.preventDefault();
+  const formData = new FormData(document.getElementById("addProductStoreForm"));
+
+  fetch("../php/tambah_produk_toko.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        closeModal("modal");
+        showModalSuccess("Produk berhasil ditambahkan.");
+        showTokoSaya();
+      } else {
+        console.error("Error adding store:", data.error);
+        showModalFail("Gagal menambahkan produk.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      // Handle network errors or other exceptions
+    });
 }
 
 function showAddStoreForm() {
@@ -476,13 +512,32 @@ function submitStoreForm(event) {
 }
 
 function showHistori() {
+  // Sembunyikan dan tampilkan elemen sesuai kebutuhan
   document.getElementById("product-container").style.display = "none";
   document.getElementById("toko-saya").style.display = "none";
   document.getElementById("histori-1").style.display = "block";
   document.getElementById("keranjang").style.display = "none";
   document.getElementById("detail-product").style.display = "none";
 
-  loadHistori("Dalam Antrian");
+  // Lakukan fetch ke PHP untuk cek histori
+  fetch("../php/cek_histori.php")
+    .then((response) => response.json())
+    .then((data) => {
+      // Jika data berhasil diambil dan tidak ada error
+      if (data.error) {
+        console.error(data.error); // Tampilkan pesan error jika ada
+      } else {
+        // Kamu bisa melakukan logika tambahan di sini jika diperlukan
+        console.log("Histori fetched:", data);
+      }
+      // Tetap jalankan loadHistori meskipun tidak ada update
+      loadHistori("Dalam Antrian");
+    })
+    .catch((error) => {
+      console.error("Error fetching histori:", error); // Handle error jika fetch gagal
+      // Tetap jalankan loadHistori meskipun fetch error
+      loadHistori("Dalam Antrian");
+    });
 }
 
 function loadHistori(status) {
