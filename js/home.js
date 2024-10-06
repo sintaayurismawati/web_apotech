@@ -453,9 +453,9 @@ function submitProductStoreForm(event) {
 function showAddStoreForm() {
   // Menampilkan popup modal
   var modalHTML = `
-        <div id="modal" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+        <div id="modal2" class="modal2" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative;">
-                <span class="close" onclick="closeModal("modal")" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                <span class="close" onclick="closeModal('modal2')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Toko</h2>
                 <form id="addStoreForm" action="../php/tambah_toko.php" method="post">
                     <div style="display:flex; flex-flow:column; gap:5px;">
@@ -497,7 +497,7 @@ function submitStoreForm(event) {
     .then((data) => {
       if (data.success) {
         // Handle success case
-        closeModal("modal"); // Close modal after successful submission
+        closeModal("modal2"); // Close modal after successful submission
         // Optionally, you can redirect or refresh the page here
       } else {
         // Handle error case
@@ -894,6 +894,23 @@ function loadKeranjang() {
 function closeModal(modal_id) {
   document.getElementById(modal_id).remove();
   document.body.style.overflow = "";
+
+  if (modal_id === "modal") {
+    document.getElementById("addProductStoreForm").reset();
+  } else if (modal_id === "modal-ulasan") {
+    document.getElementById("addUlasanForm").reset();
+  } else if (modal_id === "modal2") {
+    dosument.getElementById("addStoreForm").reset();
+  }
+}
+
+function closeModal2(modal_id) {
+  document.getElementById(modal_id).style.display = "none";
+  document.body.style.overflow = "";
+
+  if (modal_id === "modal-beli") {
+    document.getElementById("addDetailBelanja").reset();
+  }
 }
 
 function showAlamat() {

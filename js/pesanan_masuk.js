@@ -2,90 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadPesanan();
 });
 
-// function loadPesanan() {
-//   const pesananContainer = document.getElementById("pesanan-masuk");
-//   while (pesananContainer.firstChild) {
-//     pesananContainer.removeChild(pesananContainer.firstChild);
-//   }
-//   // Fetch data dari PHP
-//   fetch("../php/get_detail_belanja.php")
-//     .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
-//     .then((data) => {
-//       data.forEach((pesanan_masuk) => {
-//         // Membuat elemen histori-card baru
-//         console.log("Pesanan:", pesanan_masuk);
-//         const pesananCard = document.createElement("div");
-//         pesananCard.className = "pesanan-card";
-//         tanggalBeli = formatTanggal(pesanan_masuk.created_at);
-
-//         pesananCard.innerHTML = `
-//                     <div class="tanggal-container">
-//                         <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
-//                     </div>
-//                     <br>
-//                     <div style="display: flex; flex-flow: row; width: 100%;">
-//                         <div style="width: 300px; height: 250px;">
-//                             <img src="${pesanan_masuk.image_url}">
-//                         </div>
-//                         <div class="details">
-//                             <div>
-//                                 <label class="sub-title">${pesanan_masuk.nama_produk}</label>
-//                                 <label>${pesanan_masuk.jumlah_beli}x</label>
-//                             </div>
-//                             <div>
-//                                 <label class="sub-title">Total</label>
-//                                 <label>Rp${pesanan_masuk.total}</label>
-//                             </div>
-//                             <div>
-//                                 <label class="sub-title">Metode Pembayaran</label>
-//                                 <label>${pesanan_masuk.metode_pembayaran}</label>
-//                             </div>
-//                             <div>
-//                                 <label class="sub-title">Username</label>
-//                                 <label>${pesanan_masuk.username}</label>
-//                             </div>
-//                             <div>
-//                                 <label class="sub-title">Dikirim ke</label>
-//                                 <label>${pesanan_masuk.alamat_pengiriman}</label>
-//                             </div>
-//                             <div style="display: flex; gap: 10px; margin-top: 10px;">
-//                         <button class="btn-hps-psn">Batalkan Pesanan</button>
-//                         <button class="btn-konfirm-pengiriman">Konfirmasi Telah Dikirim</button>
-//                     </div>
-//                         </div>
-//                     </div>
-//                 `;
-
-//         const btnHapusPsn = pesananCard.querySelector(".btn-hps-psn");
-//         btnHapusPsn.addEventListener("click", function () {
-//           const pesananId = parseInt(pesanan_masuk.id, 10);
-
-//           showModalConfirm(
-//             "Apakah anda yakin ingin membatalkan pesanan?",
-//             batalkanPesanan(pesananId)
-//           );
-//         });
-
-//         const btnKonfirmPengiriman = pesananCard.querySelector(
-//           ".btn-konfirm-pengiriman"
-//         );
-//         btnKonfirmPengiriman.addEventListener("click", function () {
-//           // const keranjangId = keranjang.id;
-//           const pesananId = parseInt(pesanan_masuk.id, 10);
-
-//           showModalConfirm(
-//             "Konfirmasi bahwa pesanan telah dikirim.",
-//             konfirmasiPengiriman(pesananId)
-//           );
-//         });
-
-//         // Menambahkan histori-card ke container histori
-//         pesananContainer.appendChild(pesananCard);
-//       });
-//     })
-//     .catch((error) => console.error("Error fetching data:", error));
-// }
-
 function loadPesanan() {
   const pesananContainer = document.getElementById("pesanan-masuk");
   while (pesananContainer.firstChild) {
@@ -97,77 +13,92 @@ function loadPesanan() {
     .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
     .then((data) => {
       data.forEach((pesanan_masuk) => {
-        // Membuat elemen histori-card baru
+        // Membuat elemen pesanan-card baru
         console.log("Pesanan:", pesanan_masuk);
         const pesananCard = document.createElement("div");
         pesananCard.className = "pesanan-card";
         const tanggalBeli = formatTanggal(pesanan_masuk.created_at);
 
+        // Membuat isi HTML kartu pesanan
         pesananCard.innerHTML = `
-                    <div class="tanggal-container">
-                        <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
-                    </div>
-                    <br>
-                    <div style="display: flex; flex-flow: row; width: 100%;">
-                        <div style="width: 300px; height: 250px;">
-                            <img src="${pesanan_masuk.image_url}">
-                        </div>
-                        <div class="details">
-                            <div>
-                                <label class="sub-title">${pesanan_masuk.nama_produk}</label>
-                                <label>${pesanan_masuk.jumlah_beli}x</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Total</label>
-                                <label>Rp${pesanan_masuk.total}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Metode Pembayaran</label>
-                                <label>${pesanan_masuk.metode_pembayaran}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Username</label>
-                                <label>${pesanan_masuk.username}</label>
-                            </div>
-                            <div>
-                                <label class="sub-title">Dikirim ke</label>
-                                <label>${pesanan_masuk.alamat_pengiriman}</label>
-                            </div>
-                            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button class="btn-hps-psn">Batalkan Pesanan</button>
-                                <button class="btn-konfirm-pengiriman">Konfirmasi Telah Dikirim</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
+          <div class="tanggal-container">
+            <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
+          </div>
+          <br>
+          <div style="display: flex; flex-flow: row; width: 100%;">
+            <div style="width: 300px; height: 250px;">
+              <img src="${pesanan_masuk.image_url}">
+            </div>
+            <div class="details">
+              <div>
+                <label class="sub-title">${pesanan_masuk.nama_produk}</label>
+                <label>${pesanan_masuk.jumlah_beli}x</label>
+              </div>
+              <div>
+                <label class="sub-title">Total</label>
+                <label>Rp${pesanan_masuk.total}</label>
+              </div>
+              <div>
+                <label class="sub-title">Metode Pembayaran</label>
+                <label>${pesanan_masuk.metode_pembayaran}</label>
+              </div>
+              <div>
+                <label class="sub-title">Username</label>
+                <label>${pesanan_masuk.username}</label>
+              </div>
+              <div>
+                <label class="sub-title">Dikirim ke</label>
+                <label>${pesanan_masuk.alamat_pengiriman}</label>
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                ${
+                  pesanan_masuk.status === "Dalam Antrian"
+                    ? '<button class="btn-hps-psn">Batalkan Pesanan</button>'
+                    : ""
+                }
+                ${
+                  pesanan_masuk.status === "Sedang Diproses"
+                    ? '<button class="btn-konfirm-pengiriman">Konfirmasi Telah Dikirim</button>'
+                    : ""
+                }
+              </div>
+            </div>
+          </div>
+        `;
 
-        const btnHapusPsn = pesananCard.querySelector(".btn-hps-psn");
-        btnHapusPsn.addEventListener("click", function () {
-          const pesananId = parseInt(pesanan_masuk.id, 10);
+        // Event listener untuk tombol "Batalkan Pesanan"
+        if (pesanan_masuk.status === "Dalam Antrian") {
+          const btnHapusPsn = pesananCard.querySelector(".btn-hps-psn");
+          btnHapusPsn.addEventListener("click", function () {
+            const pesananId = parseInt(pesanan_masuk.id, 10);
 
-          showModalConfirm(
-            "Apakah anda yakin ingin membatalkan pesanan?",
-            function () {
-              batalkanPesanan(pesananId);
-            }
+            showModalConfirm(
+              "Apakah anda yakin ingin membatalkan pesanan?",
+              function () {
+                batalkanPesanan(pesananId);
+              }
+            );
+          });
+        }
+
+        // Event listener untuk tombol "Konfirmasi Telah Dikirim"
+        if (pesanan_masuk.status === "Sedang Diproses") {
+          const btnKonfirmPengiriman = pesananCard.querySelector(
+            ".btn-konfirm-pengiriman"
           );
-        });
+          btnKonfirmPengiriman.addEventListener("click", function () {
+            const pesananId = parseInt(pesanan_masuk.id, 10);
 
-        const btnKonfirmPengiriman = pesananCard.querySelector(
-          ".btn-konfirm-pengiriman"
-        );
-        btnKonfirmPengiriman.addEventListener("click", function () {
-          const pesananId = parseInt(pesanan_masuk.id, 10);
+            showModalConfirm(
+              "Konfirmasi bahwa pesanan telah dikirim.",
+              function () {
+                konfirmasiPengiriman(pesananId);
+              }
+            );
+          });
+        }
 
-          showModalConfirm(
-            "Konfirmasi bahwa pesanan telah dikirim.",
-            function () {
-              konfirmasiPengiriman(pesananId);
-            }
-          );
-        });
-
-        // Menambahkan histori-card ke container histori
+        // Menambahkan pesananCard ke dalam container pesanan
         pesananContainer.appendChild(pesananCard);
       });
     })
@@ -232,28 +163,6 @@ function showModalFail(keterangan) {
   // Mencegah scroll background saat modal ditampilkan
   document.body.style.overflow = "hidden";
 }
-
-// function showModalConfirm(keterangan, action) {
-//   // pesananIdToDelete = pesananId;
-
-//   var modalHTML = `
-//                     <div id="modal-confirm" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
-//                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
-//                             <p>${keterangan}</p>
-//                             <div style="display: flex; flex-flow: row;">
-//                               <button onclick= ${action} style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Ya</button>
-//                               <button onclick="closeModal('modal-confirm')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Tidak</button>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 `;
-
-//   // Memasukkan modal ke dalam halaman
-//   document.body.insertAdjacentHTML("beforeend", modalHTML);
-
-//   // Mencegah scroll background saat modal ditampilkan
-//   document.body.style.overflow = "hidden";
-// }
 
 function showModalConfirm(keterangan, callback) {
   var modalHTML = `
@@ -326,3 +235,91 @@ function konfirmasiPengiriman(pesananId) {
     })
     .catch((error) => console.error("Error :", error));
 }
+
+// function loadPesanan() {
+//   const pesananContainer = document.getElementById("pesanan-masuk");
+//   while (pesananContainer.firstChild) {
+//     pesananContainer.removeChild(pesananContainer.firstChild);
+//   }
+
+//   // Fetch data dari PHP
+//   fetch("../php/get_detail_belanja.php")
+//     .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
+//     .then((data) => {
+//       data.forEach((pesanan_masuk) => {
+//         // Membuat elemen histori-card baru
+//         console.log("Pesanan:", pesanan_masuk);
+//         const pesananCard = document.createElement("div");
+//         pesananCard.className = "pesanan-card";
+//         const tanggalBeli = formatTanggal(pesanan_masuk.created_at);
+
+//         pesananCard.innerHTML = `
+//                     <div class="tanggal-container">
+//                         <label style="font-weight: bold; color: #00a69c;">${tanggalBeli}</label>
+//                     </div>
+//                     <br>
+//                     <div style="display: flex; flex-flow: row; width: 100%;">
+//                         <div style="width: 300px; height: 250px;">
+//                             <img src="${pesanan_masuk.image_url}">
+//                         </div>
+//                         <div class="details">
+//                             <div>
+//                                 <label class="sub-title">${pesanan_masuk.nama_produk}</label>
+//                                 <label>${pesanan_masuk.jumlah_beli}x</label>
+//                             </div>
+//                             <div>
+//                                 <label class="sub-title">Total</label>
+//                                 <label>Rp${pesanan_masuk.total}</label>
+//                             </div>
+//                             <div>
+//                                 <label class="sub-title">Metode Pembayaran</label>
+//                                 <label>${pesanan_masuk.metode_pembayaran}</label>
+//                             </div>
+//                             <div>
+//                                 <label class="sub-title">Username</label>
+//                                 <label>${pesanan_masuk.username}</label>
+//                             </div>
+//                             <div>
+//                                 <label class="sub-title">Dikirim ke</label>
+//                                 <label>${pesanan_masuk.alamat_pengiriman}</label>
+//                             </div>
+//                             <div style="display: flex; gap: 10px; margin-top: 10px;">
+//                                 <button class="btn-hps-psn">Batalkan Pesanan</button>
+//                                 <button class="btn-konfirm-pengiriman">Konfirmasi Telah Dikirim</button>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 `;
+
+//         const btnHapusPsn = pesananCard.querySelector(".btn-hps-psn");
+//         btnHapusPsn.addEventListener("click", function () {
+//           const pesananId = parseInt(pesanan_masuk.id, 10);
+
+//           showModalConfirm(
+//             "Apakah anda yakin ingin membatalkan pesanan?",
+//             function () {
+//               batalkanPesanan(pesananId);
+//             }
+//           );
+//         });
+
+//         const btnKonfirmPengiriman = pesananCard.querySelector(
+//           ".btn-konfirm-pengiriman"
+//         );
+//         btnKonfirmPengiriman.addEventListener("click", function () {
+//           const pesananId = parseInt(pesanan_masuk.id, 10);
+
+//           showModalConfirm(
+//             "Konfirmasi bahwa pesanan telah dikirim.",
+//             function () {
+//               konfirmasiPengiriman(pesananId);
+//             }
+//           );
+//         });
+
+//         // Menambahkan histori-card ke container histori
+//         pesananContainer.appendChild(pesananCard);
+//       });
+//     })
+//     .catch((error) => console.error("Error fetching data:", error));
+// }

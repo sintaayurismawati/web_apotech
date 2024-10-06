@@ -149,9 +149,19 @@ function cekJumlahBeli(event) {
 // }
 
 function closeModal(modal_id) {
+  // document.getElementById(modal_id).remove();
   document.getElementById(modal_id).remove();
   document.body.style.overflow = "";
   getDetailProduk();
+}
+
+function closeModal2(modal_id) {
+  document.getElementById(modal_id).style.display = "none";
+  document.body.style.overflow = "";
+
+  if (modal_id === "modal-beli") {
+    document.getElementById("addDetailBelanja").reset();
+  }
 }
 
 function submitDetailBelanja() {
@@ -170,7 +180,8 @@ function submitDetailBelanja() {
     .then((data) => {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
-        closeModal("modal-beli");
+        document.getElementById("addDetailBelanja").reset();
+        closeModal2("modal-beli");
         // alert("Pembelian berhasil!");
         showModalSuccess("Pembelian berhasil!");
         // window.location.href = "../html/home.html"; // Redirect ke halaman utama

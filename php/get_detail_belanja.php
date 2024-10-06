@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
                             JOIN produk p ON db.produk_id = p.id
                             JOIN metode_pembayaran mp ON  db.metode_pembayaran_id = mp.id
                             JOIN users u ON db.user_id = u.id
-                            WHERE db.status = 'Dalam Antrian'
+                            WHERE db.status = 'Dalam Antrian' OR db.status = 'Sedang Diproses'
                             ORDER BY db.created_at DESC;");
     $stmt->execute();
     $result = $stmt->get_result();

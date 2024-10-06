@@ -61,11 +61,20 @@ function showEdit() {
 }
 
 function closeModal(modal_id, keterangan) {
-  document.getElementById(modal_id).style.display = "none";
+  document.getElementById(modal_id).remove();
   document.body.style.overflow = "";
 
   if (keterangan === "Produk berhasil dihapus.") {
     window.location.href = "../html/home.html";
+  }
+}
+
+function closeModal2(modal_id) {
+  document.getElementById(modal_id).style.display = "none";
+  document.body.style.overflow = "";
+
+  if (modal_id === "modal-edit") {
+    document.getElementById("editDetailProduk").reset();
   }
 }
 
