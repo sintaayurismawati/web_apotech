@@ -51,6 +51,14 @@ function getDetailProduk() {
             .getElementById("addDetailBelanja")
             .appendChild(produkIdInput);
 
+          const produkIdInputKrj = document.createElement("input");
+          produkIdInputKrj.type = "hidden";
+          produkIdInputKrj.name = "produk_id_krj";
+          produkIdInputKrj.value = produk_id;
+          document
+            .getElementById("addDetailKeranjang")
+            .appendChild(produkIdInputKrj);
+
           document
             .getElementById("jumlah_beli")
             .addEventListener("input", () => {
@@ -68,6 +76,29 @@ function getDetailProduk() {
                 "total"
               ).textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
               document.getElementById("total_hidden").value = total;
+            });
+
+          document
+            .getElementById("jumlah_keranjang")
+            .addEventListener("input", () => {
+              const jumlahBeliKrj =
+                parseInt(
+                  document.getElementById("jumlah_keranjang").value,
+                  10
+                ) || 0;
+              const hargaProduk = parseInt(data.harga_produk, 10) || 0;
+              const totalKrj = jumlahBeliKrj * hargaProduk;
+
+              // Logging values to console for debugging
+              console.log("Jumlah Beli:", jumlahBeliKrj);
+              console.log("Harga Produk:", hargaProduk);
+              console.log("Total:", totalKrj);
+
+              document.getElementById(
+                "total_keranjang"
+              ).textContent = `Total: Rp${totalKrj.toLocaleString("id-ID")}`;
+              document.getElementById("total_hidden_keranjang").value =
+                totalKrj;
             });
         }
       })
@@ -97,6 +128,13 @@ function showAlamat() {
 
 function showAddDetailBelanja() {
   document.getElementById("modal-beli").style.display = "flex";
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function showAddDetailKeranjang() {
+  document.getElementById("modal-keranjang").style.display = "flex";
 
   // Mencegah scroll background saat modal ditampilkan
   document.body.style.overflow = "hidden";
@@ -139,6 +177,45 @@ function cekJumlahBeli(event) {
   }
 }
 
+function cekJumlahKeranjang(event) {
+  event.preventDefault(); // Mencegah pengiriman formulir secara default
+
+  var jumlah_stok = parseInt(
+    document
+      .getElementById("jumlah_stok")
+      .textContent.replace("Tersisa : ", ""),
+    10
+  );
+  var jumlah_beli_keranjang = parseInt(
+    document.getElementById("jumlah_keranjang").value,
+    10
+  );
+
+  if (jumlah_beli_keranjang > jumlah_stok) {
+    var modalHTML = `
+                    <div id="modal-error" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative;">
+                            <span class="close" onclick="closeModal('modal-error')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+                            <h2 style="text-align: center;">Maaf</h2>
+                            <p>Jumlah keranjang melebihi jumlah ketersediaan produk</p>
+                        </div>
+                    </div>
+                `;
+
+    // Memasukkan modal ke dalam halaman
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+    // Mencegah scroll background saat modal ditampilkan
+    document.body.style.overflow = "hidden";
+
+    return false; // Mencegah pengiriman formulir
+  } else {
+    submitKeranjang();
+    // Jika jumlah_beli valid, kembalikan true untuk melanjutkan pengiriman formulir
+    return true;
+  }
+}
+
 // function closeModal(modal_id, keterangan) {
 //   document.getElementById(modal_id).style.display = "none";
 //   document.body.style.overflow = "";
@@ -161,6 +238,10 @@ function closeModal2(modal_id) {
 
   if (modal_id === "modal-beli") {
     document.getElementById("addDetailBelanja").reset();
+    document.getElementById("total").textContent = `Total: Rp0`;
+  } else if (modal_id === "modal-keranjang") {
+    document.getElementById("addDetailKeranjang").reset();
+    document.getElementById("total_keranjang").textContent = `Total: Rp0`;
   }
 }
 
@@ -197,7 +278,7 @@ function submitDetailBelanja() {
 }
 
 function submitKeranjang() {
-  const formData = new FormData(document.getElementById("addDetailBelanja"));
+  const formData = new FormData(document.getElementById("addDetailKeranjang"));
 
   fetch("../php/tambah_keranjang.php", {
     method: "POST",
@@ -213,6 +294,7 @@ function submitKeranjang() {
       console.log("Response from server:", data);
       if (data.includes("Insert successful")) {
         // closeModal("modal-beli");
+        closeModal2("modal-keranjang");
         getDetailProduk();
         showModalSuccess("Produk telah masuk keranjang!");
       } else {

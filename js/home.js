@@ -770,7 +770,7 @@ function showKeranjang() {
   loadKeranjang();
 }
 
-function loadKeranjang() {
+function loadKeranjang2() {
   const keranjangContainer = document.getElementById("keranjang");
   while (keranjangContainer.firstChild) {
     keranjangContainer.removeChild(keranjangContainer.firstChild);
@@ -876,6 +876,110 @@ function loadKeranjang() {
           });
 
           // Menambahkan histori-card ke container histori
+          keranjangContainer.appendChild(keranjangCard);
+        });
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+function loadKeranjang() {
+  const keranjangContainer = document.getElementById("keranjang");
+  while (keranjangContainer.firstChild) {
+    keranjangContainer.removeChild(keranjangContainer.firstChild);
+  }
+  // Fetch data dari PHP
+  fetch("../php/get_keranjang_vendor.php")
+    .then((response) => response.json()) // Mengubah data yang diterima menjadi JSON
+    .then((data) => {
+      if (!data || data.length === 0) {
+        const noDataFound = document.createElement("div");
+        noDataFound.className = "histori-noDataFound";
+        noDataFound.innerHTML = `
+              <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+                <img
+                  src="../images/no_data_found.jpeg"
+                  style="height: 300px; width: 300px; align-items: center;"
+                />
+                <h4>Belum ada produk dalam keranjang.</h4>
+              </div>
+            `;
+        // Menambahkan noDataFound ke historiContainer
+        keranjangContainer.appendChild(noDataFound);
+      } else {
+        data.forEach((vendor) => {
+          let total = 0; // Variabel untuk menyimpan total harga
+          const keranjangCard = document.createElement("div");
+          keranjangCard.className = "keranjang-card";
+
+          const headerKeranjangCard = document.createElement("div");
+          headerKeranjangCard.className = "header-keranjang-card";
+
+          const footerKeranjangCard = document.createElement("div");
+          footerKeranjangCard.className = "footer-keranjang-card";
+
+          headerKeranjangCard.innerHTML = `
+                    <div style="display: flex; flex-flow: row; align-items: center; gap: 5px; justify-content: flex-end;">
+                          <label style="font-weight: bold; color: #00a69c;">${vendor.nama_vendor}</label>
+                          <div class="circle-container" style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden;">
+                            <img id="image_profil" style="width: 100%; height: 100%" src="${vendor.image_profil}">
+                          </div>
+                    </div>
+                `;
+          keranjangCard.appendChild(headerKeranjangCard);
+
+          fetch(
+            `../php/get_keranjang_groupby_vendor.php?vendor_id=${vendor.id}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              data.forEach((keranjang) => {
+                const subtotal = keranjang.jumlah * keranjang.harga_produk;
+                total += subtotal; // Menambahkan subtotal ke total
+
+                const detailKeranjangCard = document.createElement("div");
+                detailKeranjangCard.className = "detail-keranjang-card";
+                detailKeranjangCard.innerHTML = `
+                  <div style="display: flex; flex-flow: row; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <div class="produk" style="display: flex; flex-flow: row; align-items: center; gap: 5px; width: 200px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      <div style="width: 50px; height: 50px; overflow: hidden;">
+                        <img style="width: 100%; height: 100%" src="${keranjang.image_url}">
+                      </div>
+                      <label style="font-weight: bold; color: #00a69c;">${keranjang.nama_produk}</label>
+                    </div>
+                    <label class="jml_krj" style="font-weight: bold; color: #00a69c;">${keranjang.jumlah} x</label>
+                    <label class="sub_total" style="width: 100px; font-weight: bold; color: #00a69c;">Rp${subtotal}</label>
+                  </div>
+                `;
+                keranjangCard.appendChild(detailKeranjangCard);
+              });
+
+              // Menambahkan label total di atas tombol
+              const totalLabel = document.createElement("div");
+              totalLabel.className = "total-label";
+              totalLabel.innerHTML = `
+                <h4 style="text-align: left; color: #00a69c;">Total: Rp${total}</h4>
+              `;
+              keranjangCard.appendChild(totalLabel);
+
+              footerKeranjangCard.innerHTML = `
+              <div class="button" style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn-beli-krj">Beli Sekarang</button>
+                <button class="btn-hps-krj">Hapus</button>
+              </div>
+              `;
+              keranjangCard.appendChild(footerKeranjangCard);
+
+              const btnHapus =
+                footerKeranjangCard.querySelector(".btn-hps-krj");
+              btnHapus.addEventListener("click", () => {
+                console.log("vendor_id", keranjang.vendor_id);
+                showModalConfirmDelKrj(vendor.id); // Memanggil modal konfirmasi penghapusan
+              });
+            })
+            .catch((error) =>
+              console.error("Error fetching keranjang details:", error)
+            );
           keranjangContainer.appendChild(keranjangCard);
         });
       }
@@ -1153,4 +1257,44 @@ function showModalConfirm(keterangan, produkId, pesananId) {
 
   // Mencegah scroll background saat modal ditampilkan
   document.body.style.overflow = "hidden";
+}
+
+function showModalConfirmDelKrj(vendorId) {
+  var modalHTML = `
+                    <div id="modal-confirm" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+                        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+                            <p>Apakah anda yakin untuk menghapus?</p>
+                            <div style="display: flex; flex-flow: row;">
+                              <button onclick="deleteKeranjang(${vendorId})" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Ya</button>
+                              <button onclick="closeModal('modal-confirm')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">Tidak</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+  // Memasukkan modal ke dalam halaman
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Mencegah scroll background saat modal ditampilkan
+  document.body.style.overflow = "hidden";
+}
+
+function deleteKeranjang(vendorId) {
+  fetch(`../php/delete_keranjang_by_vendor.php?vendor_id=${vendorId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      if (data.includes("Delete successful")) {
+        closeModal("modal-confirm"); // Menutup modal confirm
+        showModalSuccess("Keranjang Berhasil Dihapus."); // Menampilkan modal sukses
+        loadKeranjang(); // Memperbarui keranjang setelah penghapusan
+      } else {
+        alert("Gagal menghapus keranjang: " + data);
+      }
+    })
+    .catch((error) => console.error("Error:", error));
 }

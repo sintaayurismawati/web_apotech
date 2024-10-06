@@ -65,7 +65,7 @@
             </div>
           </div>
           <div class="buttons">
-            <button class="btn btn-add-cart" onclick="submitKeranjang()">
+            <button class="btn btn-add-cart" onclick="showAddDetailKeranjang()">
               Masukkan keranjang
             </button>
             <button
@@ -196,6 +196,94 @@
                   type="submit"
                   id="btn-next"
                   value="Checkout"
+                  style="
+                    background-color: #00a69c;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-align: right;
+                  "
+                />
+              </div>
+            </form>
+          </row>
+        </div>
+      </div>
+      <div
+        id="modal-keranjang"
+        class="modal"
+        style="
+          display: none;
+          justify-content: center;
+          align-items: center;
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+        "
+      >
+        <div
+          class="modal-content"
+          style="
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+            max-height: 80%;
+            overflow-y: auto;
+          "
+        >
+          <span
+            class="close"
+            onclick="closeModal2('modal-keranjang')"
+            style="
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            "
+            >&times;</span
+          >
+          <h2 style="text-align: center">Detail Keranjang</h2>
+          <row>
+            <form
+              id="addDetailKeranjang"
+              action="../php/tambah_keranjang.php"
+              method="post"
+              onsubmit="cekJumlahKeranjang(event)"
+            >
+              <label for="jumlah_keranjang" style="margin-top: 10px"
+                >Jumlah :</label
+              >
+              <input
+                type="number"
+                id="jumlah_keranjang"
+                name="jumlah_keranjang"
+                required
+                style="
+                  width: 95%;
+                  padding: 10px;
+                  margin-bottom: 10px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                "
+              />
+              <h2 style="text-align: right" id="total_keranjang">Total: Rp0</h2>
+              <input type="hidden" id="total_hidden_keranjang" name="total" />
+              <div style="text-align: right">
+                <input
+                  type="submit"
+                  id="btn-next"
+                  value="Masukkan Keranjang"
                   style="
                     background-color: #00a69c;
                     color: white;

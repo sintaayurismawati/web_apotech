@@ -8,18 +8,20 @@ if (!$conn) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_SESSION['user_id'])) { // Periksa apakah user_id ada di sesi
-        $user_id = $_SESSION['user_id'];
-        $produk_id = (int) $_POST['produk_id'];
-        $jumlah_keranjang = (int) $_POST['jumlah_keranjang'];
+    if (isset($_SESSION['user_id'])) { 
+        $vendor_id = (int) $_GET['vendor_id'];
 
-        $stmt = $conn->prepare("INSERT INTO keranjang (user_id, produk_id, jumlah) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $user_id, $produk_id, $jumlah_keranjang);
+        $stmt = $conn->prepare("DELETE keranjang
+                                FROM keranjang
+                                JOIN produk ON keranjang.produk_id = produk.id
+                                JOIN vendor ON produk.vendor_id = vendor.id
+                                WHERE vendor.id = ?;");
+        $stmt->bind_param("i", $vendor_id);
         if ($stmt->execute()) {
-            echo "Insert successful";
+            echo "Delete successful";
             // header("Location: ../html/home.html?addKeranjang=success");
         } else {
-            echo "Insert error: " . $stmt->error;
+            echo "Delete error: " . $stmt->error;
             // header("Location: ../html/home.html?addKeranjang=error");
         }
 
