@@ -10,7 +10,7 @@ if (!$conn) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_SESSION['user_id'])) { // Periksa apakah user_id ada di sesi
         $user_id = $_SESSION['user_id'];
-        $produk_id = (int) $_POST['produk_id'];
+        $produk_id = (int) $_POST['produk_id_krj'];
         $jumlah_keranjang = (int) $_POST['jumlah_keranjang'];
 
         $stmt = $conn->prepare("INSERT INTO keranjang (user_id, produk_id, jumlah) VALUES (?, ?, ?)");

@@ -767,6 +767,7 @@ function showKeranjang() {
   document.getElementById("keranjang").style.display = "block";
   document.getElementById("detail-product").style.display = "none";
 
+  cekStokKeranjang();
   loadKeranjang();
 }
 
@@ -883,6 +884,12 @@ function loadKeranjang2() {
     .catch((error) => console.error("Error fetching data:", error));
 }
 
+function cekStokKeranjang() {
+  fetch("../php/cek_stok_keranjang.php")
+    .then((response) => response.json())
+    .catch((error) => console.error("Error cek stok keranjang :", error));
+}
+
 function loadKeranjang() {
   const keranjangContainer = document.getElementById("keranjang");
   while (keranjangContainer.firstChild) {
@@ -909,6 +916,8 @@ function loadKeranjang() {
       } else {
         data.forEach((vendor) => {
           let total = 0; // Variabel untuk menyimpan total harga
+          let produkKeranjang = [];
+
           const keranjangCard = document.createElement("div");
           keranjangCard.className = "keranjang-card";
 
@@ -936,6 +945,12 @@ function loadKeranjang() {
               data.forEach((keranjang) => {
                 const subtotal = keranjang.jumlah * keranjang.harga_produk;
                 total += subtotal; // Menambahkan subtotal ke total
+
+                produkKeranjang.push({
+                  produk_id: keranjang.produk_id,
+                  jumlah_beli: keranjang.jumlah,
+                  total: subtotal,
+                });
 
                 const detailKeranjangCard = document.createElement("div");
                 detailKeranjangCard.className = "detail-keranjang-card";
@@ -973,8 +988,16 @@ function loadKeranjang() {
               const btnHapus =
                 footerKeranjangCard.querySelector(".btn-hps-krj");
               btnHapus.addEventListener("click", () => {
-                console.log("vendor_id", keranjang.vendor_id);
+                console.log("vendor_id", vendor.id);
                 showModalConfirmDelKrj(vendor.id); // Memanggil modal konfirmasi penghapusan
+              });
+
+              const btnBeli =
+                footerKeranjangCard.querySelector(".btn-beli-krj");
+              btnBeli.addEventListener("click", () => {
+                // console.log("vendor_id", keranjang.vendor_id);
+                showAddAlamatKeranjang(produkKeranjang);
+                showAlamat();
               });
             })
             .catch((error) =>
@@ -994,6 +1017,77 @@ function loadKeranjang() {
 //     document.body.style.overflow = ""; // Mengembalikan scroll saat modal ditutup
 //   }
 // }
+
+// function showAddAlamatKeranjang() {
+//   // const historiId = id;
+//   var modalHTML = `
+//         <div id="modal-alamat-krj" class="modal-alamat-krj" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+//             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
+//                 <span class="close" onclick="closeModal('modal-alamat-krj')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+//                 <h2 style="text-align: center;">Alamat</h2>
+//                 <form id="addAlamatKrjForm" action="" method="post" onsubmit="return false;">
+//                     <div style="display:flex; flex-flow:column;">
+//                         <textarea id="alamat-krj" name="alamat-krj" style="height: 100px; width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+//                     </div>
+//                     <button style="background-color: #00A69C; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Kirim</button>
+//                 </form>
+//             </div>
+//         </div>
+//     `;
+//   document.body.insertAdjacentHTML("beforeend", modalHTML);
+// }
+
+function showAddAlamatKeranjang(produkKeranjang) {
+  showMetodePembayaranKrj();
+  var modalHTML = `
+    <div id="modal-alamat-krj" class="modal-alamat-krj" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative; max-height: 80%; overflow-y: auto;">
+            <span class="close" onclick="closeModal('modal-alamat-krj')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
+            <h2 style="text-align: center;">Alamat</h2>
+            <form id="addAlamatKrjForm" method="post">
+              <label for="metode_pembayaran_krj" style="margin-top: 10px">Metode Pembayaran:</label>
+              <select required id="metode_pembayaran_krj" name="metode_pembayaran_krj" style="width: 98.5%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                <option value="" disabled selected>Pilih metode pembayaran</option>
+              </select>
+              <label for="alamat-krj" style="margin-top: 10px">Alamat :</label>
+              <textarea id="alamat-krj" name="alamat-krj" style="height: 100px; width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+              <button type="button" id="submitAlamatKrj" style="background-color: #00A69C; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Kirim</button>
+            </form>
+        </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Tambahkan event listener untuk tombol "Kirim"
+  document
+    .getElementById("submitAlamatKrj")
+    .addEventListener("click", function () {
+      const alamat = document.getElementById("alamat-krj").value;
+
+      // Kirim produk keranjang dan alamat ke PHP
+      fetch("../php/tambah_detail_belanja.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          produk_keranjang: produkKeranjang, // Data keranjang yang diproses
+          alamat: alamat, // Alamat yang diisi pada modal
+        }),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          console.log("Response dari PHP:", data);
+          if (data.includes("Insert successful")) {
+            alert("Produk berhasil ditambahkan ke detail belanja!");
+            closeModal("modal-alamat-krj"); // Menutup modal
+          } else {
+            alert("Gagal menambahkan produk ke detail belanja.");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    });
+}
 
 function closeModal(modal_id) {
   document.getElementById(modal_id).remove();
@@ -1028,6 +1122,7 @@ function showAlamat() {
       } else {
         console.log("User address:", data.alamat);
         document.getElementById("alamat").value = data.alamat;
+        document.getElementById("alamat-krj").value = data.alamat;
       }
     })
     .catch((error) => {
@@ -1137,12 +1232,57 @@ fetch("../php/get_metode_pembayaran.php")
       document
         .getElementById("addDetailBelanja")
         .appendChild(metodePembayaranIdInput);
+
+      // document
+      //   .getElementById("addAlamatKrjForm")
+      //   .appendChild(metodePembayaranIdInput);
     });
   })
   .catch((error) => {
     console.error("Error:", error);
     alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
   });
+
+function showMetodePembayaranKrj() {
+  fetch("../php/get_metode_pembayaran.php")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const select = document.getElementById("metode_pembayaran_krj");
+      // Clear existing options
+      select.innerHTML =
+        '<option value="" disabled selected>Pilih metode pembayaran</option>';
+      data.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.id; // Gunakan ID sebagai value
+        option.textContent = item.metode_pembayaran; // Tampilkan nama metode
+        select.appendChild(option);
+      });
+
+      select.addEventListener("change", (event) => {
+        const selectedId = event.target.value; // Ambil nilai ID dari option yang dipilih
+        console.log("ID metode pembayaran yang dipilih:", selectedId);
+
+        // Update hidden input field for metode_pembayaran_id
+        const metodePembayaranIdInput = document.createElement("input");
+        metodePembayaranIdInput.type = "hidden";
+        metodePembayaranIdInput.name = "metode_pembayaran_id";
+        metodePembayaranIdInput.value = selectedId;
+
+        document
+          .getElementById("addAlamatKrjForm")
+          .appendChild(metodePembayaranIdInput);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Gagal memuat metode pembayaran. Silakan coba lagi.");
+    });
+}
 
 function initializeButtonToggle() {
   // Ambil semua tombol dengan class .btn
