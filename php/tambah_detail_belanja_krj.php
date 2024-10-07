@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         error_log("User ID: $user_id, Produk Keranjang: " . print_r($produk_keranjang, true) . ", Metode Pembayaran ID: $metode_pembayaran_id, Alamat: $alamat");
 
         foreach ($produk_keranjang as $produk) {
+            $keranjang_id = (int) $produk['keranjang_id'];
             $produk_id = (int) $produk['produk_id']; // Ensure the ID is cast to int
             $jumlah_beli = (int) $produk['jumlah_beli']; 
             $total = (int) $produk['total'];
@@ -60,6 +61,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt_update_stock->bind_param("ii", $jumlah_stok_baru, $produk_id);
                     if (!$stmt_update_stock->execute()) {
                         throw new Exception("Execute failed: (" . $stmt_update_stock->errno . ") " . $stmt_update_stock->error);
+                    }
+
+                    // Delete dari keranjang setelah insert sukses
+                    $stmt_delete = $conn->prepare("DELETE FROM keranjang WHERE id=?");
+                    if (!$stmt_delete) {
+                        throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+                    }
+                    $stmt_delete->bind_param("i", $keranjang_id);
+                    if (!$stmt_delete->execute()) {
+                        throw new Exception("Execute failed: (" . $stmt_delete->errno . ") " . $stmt_delete->error);
                     }
 
                     // Commit transaksi jika semuanya berhasil

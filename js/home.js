@@ -947,6 +947,7 @@ function loadKeranjang() {
                 total += subtotal; // Menambahkan subtotal ke total
 
                 produkKeranjang.push({
+                  keranjang_id: keranjang.keranjang_id,
                   produk_id: keranjang.produk_id,
                   jumlah_beli: keranjang.jumlah,
                   total: subtotal,
@@ -1085,8 +1086,8 @@ function showAddAlamatKeranjang(produkKeranjang) {
         .then((data) => {
           console.log("Response dari PHP:", data);
           if (data.includes("Insert successful")) {
-            alert("Produk berhasil ditambahkan ke detail belanja!");
             closeModal("modal-alamat-krj"); // Menutup modal
+            showModalSuccess("Pembelian berhasil.");
           } else {
             alert("Gagal menambahkan produk ke detail belanja.");
           }
@@ -1105,6 +1106,8 @@ function closeModal(modal_id) {
     document.getElementById("addUlasanForm").reset();
   } else if (modal_id === "modal2") {
     dosument.getElementById("addStoreForm").reset();
+  } else if (modal_id === "modal-success") {
+    loadKeranjang();
   }
 }
 

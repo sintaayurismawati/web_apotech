@@ -14,6 +14,7 @@ if (isset($_SESSION['user_id'])) {
     // $stmt = $conn->prepare("SELECT * FROM detail_produk WHERE user_id=? ORDER BY created_at DESC");
     $stmt = $conn->prepare("SELECT COUNT(k.jumlah) AS jumlah,
                                    k.produk_id,
+                                   k.id AS keranjang_id,
                                    p.nama_produk, 
                                    p.harga_produk, 
                                    p.image_url,
