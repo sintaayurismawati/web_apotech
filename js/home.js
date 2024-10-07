@@ -1004,6 +1004,7 @@ function loadKeranjang() {
               console.error("Error fetching keranjang details:", error)
             );
           keranjangContainer.appendChild(keranjangCard);
+          console.log("produk keranjang : ", produkKeranjang);
         });
       }
     })
@@ -1062,17 +1063,22 @@ function showAddAlamatKeranjang(produkKeranjang) {
   document
     .getElementById("submitAlamatKrj")
     .addEventListener("click", function () {
+      console.log("produk keranjang : ", produkKeranjang);
       const alamat = document.getElementById("alamat-krj").value;
+      const metodePembayaranId = document.getElementById(
+        "metode_pembayaran_krj"
+      ).value;
 
       // Kirim produk keranjang dan alamat ke PHP
-      fetch("../php/tambah_detail_belanja.php", {
+      fetch("../php/tambah_detail_belanja_krj.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           produk_keranjang: produkKeranjang, // Data keranjang yang diproses
-          alamat: alamat, // Alamat yang diisi pada modal
+          alamat: alamat,
+          metode_pembayaran_id: metodePembayaranId, // Alamat yang diisi pada modal
         }),
       })
         .then((response) => response.text())
