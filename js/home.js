@@ -310,7 +310,7 @@ function showTokoSaya() {
                         <div class="profil-store" style="display:flex; flex-flow: row; justify-content:center; gap:130px; align-items:center;">
                             <div style="display:flex; flex-flow:column; text-align: center;">
                                 <div class="circle-container" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;">
-                                    <img src="${data.image_profil}" alt="Deskripsi Gambar" style="width: 100%; height: 100%;">
+                                    <img src="http://localhost/web_apotech/apotech_images/${data.image_profil}" alt="Deskripsi Gambar" style="width: 100%; height: 100%;">
                                 </div>
                                 <p style="color:#475353; font-weight:bold;">${data.nama_vendor}</p>
                             </div>
@@ -481,7 +481,7 @@ function showAddStoreForm() {
             <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; position: relative;">
                 <span class="close" onclick="closeModal('modal2')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>
                 <h2 style="text-align: center;">Form Tambah Toko</h2>
-                <form id="addStoreForm" action="../php/tambah_toko.php" method="post">
+                <form id="addStoreForm" action="../php/tambah_toko.php" method="post"  enctype="multipart/form-data">
                     <div style="display:flex; flex-flow:column; gap:5px;">
                         <label for="storeName">Nama Toko:</label>
                         <input type="text" id="storeName" name="storeName" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
@@ -491,8 +491,9 @@ function showAddStoreForm() {
                         <input type="text" id="address" name="address" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
                         <label for="phoneNumber">Nomor Telepon:</label>
                         <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{10,12}" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                        <label for="image_profil">Image Profile URL:</label>
-                        <input type="text" id="image_profil" name="image_profil" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        
+                        <label for="image_profil" style="margin-top: 10px;">Upload Gambar Profil:</label>
+                        <input type="file" id="image_profil" name="image_profil" accept="image/*" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
                     </div>
                     <input type="submit" value="Simpan" style="background-color: #00A69C; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
                 </form>
@@ -957,7 +958,7 @@ function loadKeranjang() {
                     <div style="display: flex; flex-flow: row; align-items: center; gap: 5px; justify-content: flex-end;">
                           <label style="font-weight: bold; color: #00a69c;">${vendor.nama_vendor}</label>
                           <div class="circle-container" style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden;">
-                            <img id="image_profil" style="width: 100%; height: 100%" src="${vendor.image_profil}">
+                            <img id="image_profil" style="width: 100%; height: 100%" src="http://localhost/web_apotech/apotech_images/${vendor.image_profil}">
                           </div>
                     </div>
                 `;

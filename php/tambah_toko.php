@@ -13,17 +13,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nama_vendor = $_POST['storeName'];
         $kota = $_POST['city'];
         $alamat = $_POST['address'];
-        $image_profil = $_POST['image_profil'];
         $no_telp = (int) $_POST['phoneNumber'];
 
-        // Debugging output
-        echo "User ID: " . $user_id . "<br>";
-        echo "Nama Vendor: " . $nama_vendor . "<br>";
-        echo "Kota: " . $kota . "<br>";
-        echo "Alamat: " . $alamat . "<br>";
-        echo "Image Profil: " . $image_profil . "<br>";
-        echo "Nomor Telepon: " . $no_telp . "<br>";
+        // Proses upload gambar
+        $target_dir = "../apotech_images/"; // Folder penyimpanan
+        $image_profil = basename($_FILES["image_profil"]["name"]); // Nama file gambar
+        $target_file = $target_dir . $image_profil;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
+        // Memindahkan file yang diupload ke folder apotech_images
+        if (move_uploaded_file($_FILES["image_profil"]["tmp_name"], $target_file)) {
+            echo "File " . htmlspecialchars($image_profil) . " berhasil diupload.";
+        } else {
+            echo "Maaf, terjadi kesalahan saat mengupload file.";
+            exit; // Hentikan eksekusi jika gagal upload
+        }
+
+        // Simpan informasi vendor ke database
         $stmt = $conn->prepare("INSERT INTO vendor (user_id, nama_vendor, kota, alamat, image_profil, no_telp) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("issssi", $user_id, $nama_vendor, $kota, $alamat, $image_profil, $no_telp);
         if ($stmt->execute()) {
@@ -43,3 +49,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_close($conn);
 }
+?>
