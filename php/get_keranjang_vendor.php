@@ -13,7 +13,9 @@ if (isset($_SESSION['user_id'])) {
     $stmt = $conn->prepare("SELECT DISTINCT v.id, v.nama_vendor, v.image_profil
                             FROM keranjang k
                             JOIN produk p ON k.produk_id = p.id
-                            JOIN vendor v ON p.vendor_id = v.id;");
+                            JOIN vendor v ON p.vendor_id = v.id
+                            WHERE k.user_id = ?;");
+    $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 

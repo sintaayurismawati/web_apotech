@@ -334,9 +334,19 @@ function showTokoSaya() {
           showPrdouctStore(); // Panggil fungsi untuk menampilkan produk
         } else {
           // Handle successful data retrieval
+          // tokoSayaDiv.innerHTML = `
+          //               <p>Nama Toko: ${data.nama_vendor}</p>
+          //           `;
+
           tokoSayaDiv.innerHTML = `
-                        <p>Nama Toko: ${data.nama_vendor}</p>
-                    `;
+              <div style="display: flex; flex-flow: column; justify-content: center; align-items: center;">
+                <img
+                  src="../images/waiting.png"
+                  style="height: 200px; width: 200px; align-items: center;"
+                />
+                <h4>Toko dalam proses konfirmasi oleh admin.</h4>
+              </div>
+            `;
         }
       }
 
@@ -1118,7 +1128,7 @@ function closeModal(modal_id) {
   } else if (modal_id === "modal-ulasan") {
     document.getElementById("addUlasanForm").reset();
   } else if (modal_id === "modal2") {
-    dosument.getElementById("addStoreForm").reset();
+    document.getElementById("addStoreForm").reset();
   } else if (modal_id === "modal-success") {
     loadKeranjang();
   }

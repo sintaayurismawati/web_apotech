@@ -8,6 +8,8 @@ if (!$conn) {
 }
 
 if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
     $stmt = $conn->prepare("SELECT db.*, 
                                    p.nama_produk, 
                                    p.image_url,
@@ -17,8 +19,9 @@ if (isset($_SESSION['user_id'])) {
                             JOIN produk p ON db.produk_id = p.id
                             JOIN metode_pembayaran mp ON  db.metode_pembayaran_id = mp.id
                             JOIN users u ON db.user_id = u.id
-                            WHERE db.status = 'Selesai'
+                            WHERE db.status = 'Selesai' AND p.vendor_id = ?
                             ORDER BY db.created_at DESC;");
+    $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
