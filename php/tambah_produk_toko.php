@@ -7,39 +7,49 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-//vendor_id, nama_produk, kategori_produk, harga_produk, jumlah_stok, jumlah_terjual, deskripsi
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_SESSION['vendor_id'])) { // Periksa apakah user_id ada di sesi
+    if (isset($_SESSION['vendor_id'])) { // Periksa apakah vendor_id ada di sesi
         $vendor_id = $_SESSION['vendor_id'];
         $nama_produk = $_POST['nama_produk'];
         $kategori_produk = $_POST['kategori_produk'];
         $harga_produk = (int) $_POST['harga_produk'];
-        $image_url = $_POST['image_url'];
         $jumlah_stok = (int) $_POST['jumlah_stok'];
-        // $deskripsi = $_POST['deskripsi'];
         $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi']);
 
-        $stmt = $conn->prepare("INSERT INTO produk (vendor_id, nama_produk, kategori_produk, harga_produk, jumlah_stok, deskripsi, image_url) VALUES (?, ?, ?, ?, ?, ?,?)");
-        $stmt->bind_param("issiiss", $vendor_id, $nama_produk, $kategori_produk, $harga_produk, $jumlah_stok, $deskripsi, $image_url);
+        // Mengatur direktori tempat gambar akan disimpan
+        $targetDir = "C:/xampp/htdocs/web_apotech/apotech_images/"; // Path di file system
+        $imageFileType = strtolower(pathinfo($_FILES["image_url"]["name"], PATHINFO_EXTENSION));
+        $imageName = basename($_FILES["image_url"]["name"]);
+        $targetFilePath = $targetDir . $imageName;
 
-        if ($stmt->execute()) {
-            echo json_encode(["status" => "success", "message" => "Insert successful"]);
+        // Validasi tipe file gambar (opsional)
+        $allowedTypes = array('jpg', 'jpeg', 'png', 'gif');
+        if (in_array($imageFileType, $allowedTypes)) {
+            // Pindahkan file yang diunggah ke direktori tujuan
+            if (move_uploaded_file($_FILES["image_url"]["tmp_name"], $targetFilePath)) {
+                // Simpan nama file ke database, bukan path lengkapnya
+                $image_url = $imageName;
+
+                // Query untuk menyimpan produk ke database
+                $stmt = $conn->prepare("INSERT INTO produk (vendor_id, nama_produk, kategori_produk, harga_produk, jumlah_stok, deskripsi, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("issiiss", $vendor_id, $nama_produk, $kategori_produk, $harga_produk, $jumlah_stok, $deskripsi, $image_url);
+
+                if ($stmt->execute()) {
+                    echo json_encode(["status" => "success", "message" => "Produk berhasil ditambahkan."]);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Gagal menambahkan produk: " . $stmt->error]);
+                }
+
+                $stmt->close();
+            } else {
+                echo json_encode(["status" => "error", "message" => "Gagal mengunggah gambar."]);
+            }
         } else {
-            echo json_encode(["status" => "error", "message" => "Insert error: " . $stmt->error]);
+            echo json_encode(["status" => "error", "message" => "Tipe file tidak didukung. Hanya JPG, JPEG, PNG, dan GIF yang diperbolehkan."]);
         }
-
-        // if ($stmt->execute()) {
-        //     echo "Insert successful";
-        //     header("Location: ../html/home.html?addProductStore=success");
-        // } else {
-        //     echo "Insert error: " . $stmt->error;
-        //     header("Location: ../html/home.html?addProductStore=error");
-        // }
-
-        $stmt->close();
     } else {
-        // Jika user_id tidak ada dalam sesi, kembali ke halaman login atau berikan pesan kesalahan
-        echo "Vendor ID not found in session.";
+        // Jika vendor_id tidak ada dalam sesi
+        echo json_encode(["status" => "error", "message" => "Vendor ID tidak ditemukan dalam sesi."]);
         header("Location: ../html/login.html");
     }
 

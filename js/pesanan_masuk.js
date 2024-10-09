@@ -27,7 +27,9 @@ function loadPesanan() {
           <br>
           <div style="display: flex; flex-flow: row; width: 100%;">
             <div style="width: 300px; height: 250px;">
-              <img src="${pesanan_masuk.image_url}">
+              <img src="http://localhost/web_apotech/apotech_images/${
+                pesanan_masuk.image_url
+              }">
             </div>
             <div class="details">
               <div>

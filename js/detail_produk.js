@@ -23,10 +23,14 @@ function getDetailProduk() {
           console.error(data.error); // Menangani kesalahan dari PHP
           alert("Error fetching product details.");
         } else {
+          console.log("data produk : ", data);
           showUlasan(produk_id);
 
-          document.getElementById("image_url").src = data.image_url;
+          document.getElementById(
+            "image_url"
+          ).src = `http://localhost/web_apotech/apotech_images/${data.image_url}`;
           document.getElementById("nama_produk").textContent = data.nama_produk;
+
           document.getElementById(
             "harga_produk"
           ).textContent = `Rp${data.harga_produk}`;

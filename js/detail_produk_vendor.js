@@ -27,7 +27,9 @@ function getDetailProduk() {
         } else {
           // Menampilkan data produk yang diterima dari PHP
           console.log("hasil fetch php : ", data);
-          document.getElementById("image_url").src = data.image_url;
+          document.getElementById(
+            "image_url"
+          ).src = `http://localhost/web_apotech/apotech_images/${data.image_url}`;
           document.getElementById("nama_produk").textContent = data.nama_produk;
           document.getElementById(
             "harga_produk"

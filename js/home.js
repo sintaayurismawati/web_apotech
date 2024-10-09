@@ -52,9 +52,14 @@ function initializeProductDisplay(products) {
       window.location.href = "../html/detail_produk_vendor.html";
     });
 
+    // const productImage = document.createElement("img");
+    // productImage.className = "product-image";
+    // productImage.src = product.image_url;
+    // productImage.alt = "product image";
+
     const productImage = document.createElement("img");
     productImage.className = "product-image";
-    productImage.src = product.image_url;
+    productImage.src = `http://localhost/web_apotech/apotech_images/${product.image_url}`;
     productImage.alt = "product image";
 
     const productDetails = document.createElement("div");
@@ -116,9 +121,14 @@ function showAllProducts() {
           window.location.href = "../html/detail_produk.html";
         });
 
+        // const productImage = document.createElement("img");
+        // productImage.className = "product-image";
+        // productImage.src = product.image_url;
+        // productImage.alt = "product image";
+
         const productImage = document.createElement("img");
         productImage.className = "product-image";
-        productImage.src = product.image_url;
+        productImage.src = `http://localhost/web_apotech/apotech_images/${product.image_url}`;
         productImage.alt = "product image";
 
         const productDetails = document.createElement("div");
@@ -225,9 +235,13 @@ document.querySelectorAll(".dropdown-item").forEach((item) => {
               window.location.href = "../html/detail_produk.html";
             });
 
+            // const productImage = document.createElement("img");
+            // productImage.className = "product-image";
+            // productImage.src = product.image_url;
+            // productImage.alt = "product image";
             const productImage = document.createElement("img");
             productImage.className = "product-image";
-            productImage.src = product.image_url;
+            productImage.src = `http://localhost/web_apotech/apotech_images/${product.image_url}`;
             productImage.alt = "product image";
 
             const productDetails = document.createElement("div");
@@ -410,8 +424,8 @@ function showAddProductStoreForm() {
                         <label for="jumlah_stok" style="margin-top: 10px;">Jumlah Stok:</label>
                         <input type="number" id="jumlah_stok" name="jumlah_stok" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-                        <label for="image_url" style="margin-top: 10px;">URL Gambar Produk:</label>
-                        <input type="text" id="image_url" name="image_url" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <label for="image_url" style="margin-top: 10px;">Upload Gambar Produk:</label>
+                        <input type="file" id="image_url" name="image_url" accept="image/*" required style="width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
                         <label for="deskripsi" style="margin-top: 10px;">Deskripsi:</label>
                         <textarea id="deskripsi" name="deskripsi" style="height: 100px; width: 95%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
@@ -586,7 +600,9 @@ function loadHistori(status) {
                     <div style="display:flex; flex-flow:column;">
                       <div style="display: flex; flex-flow: row; width: 100%;">
                           <div style="width: 300px; height: 250px;">
-                              <img src="${histori.image_url}">
+                              <img src="http://localhost/web_apotech/apotech_images/${
+                                histori.image_url
+                              }">
                           </div>
                           <div class="details">
                               <div>
@@ -805,7 +821,7 @@ function loadKeranjang2() {
           keranjangCard.innerHTML = `
                     <div style="display: flex; flex-flow: row; width: 100%;">
                         <div style="width: 300px; height: 250px;">
-                            <img src="${keranjang.image_url}">
+                            <img src="http://localhost/web_apotech/apotech_images/${keranjang.image_url}">
                         </div>
                         <div class="details-krj">
                             <div>
@@ -959,7 +975,7 @@ function loadKeranjang() {
                   <div style="display: flex; flex-flow: row; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                     <div class="produk" style="display: flex; flex-flow: row; align-items: center; gap: 5px; width: 200px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                       <div style="width: 50px; height: 50px; overflow: hidden;">
-                        <img style="width: 100%; height: 100%" src="${keranjang.image_url}">
+                        <img style="width: 100%; height: 100%" src="http://localhost/web_apotech/apotech_images/${keranjang.image_url}">
                       </div>
                       <label style="font-weight: bold; color: #00a69c;">${keranjang.nama_produk}</label>
                     </div>
@@ -1097,9 +1113,6 @@ function showAddAlamatKeranjang(produkKeranjang) {
 }
 
 function closeModal(modal_id) {
-  document.getElementById(modal_id).remove();
-  document.body.style.overflow = "";
-
   if (modal_id === "modal") {
     document.getElementById("addProductStoreForm").reset();
   } else if (modal_id === "modal-ulasan") {
@@ -1109,6 +1122,9 @@ function closeModal(modal_id) {
   } else if (modal_id === "modal-success") {
     loadKeranjang();
   }
+
+  document.getElementById(modal_id).remove();
+  document.body.style.overflow = "";
 }
 
 function closeModal2(modal_id) {
