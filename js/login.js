@@ -38,7 +38,8 @@ function login(event) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        window.location.href = "../html/home.html";
+        // window.location.href = "../html/home.html";
+        window.location.href = data.redirect;
       } else {
         showModalFail("Username / password salah.");
       }

@@ -291,6 +291,106 @@ function get_vendor() {
     .catch((error) => console.error("Error:", error));
 }
 
+// function viewReport(vendor_id) {
+//   console.log("lihat laporan penjualan vendor_id:", vendor_id);
+
+//   fetch(`../php/get_detail_belanja?id=${vendor_id}`, {
+//     method: "GET",
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       if (data.success) {
+//         var modalHTML = `
+//                     <div id="modal-laporan" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+//                         <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; border-radius: 10px; position: relative; text-align: center;">
+//                         <img src="../images/success-icon.png" alt="Success Image" style="max-width: 100px; margin-bottom: 10px;">
+//                         <h2>Laporan Penjualan</h2>
+//                              <button onclick="closeModal('modal-laporan')" style="border: none; background: none; color: #007bff; font-size: 16px; margin-top: 10px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">OK</button>
+//                         </div>
+//                     </div>
+//                 `;
+
+//         // Memasukkan modal ke dalam halaman
+//         document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+//         // Mencegah scroll background saat modal ditampilkan
+//         document.body.style.overflow = "hidden";
+//       } else {
+//         alert("Gagal : " + data.error);
+//       }
+//     })
+//     .catch((error) => console.error("Error:", error));
+// }
+
+function viewReport(vendor_id) {
+  console.log("lihat laporan penjualan vendor_id:", vendor_id);
+
+  fetch(`../php/get_laporan_penjualan_vendor.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `vendor_id=${vendor_id}`,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.length > 0) {
+        // Membangun tabel HTML dari data
+        let tableHTML = `
+          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+              <tr>
+                <th style="border: 1px solid #ddd; padding: 8px;">Produk</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Pembeli</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Metode Pembayaran</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Jumlah Beli</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Total</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+        // Looping melalui data dan menambahkan ke tabel
+        data.forEach((penjualan) => {
+          tableHTML += `
+            <tr>
+              <td style="border: 1px solid #ddd; padding: 8px;">${penjualan.nama_produk}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${penjualan.username}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${penjualan.metode_pembayaran}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${penjualan.jumlah_beli}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${penjualan.total}</td>
+            </tr>`;
+        });
+
+        tableHTML += `</tbody></table>`;
+
+        // Membuat modal dengan tabel di dalamnya
+        var modalHTML = `
+          <div id="modal-laporan" class="modal" style="display: flex; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;">
+              <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 70%; max-width: 600px; border-radius: 10px; position: relative; text-align: center;">
+              <span class="close" onclick="closeModal('modal-laporan')" style="color: #aaa; float: right; font-size: 28px; font-weight: bold;">&times;</span>  
+              <h2>Laporan Penjualan</h2>
+                ${tableHTML}  <!-- Menambahkan tabel ke dalam modal -->
+              </div>
+          </div>
+        `;
+
+        // Memasukkan modal ke dalam halaman
+        document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+        // Mencegah scroll background saat modal ditampilkan
+        document.body.style.overflow = "hidden";
+      } else {
+        alert("Tidak ada pesanan yang ditemukan.");
+      }
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+function closeModal(modal_id) {
+  document.getElementById(modal_id).remove();
+  document.body.style.overflow = "";
+}
+
 function disableVendor(vendorId) {
   if (confirm("Apakah kamu yakin ingin menonaktifkan vendor ini?")) {
     fetch(`../php/disable_vendor.php?id=${vendorId}`, {
