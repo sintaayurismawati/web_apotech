@@ -40,7 +40,9 @@ function getDetailProduk() {
           document.getElementById("kategori_produk").textContent =
             data.kategori_produk;
           document.getElementById("nama_vendor").textContent = data.nama_vendor;
-          document.getElementById("image_profil").src = data.image_profil;
+          document.getElementById(
+            "image_profil"
+          ).src = `http://localhost/web_apotech/apotech_images/${data.image_profil}`;
 
           document.getElementById("kota").textContent = data.kota;
           document.getElementById("deskripsi-produk").textContent =
